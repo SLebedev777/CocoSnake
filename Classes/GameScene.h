@@ -9,12 +9,12 @@ USING_NS_CC;
 class GameScene : public Scene
 {
 public:
-    GameScene(GameLevel* level);
-    static Scene* createScene(GameLevel* level);
+    GameScene(GameLevel& level);
+    static Scene* createScene(GameLevel& level);
 
     virtual bool init();
 
-    static GameScene* create(GameLevel* level);
+    static GameScene* create(GameLevel& level);
 
 
     void onMouseDown(Event* event);
@@ -31,13 +31,11 @@ public:
     void onGameWin(Ref* sender);
     void onGameLoose(Ref* sender);
 
-    GameLevel* getCurrLevel() { return currLevel; }
-
     void updateTimer(float dt);
 
 protected:
+    GameLevel currLevel;
     Sprite* player;
-    GameLevel* currLevel;
     float time_elapsed = float(0.0);
 };
 

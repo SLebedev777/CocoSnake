@@ -1,44 +1,38 @@
+#include <stdexcept>
+#include <cassert>
 #include "GameLevel.h"
 
-GameLevelManager* GameLevelManager::m_pGameLevelManagerInstance = nullptr;
 
 GameLevelManager::GameLevelManager() :
-	m_currLevelNumber(0),
-	m_pCurrLevel(nullptr)
-{}
-
-GameLevelManager::~GameLevelManager()
+	m_currLevelNumber(0)
 {}
 
 
-GameLevelManager* GameLevelManager::getInstance()
+GameLevelManager& GameLevelManager::getInstance()
 {
-	if (!m_pGameLevelManagerInstance)
-	{
-		m_pGameLevelManagerInstance = new GameLevelManager();
-	}
-	return m_pGameLevelManagerInstance;
+	static GameLevelManager instance;
+	return instance;
 }
 
 void GameLevelManager::setGameLevelsArray(GameLevelsArray& levels)
 {
 	if (!levels.empty())
 	{
-		m_levels = levels;
+		m_levels.clear();
+		for (auto& level : levels)
+			m_levels.push_back(level);
 		rewind();
 	}
 	else
 	{
-		throw;
+		throw std::invalid_argument("GameLevelsArray cannot be empty");
 	}
 }
 
-GameLevel* GameLevelManager::getCurrLevel() const
+GameLevel& GameLevelManager::getCurrLevel() const
 {
-	if (m_levels.empty())
-		return nullptr;
-
-	return m_levels[m_currLevelNumber];
+	assert(!m_levels.empty());
+	return *m_levels[m_currLevelNumber];
 }
 
 bool GameLevelManager::moveToNextLevel()

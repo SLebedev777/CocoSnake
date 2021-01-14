@@ -28,11 +28,11 @@ enum HUDLayerTags
     TAG_HUD_LAYER_TIMER_STRING = 1
 };
 
-GameScene::GameScene(GameLevel* level) :
+GameScene::GameScene(GameLevel& level) :
     currLevel(level)
 {}
 
-GameScene* GameScene::create(GameLevel* level)
+GameScene* GameScene::create(GameLevel& level)
 {
     GameScene* pRet = new(std::nothrow) GameScene(level);
     if (pRet && pRet->init()) {
@@ -46,7 +46,7 @@ GameScene* GameScene::create(GameLevel* level)
     }
 }
 
-Scene* GameScene::createScene(GameLevel* level)
+Scene* GameScene::createScene(GameLevel& level)
 {
     return GameScene::create(level);
 }
@@ -88,7 +88,7 @@ bool GameScene::init()
     
     auto hud_layer = LayerColor::create(Color4B(0, 0, 0, 0));
 
-    auto label = Label::createWithTTF("GameScene, level=" + std::to_string(this->currLevel->getNumber()), "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("GameScene, level=" + std::to_string(this->currLevel.getNumber()), "fonts/Marker Felt.ttf", 24);
     if (label)
     {
         // position the label on the center of the screen
@@ -259,11 +259,11 @@ void GameScene::onGameMenuClose(Event* event)
 
 void GameScene::onGameWin(Ref* sender)
 {
-    auto glm = GameLevelManager::getInstance();
-    auto director = Director::getInstance();
-    if (glm->moveToNextLevel())
+    auto& glm = GameLevelManager::getInstance();  // auto& because returned type is ref: GameLevelManager& (instead, auto makes local copy of class instance, not ref)
+    auto director = Director::getInstance();  // auto because returned type is pointer: Director* (makes local copy of pointer, but it is address on heap, so ok)
+    if (glm.moveToNextLevel())
     {
-        director->replaceScene(GameScene::create(glm->getCurrLevel()));
+        director->replaceScene(GameScene::create(glm.getCurrLevel()));
         director->pushScene(WinSplashScene::create());
     }
     else 
@@ -274,9 +274,9 @@ void GameScene::onGameWin(Ref* sender)
 
 void GameScene::onGameLoose(Ref* sender)
 {
-    auto glm = GameLevelManager::getInstance();
+    auto& glm = GameLevelManager::getInstance();
     auto director = Director::getInstance();
-    director->replaceScene(GameScene::create(glm->getCurrLevel()));
+    director->replaceScene(GameScene::create(glm.getCurrLevel()));
     director->pushScene(LooseSplashScene::create());
 }
 

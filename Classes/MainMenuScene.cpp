@@ -65,8 +65,8 @@ void MainMenuScene::menuCloseCallback(Ref* pSender)
 
 void MainMenuScene::menuNewGameCallback(cocos2d::Ref* pSender)
 {
-    GameLevelManager::getInstance()->rewind();
-    auto curr_level = GameLevelManager::getInstance()->getCurrLevel();
+    GameLevelManager::getInstance().rewind();
+    auto& curr_level = GameLevelManager::getInstance().getCurrLevel();
     game_scene = GameScene::create(curr_level);
     Director::getInstance()->pushScene(game_scene);
 }

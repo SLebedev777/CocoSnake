@@ -21,7 +21,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
+#include <memory>
 #include "AppDelegate.h"
 #include "MainMenuScene.h"
 #include "GameLevel.h"
@@ -109,11 +109,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // load and init Levels Manager singleton
-    GameLevel* level1 = new GameLevel(1);
-    GameLevel* level2 = new GameLevel(2);
-    GameLevel* level3 = new GameLevel(3);
-    GameLevelsArray levels = { level1, level2, level3 };
-    GameLevelManager::getInstance()->setGameLevelsArray(levels);
+    GameLevelsArray levels;
+    levels.push_back(std::make_shared<GameLevel>(1));
+    levels.push_back(std::make_shared<GameLevel>(2));
+    levels.push_back(std::make_shared<GameLevel>(3));
+    GameLevelManager::getInstance().setGameLevelsArray(levels);
 
     // create a scene. it's an autorelease object
     auto main_menu_scene = MainMenuScene::createScene();
