@@ -33,10 +33,23 @@ public:
 
     void updateTimer(float dt);
 
+    // calc up and right based on pressed and released keyboard keys
+    void updateInputDirectionState();
+    void drawInputDirectionStateString();
+
+    void update(float dt) override;
+
 protected:
     GameLevel currLevel;
     Sprite* player;
     float time_elapsed = float(0.0);
+
+    bool up_pressed;
+    bool down_pressed;
+    bool right_pressed;
+    bool left_pressed;
+    int up;    // 1 = up, -1 = down
+    int right; // 1 = right, -1 = left
 };
 
 #endif // __GAMESCENE_H__

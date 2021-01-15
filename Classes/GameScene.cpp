@@ -25,7 +25,8 @@ enum GameLayerTags
 
 enum HUDLayerTags
 {
-    TAG_HUD_LAYER_TIMER_STRING = 1
+    TAG_HUD_LAYER_TIMER_STRING = 1,
+    TAG_HUD_LAYER_ARROWS_STATE_STRING
 };
 
 GameScene::GameScene(GameLevel& level) :
@@ -91,7 +92,6 @@ bool GameScene::init()
     auto label = Label::createWithTTF("GameScene, level=" + std::to_string(this->currLevel.getNumber()), "fonts/Marker Felt.ttf", 24);
     if (label)
     {
-        // position the label on the center of the screen
         label->setPosition(Vec2(origin.x + visibleSize.width / 2,
             origin.y + visibleSize.height - label->getContentSize().height));
     }
@@ -101,12 +101,20 @@ bool GameScene::init()
     auto label_time = Label::createWithTTF("time elapsed: ", "fonts/Marker Felt.ttf", 24);
     if (label_time)
     {
-        // position the label on the center of the screen
         label_time->setPosition(Vec2(origin.x + visibleSize.width  - 100,
             origin.y + label_time->getContentSize().height));
     }
 
     hud_layer->addChild(label_time, 1, TAG_HUD_LAYER_TIMER_STRING);
+
+    auto label_arrows = Label::createWithTTF("up: 0  right: 0", "fonts/Marker Felt.ttf", 24);
+    if (label_arrows)
+    {
+        label_arrows->setPosition(Vec2(origin.x + visibleSize.width - 100,
+            origin.y + label_arrows->getContentSize().height + 100));
+    }
+
+    hud_layer->addChild(label_arrows, 1, TAG_HUD_LAYER_ARROWS_STATE_STRING);
 
 
     //////////////////////////////////////////////////
@@ -180,6 +188,15 @@ bool GameScene::init()
     time_elapsed = 0.0f;
     this->schedule(CC_SCHEDULE_SELECTOR(GameScene::updateTimer), 1.0f);
 
+    up_pressed = false;
+    down_pressed = false;
+    right_pressed = false;
+    left_pressed = false;
+    up = 0;
+    right = 0;
+
+    this->scheduleUpdate();
+
     return true;
 }
 
@@ -213,11 +230,44 @@ void GameScene::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
         {
             onGameMenuOpen(nullptr);
         }
+        return;
+    }
+    if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+    {
+        left_pressed = true;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+    {
+        right_pressed = true;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW)
+    {
+        up_pressed = true;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW)
+    {
+        down_pressed = true;
     }
 }
 
 void GameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
+    if (keyCode == EventKeyboard::KeyCode::KEY_LEFT_ARROW)
+    {
+        left_pressed = false;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_RIGHT_ARROW)
+    {
+        right_pressed = false;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_UP_ARROW)
+    {
+        up_pressed = false;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_DOWN_ARROW)
+    {
+        down_pressed = false;
+    }
 }
 
 void GameScene::onGameMenuOpen(Ref* sender)
@@ -287,4 +337,29 @@ void GameScene::updateTimer(float dt)
     auto label_time = static_cast<cocos2d::Label*> (label_time_node);
     time_elapsed += dt;
     label_time->setString("time elapsed: " + std::to_string(int(time_elapsed)));
+}
+
+void GameScene::updateInputDirectionState()
+{
+    up = int(up_pressed) - int(down_pressed);
+    right = int(right_pressed) - int(left_pressed);
+}
+
+void GameScene::drawInputDirectionStateString()
+{
+    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
+    auto label_arrows_node = hud_layer->getChildByTag(TAG_HUD_LAYER_ARROWS_STATE_STRING);
+    auto label_arrows = static_cast<cocos2d::Label*> (label_arrows_node);
+    label_arrows->setString("up: " + std::to_string(up) + "  right: " + std::to_string(right));
+}
+
+void GameScene::update(float dt)
+{
+    updateInputDirectionState();
+    // GAME LOGIC HERE
+    int dx = 5 * right;
+    int dy = 5 * up;
+    player->setPosition(player->getPosition() + Vec2(dx, dy));
+    //
+    drawInputDirectionStateString();
 }
