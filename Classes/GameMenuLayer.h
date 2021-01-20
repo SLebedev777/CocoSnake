@@ -2,7 +2,9 @@
 #define __GAMEMENULAYER_H__
 
 #include "cocos2d.h"
-#include "GameScene.h"
+// use fwd decl to skip include GameScene.h in this header (include only in .cpp)
+// we can do that because we use only GameScene*
+class GameScene;
 
 class GameMenuLayer : public cocos2d::LayerColor
 {

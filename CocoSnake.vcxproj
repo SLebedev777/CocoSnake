@@ -802,6 +802,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes\CCHelpers.h" />
+    <ClInclude Include="Classes\DirectedSprite.h" />
     <ClInclude Include="Classes\GameLevel.h" />
     <ClInclude Include="Classes\GameMenuLayer.h" />
     <ClInclude Include="Classes\GameScene.h" />
@@ -810,6 +811,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\main.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\resource.h" />
+    <ClCompile Include="Classes\DirectedSprite.cpp" />
     <ClCompile Include="Classes\GameLevel.cpp" />
     <ClCompile Include="Classes\GameMenuLayer.cpp" />
     <ClCompile Include="Classes\GameScene.cpp" />
@@ -890,6 +892,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\apple.png" />
+    <Image Include="Resources\HD\snake.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HD\snake.plist" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

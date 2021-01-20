@@ -35,7 +35,7 @@ using namespace cocos2d::experimental;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
@@ -74,9 +74,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("Bubble Shooter", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("CocoSnake", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
 #else
-        glview = GLViewImpl::create("Bubble Shooter");
+        glview = GLViewImpl::create("CocoSnake");
 #endif
         director->setOpenGLView(glview);
     }
@@ -90,21 +90,28 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
     auto frameSize = glview->getFrameSize();
+
+    // redirect paths to packed art according to device resolution
+    std::vector<std::string> searchPaths;
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height)
-    {        
+    {
+        searchPaths.push_back("Resources/HDR");
         director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
     }
     // if the frame's height is larger than the height of small size.
     else if (frameSize.height > smallResolutionSize.height)
-    {        
+    {
+        searchPaths.push_back("Resources/HD");
         director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
     }
     // if the frame's height is smaller than the height of medium size.
     else
-    {        
+    {
+        searchPaths.push_back("Resources/SD");
         director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
     }
+    FileUtils::getInstance()->setSearchPaths(searchPaths);
 
     register_all_packages();
 
@@ -115,6 +122,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     levels.push_back(std::make_shared<GameLevel>(3));
     GameLevelManager::getInstance().setGameLevelsArray(levels);
 
+    // load art into sprite cache
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("snake.plist");
+    
     // create a scene. it's an autorelease object
     auto main_menu_scene = MainMenuScene::createScene();
 

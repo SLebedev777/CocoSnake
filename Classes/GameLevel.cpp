@@ -1,6 +1,6 @@
+#include "GameLevel.h"
 #include <stdexcept>
 #include <cassert>
-#include "GameLevel.h"
 
 
 GameLevelManager::GameLevelManager() :

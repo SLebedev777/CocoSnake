@@ -25,6 +25,9 @@
     <ClCompile Include="Classes\SplashScene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\DirectedSprite.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h">
@@ -72,6 +75,9 @@
     <ClInclude Include="Classes\SplashScene.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\DirectedSprite.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\semen\games\cocos2d-x_projects\CocoSnake\CMakeLists.txt" />
@@ -105,5 +111,13 @@
     <Image Include="Resources\apple.png">
       <Filter>Resources</Filter>
     </Image>
+    <Image Include="Resources\HD\snake.png">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HD\snake.plist">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
 </Project>

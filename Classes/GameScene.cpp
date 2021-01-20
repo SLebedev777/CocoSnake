@@ -1,11 +1,12 @@
-#include <string>
-#include <vector>
 #include "GameScene.h"
 #include "GameMenuLayer.h"
 #include "SplashScene.h"
 #include "MainMenuScene.h"
+#include "DirectedSprite.h"
 #include "ui/CocosGUI.h"
 #include "CCHelpers.h"
+#include <string>
+#include <vector>
 
 
 USING_NS_CC;
@@ -77,6 +78,23 @@ bool GameScene::init()
     //
     auto game_layer = Layer::create();
 
+    Snake::DirToFrameTable snakeDirToFrameTable = Snake::dirToFrameTemplate("head.png");
+    ds = std::make_unique<Snake::DirectedSprite>(snakeDirToFrameTable);
+    ds->getSprite()->setPosition(Vec2(200, 200));
+
+    ds2 = std::make_unique<Snake::DirectedSprite>(*ds);
+    ds2->getSprite()->setPosition(Vec2(300, 300));
+    ds2->getSprite()->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
+
+    std::unique_ptr<Snake::DirectedSprite> ds3 = std::make_unique<Snake::DirectedSprite>(*ds);
+    ds3->getSprite()->setPosition(Vec2(400, 400));
+    *ds3 = *ds2;
+    ds3->getSprite()->setPosition(Vec2(500, 500));
+
+    game_layer->addChild(ds->getSprite());
+    game_layer->addChild(ds2->getSprite());
+    game_layer->addChild(ds3->getSprite());
+    
     player = Sprite::create("apple.png");
     player->setPosition(Vec2(50, 50));
     player->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
@@ -337,6 +355,11 @@ void GameScene::updateTimer(float dt)
     auto label_time = static_cast<cocos2d::Label*> (label_time_node);
     time_elapsed += dt;
     label_time->setString("time elapsed: " + std::to_string(int(time_elapsed)));
+    // test - destroy directed sprite by smart ptr and remove it from the scene
+    if (ds2 && time_elapsed == 10)
+    {
+        ds2.reset();
+    }
 }
 
 void GameScene::updateInputDirectionState()
@@ -359,7 +382,17 @@ void GameScene::update(float dt)
     // GAME LOGIC HERE
     int dx = 5 * right;
     int dy = 5 * up;
-    player->setPosition(player->getPosition() + Vec2(dx, dy));
+    //player->setPosition(player->getPosition() + Vec2(dx, dy));
+    ds->getSprite()->setPosition(ds->getSprite()->getPosition() + Vec2(dx, dy));
+    if (up > 0 && !right)
+        ds->setDirPair(Snake::DIRECTION_PAIR_UP);
+    else if (up < 0 && !right)
+        ds->setDirPair(Snake::DIRECTION_PAIR_DOWN);
+    else if (!up && right > 0)
+        ds->setDirPair(Snake::DIRECTION_PAIR_RIGHT);
+    else if (!up && right < 0)
+        ds->setDirPair(Snake::DIRECTION_PAIR_LEFT);
+    ds->update();
     //
     drawInputDirectionStateString();
 }

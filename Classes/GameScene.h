@@ -4,6 +4,12 @@
 #include "cocos2d.h"
 #include "GameLevel.h"
 
+// fwd
+namespace Snake
+{
+    class DirectedSprite;
+}
+
 USING_NS_CC;
 
 class GameScene : public Scene
@@ -42,7 +48,9 @@ public:
 protected:
     GameLevel currLevel;
     Sprite* player;
-    float time_elapsed = float(0.0);
+    std::unique_ptr<Snake::DirectedSprite> ds;
+    std::unique_ptr<Snake::DirectedSprite> ds2;
+    float time_elapsed = 0.0f;
 
     bool up_pressed;
     bool down_pressed;
