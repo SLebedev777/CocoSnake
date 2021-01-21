@@ -3,6 +3,7 @@
 #include "SplashScene.h"
 #include "MainMenuScene.h"
 #include "DirectedSprite.h"
+#include "Snake.h"
 #include "ui/CocosGUI.h"
 #include "CCHelpers.h"
 #include <string>
@@ -78,15 +79,15 @@ bool GameScene::init()
     //
     auto game_layer = Layer::create();
 
-    Snake::DirToFrameTable snakeDirToFrameTable = Snake::dirToFrameTemplate("head.png");
-    ds = std::make_unique<Snake::DirectedSprite>(snakeDirToFrameTable);
+    NS_Snake::DirToFrameTable snakeDirToFrameTable = NS_Snake::dirToFrameTemplate("head.png");
+    ds = std::make_unique<NS_Snake::DirectedSprite>(snakeDirToFrameTable);
     ds->getSprite()->setPosition(Vec2(200, 200));
 
-    ds2 = std::make_unique<Snake::DirectedSprite>(*ds);
+    ds2 = std::make_unique<NS_Snake::DirectedSprite>(*ds);
     ds2->getSprite()->setPosition(Vec2(300, 300));
     ds2->getSprite()->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
 
-    std::unique_ptr<Snake::DirectedSprite> ds3 = std::make_unique<Snake::DirectedSprite>(*ds);
+    std::unique_ptr<NS_Snake::DirectedSprite> ds3 = std::make_unique<NS_Snake::DirectedSprite>(*ds);
     ds3->getSprite()->setPosition(Vec2(400, 400));
     *ds3 = *ds2;
     ds3->getSprite()->setPosition(Vec2(500, 500));
@@ -94,7 +95,20 @@ bool GameScene::init()
     game_layer->addChild(ds->getSprite());
     game_layer->addChild(ds2->getSprite());
     game_layer->addChild(ds3->getSprite());
-    
+ 
+    std::vector<NS_Snake::DirectedSpritePtr> parts;
+    int start_x = origin.x + visibleSize.width / 2;
+    int start_y = origin.y + visibleSize.height / 2;
+    int cell_size = 40;
+    for (int i = 0; i <10; i++)
+    {
+        parts.push_back(std::make_unique<NS_Snake::DirectedSprite>(snakeDirToFrameTable));
+        parts[i]->setPosition(NS_Snake::Point2d(start_x, start_y - i*cell_size));
+        game_layer->addChild(parts[i]->getSprite());
+    }
+    snake = std::make_unique<NS_Snake::Snake>(parts, /*speed*/cell_size);
+
+
     player = Sprite::create("apple.png");
     player->setPosition(Vec2(50, 50));
     player->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
@@ -380,19 +394,22 @@ void GameScene::update(float dt)
 {
     updateInputDirectionState();
     // GAME LOGIC HERE
+    /**
     int dx = 5 * right;
     int dy = 5 * up;
     //player->setPosition(player->getPosition() + Vec2(dx, dy));
     ds->getSprite()->setPosition(ds->getSprite()->getPosition() + Vec2(dx, dy));
     if (up > 0 && !right)
-        ds->setDirPair(Snake::DIRECTION_PAIR_UP);
+        ds->setDirPair(NS_Snake::DIRECTION_PAIR_UP);
     else if (up < 0 && !right)
-        ds->setDirPair(Snake::DIRECTION_PAIR_DOWN);
+        ds->setDirPair(NS_Snake::DIRECTION_PAIR_DOWN);
     else if (!up && right > 0)
-        ds->setDirPair(Snake::DIRECTION_PAIR_RIGHT);
+        ds->setDirPair(NS_Snake::DIRECTION_PAIR_RIGHT);
     else if (!up && right < 0)
-        ds->setDirPair(Snake::DIRECTION_PAIR_LEFT);
+        ds->setDirPair(NS_Snake::DIRECTION_PAIR_LEFT);
     ds->update();
+    */
+    snake->move(up, right);
     //
     drawInputDirectionStateString();
 }
