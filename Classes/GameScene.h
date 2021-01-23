@@ -42,9 +42,6 @@ public:
 
 protected:
     GameLevel currLevel;
-    Sprite* player;
-    NS_Snake::DirectedSpritePtr ds;
-    NS_Snake::DirectedSpritePtr ds2;
     NS_Snake::SnakePtr snake;
     float time_elapsed = 0.0f;
 

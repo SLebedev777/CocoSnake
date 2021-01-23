@@ -4,10 +4,14 @@
 namespace NS_Snake
 {
 	Snake::Snake(std::vector<DirectedSpritePtr>& parts,
-		uint8_t speed, uint8_t max_health) :
+		uint8_t speed, uint8_t accel, uint8_t max_health) :
 		m_speed(speed),
+		m_accel(accel),
 		m_maxHealth(max_health)
 	{
+		if (m_accel > m_speed)
+			m_accel = m_speed;
+
 		for (auto& part : parts)
 		{
 			m_parts.push_back(std::move(part));
@@ -16,6 +20,15 @@ namespace NS_Snake
 
 	bool Snake::move(int up, int right)
 	{
+		if (!up && !right)
+		{
+			m_currSpeed = 0;
+			return false;
+		}
+		m_currSpeed += m_accel;
+		if (m_currSpeed < m_speed)
+			return false;
+
 		int head_shift_x = 0;
 		int head_shift_y = 0;
 		SPRITE_DIRECTION new_direction = SPRITE_DIRECTION::NONE;
@@ -48,11 +61,15 @@ namespace NS_Snake
 			curr_part->setPosition(next_part->getPosition());
 			curr_part->setDirPair(next_part->getDirPair());
 		}
+		// kink neck
+		m_parts[1]->setDirFrom(m_parts[1]->getDirTo());
+		m_parts[1]->setDirTo(new_direction);
 		// move head
 		Point2d new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
 		head().setPosition(new_head_pos);
 		head().setDirPair({ new_direction, new_direction });
 
+		m_currSpeed = 0;
 		return true;
 	}
 

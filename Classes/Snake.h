@@ -10,7 +10,7 @@ namespace NS_Snake
 	{
 	public:
 		Snake(std::vector<DirectedSpritePtr>& parts, 
-			uint8_t speed, uint8_t max_health = 100);
+			uint8_t speed, uint8_t accel, uint8_t max_health = 100);
 		~Snake() {}
 
 		bool move(int up, int right);
@@ -25,6 +25,8 @@ namespace NS_Snake
 		std::vector<DirectedSpritePtr> m_parts;
 		uint8_t m_speed;
 		uint8_t m_maxHealth;
+		uint8_t m_currSpeed;
+		uint8_t m_accel;
 	};
 }
 

@@ -78,42 +78,73 @@ bool GameScene::init()
     // GAME LAYER
     //
     auto game_layer = Layer::create();
+    
+    using namespace NS_Snake;
 
-    NS_Snake::DirToFrameTable snakeDirToFrameTable = NS_Snake::dirToFrameTemplate("head.png");
-    ds = std::make_unique<NS_Snake::DirectedSprite>(snakeDirToFrameTable);
-    ds->getSprite()->setPosition(Vec2(200, 200));
-
-    ds2 = std::make_unique<NS_Snake::DirectedSprite>(*ds);
-    ds2->getSprite()->setPosition(Vec2(300, 300));
-    ds2->getSprite()->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
-
-    std::unique_ptr<NS_Snake::DirectedSprite> ds3 = std::make_unique<NS_Snake::DirectedSprite>(*ds);
-    ds3->getSprite()->setPosition(Vec2(400, 400));
-    *ds3 = *ds2;
-    ds3->getSprite()->setPosition(Vec2(500, 500));
-
-    game_layer->addChild(ds->getSprite());
-    game_layer->addChild(ds2->getSprite());
-    game_layer->addChild(ds3->getSprite());
- 
-    std::vector<NS_Snake::DirectedSpritePtr> parts;
+    std::vector<DirectedSpritePtr> parts;
     int start_x = origin.x + visibleSize.width / 2;
     int start_y = origin.y + visibleSize.height / 2;
     int cell_size = 40;
-    for (int i = 0; i <10; i++)
+    int num_parts_body = 7;
+    uint8_t accel = 7;
+    // make head
+    DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
+    parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_head));
+
+    // make body
+    DirToFrameTable snakeDFT_body = dirToFrameTemplate("body_straight.png");
+    auto body_curve_frame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("body_curve.png");
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::UP, SPRITE_DIRECTION::RIGHT }, 
+        SpriteFrameTransform(body_curve_frame)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::UP, SPRITE_DIRECTION::LEFT },
+        SpriteFrameTransform(body_curve_frame, 0, true, false)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::RIGHT, SPRITE_DIRECTION::DOWN },
+        SpriteFrameTransform(body_curve_frame, 90)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::DOWN, SPRITE_DIRECTION::LEFT },
+        SpriteFrameTransform(body_curve_frame, 180)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::LEFT, SPRITE_DIRECTION::UP },
+        SpriteFrameTransform(body_curve_frame, 270)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::RIGHT, SPRITE_DIRECTION::UP },
+        SpriteFrameTransform(body_curve_frame, 270, false, true)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::DOWN, SPRITE_DIRECTION::RIGHT },
+        SpriteFrameTransform(body_curve_frame, 180, true, false)));
+    snakeDFT_body.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::LEFT, SPRITE_DIRECTION::DOWN },
+        SpriteFrameTransform(body_curve_frame, 270, true, false)));
+
+    for (int i = 0; i < num_parts_body; i++)
+        parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_body));
+
+    // make tail
+    DirToFrameTable snakeDFT_tail = dirToFrameTemplate("tail.png");
+    auto tail_curve_frame = cocos2d::SpriteFrameCache::getInstance()->getSpriteFrameByName("tail_curve.png");
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::UP, SPRITE_DIRECTION::RIGHT },
+        SpriteFrameTransform(tail_curve_frame)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::UP, SPRITE_DIRECTION::LEFT },
+        SpriteFrameTransform(tail_curve_frame, 0, true, false)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::RIGHT, SPRITE_DIRECTION::DOWN },
+        SpriteFrameTransform(tail_curve_frame, 90)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::DOWN, SPRITE_DIRECTION::LEFT },
+        SpriteFrameTransform(tail_curve_frame, 180)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::LEFT, SPRITE_DIRECTION::UP },
+        SpriteFrameTransform(tail_curve_frame, 270)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::RIGHT, SPRITE_DIRECTION::UP },
+        SpriteFrameTransform(tail_curve_frame, 270, false, true)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::DOWN, SPRITE_DIRECTION::RIGHT },
+        SpriteFrameTransform(tail_curve_frame, 180, true, false)));
+    snakeDFT_tail.insert(std::pair<DirectionPair, SpriteFrameTransform>({ SPRITE_DIRECTION::LEFT, SPRITE_DIRECTION::DOWN },
+        SpriteFrameTransform(tail_curve_frame, 270, true, false)));
+
+    parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_tail));
+
+    // setup parts and construct snake
+    for (int i = 0; i <parts.size(); i++)
     {
-        parts.push_back(std::make_unique<NS_Snake::DirectedSprite>(snakeDirToFrameTable));
-        parts[i]->setPosition(NS_Snake::Point2d(start_x, start_y - i*cell_size));
+        parts[i]->setPosition(Point2d(start_x, start_y - i*cell_size));
+        parts[i]->setDirPair(DIRECTION_PAIR_UP);
         game_layer->addChild(parts[i]->getSprite());
     }
-    snake = std::make_unique<NS_Snake::Snake>(parts, /*speed*/cell_size);
+    snake = std::make_unique<Snake>(parts, /*speed*/cell_size, /*accel*/accel);
 
-
-    player = Sprite::create("apple.png");
-    player->setPosition(Vec2(50, 50));
-    player->runAction(RepeatForever::create(RotateBy::create(3.0f, 360.0f)));
-
-    game_layer->addChild(player);
 
     //////////////////////////////////////////////////
     // HUD LAYER
@@ -234,8 +265,6 @@ bool GameScene::init()
 
 void GameScene::onMouseDown(Event* event)
 {
-    EventMouse* e = (EventMouse*)event;
-    player->setPosition(Vec2(e->getCursorX(), e->getCursorY()));
 }
 
 void GameScene::onMouseUp(Event* event)
@@ -369,11 +398,6 @@ void GameScene::updateTimer(float dt)
     auto label_time = static_cast<cocos2d::Label*> (label_time_node);
     time_elapsed += dt;
     label_time->setString("time elapsed: " + std::to_string(int(time_elapsed)));
-    // test - destroy directed sprite by smart ptr and remove it from the scene
-    if (ds2 && time_elapsed == 10)
-    {
-        ds2.reset();
-    }
 }
 
 void GameScene::updateInputDirectionState()
@@ -394,22 +418,8 @@ void GameScene::update(float dt)
 {
     updateInputDirectionState();
     // GAME LOGIC HERE
-    /**
-    int dx = 5 * right;
-    int dy = 5 * up;
-    //player->setPosition(player->getPosition() + Vec2(dx, dy));
-    ds->getSprite()->setPosition(ds->getSprite()->getPosition() + Vec2(dx, dy));
-    if (up > 0 && !right)
-        ds->setDirPair(NS_Snake::DIRECTION_PAIR_UP);
-    else if (up < 0 && !right)
-        ds->setDirPair(NS_Snake::DIRECTION_PAIR_DOWN);
-    else if (!up && right > 0)
-        ds->setDirPair(NS_Snake::DIRECTION_PAIR_RIGHT);
-    else if (!up && right < 0)
-        ds->setDirPair(NS_Snake::DIRECTION_PAIR_LEFT);
-    ds->update();
-    */
     snake->move(up, right);
+    snake->update();
     //
     drawInputDirectionStateString();
 }

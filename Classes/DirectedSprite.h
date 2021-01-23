@@ -58,6 +58,7 @@ namespace NS_Snake
 	static const DirectionPair DIRECTION_PAIR_RIGHT({ SPRITE_DIRECTION::RIGHT, SPRITE_DIRECTION::RIGHT });
 	static const DirectionPair DIRECTION_PAIR_LEFT({ SPRITE_DIRECTION::LEFT, SPRITE_DIRECTION::LEFT });
 
+
 	// create table with transformed frames for basic directions: up, down, right, left, without kinks 
 	DirToFrameTable dirToFrameTemplate(const std::string& image_name);
 
