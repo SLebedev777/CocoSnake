@@ -81,15 +81,27 @@ bool GameScene::init()
     
     using namespace NS_Snake;
 
+    // tile background with sand bitmap
+    Texture2D::TexParams texParams;
+    texParams.magFilter = backend::SamplerFilter::LINEAR;
+    texParams.minFilter = backend::SamplerFilter::LINEAR;
+    texParams.sAddressMode = backend::SamplerAddressMode::REPEAT;
+    texParams.tAddressMode = backend::SamplerAddressMode::REPEAT;
+    Sprite* background = Sprite::create("ground32x32.png", Rect(0, 0, visibleSize.width, visibleSize.height));
+    background->getTexture()->setTexParameters(texParams);
+    background->setPosition(visibleSize.width * 0.5f, visibleSize.height * 0.5f);
+    game_layer->addChild(background);
+
     std::vector<DirectedSpritePtr> parts;
     int start_x = origin.x + visibleSize.width / 2;
     int start_y = origin.y + visibleSize.height / 2;
-    int cell_size = 40;
     int num_parts_body = 7;
     uint8_t accel = 7;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
     parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_head));
+
+    int cell_size = parts[0]->getSprite()->getTextureRect().size.width;
 
     // make body
     DirToFrameTable snakeDFT_body = dirToFrameTemplate("body_straight.png");

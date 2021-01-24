@@ -20,6 +20,7 @@ namespace NS_Snake
 		void update();
 		DirectedSprite& head() { return *(m_parts.front()); }
 		DirectedSprite& tail() { return *(m_parts.back()); }
+		DirectedSprite& neck() { return *(m_parts[1]); }
 
 	private:
 		std::vector<DirectedSpritePtr> m_parts;

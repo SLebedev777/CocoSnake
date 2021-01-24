@@ -12,6 +12,11 @@ namespace NS_Snake
 		if (m_accel > m_speed)
 			m_accel = m_speed;
 
+		if (parts.size() < 3)
+		{
+			throw std::invalid_argument("At least 3 parts needed for snake - head, 1 body part and tail");
+		}
+
 		for (auto& part : parts)
 		{
 			m_parts.push_back(std::move(part));
@@ -62,8 +67,8 @@ namespace NS_Snake
 			curr_part->setDirPair(next_part->getDirPair());
 		}
 		// kink neck
-		m_parts[1]->setDirFrom(m_parts[1]->getDirTo());
-		m_parts[1]->setDirTo(new_direction);
+		neck().setDirFrom(neck().getDirTo());
+		neck().setDirTo(new_direction);
 		// move head
 		Point2d new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
 		head().setPosition(new_head_pos);
