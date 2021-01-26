@@ -1,6 +1,7 @@
 #ifndef __DIRECTEDSPRITE_H__
 #define __DIRECTEDSPRITE_H__
 
+#include "Snake_types.h"
 #include "cocos2d.h"
 #include <map>
 
@@ -43,15 +44,6 @@ namespace NS_Snake
 	// mapping direction pair to transformed sprite frame
 	typedef std::map<DirectionPair, SpriteFrameTransform>  DirToFrameTable;
 
-	struct Point2d
-	{
-		Point2d(int xx, int yy) : 
-			x(xx), y(yy)
-		{}
-		int x;
-		int y;
-	};
-
 	static const DirectionPair DIRECTION_PAIR_NONE({ SPRITE_DIRECTION::NONE, SPRITE_DIRECTION::NONE });
 	static const DirectionPair DIRECTION_PAIR_UP({ SPRITE_DIRECTION::UP, SPRITE_DIRECTION::UP });
 	static const DirectionPair DIRECTION_PAIR_DOWN({ SPRITE_DIRECTION::DOWN, SPRITE_DIRECTION::DOWN });
@@ -81,7 +73,7 @@ namespace NS_Snake
 		DirectionPair getDirPair() const { return m_dirPair; }
 		void setIdle() { setDirPair(DIRECTION_PAIR_NONE); }
 		void update();  // updates frame by table, according to set direction
-		Point2d& getPosition() const { const auto pos = m_ccSprite->getPosition(); return Point2d(pos.x, pos.y); }
+		Point2d getPosition() const { const auto pos = m_ccSprite->getPosition(); return Point2d(pos.x, pos.y); }
 		void setPosition(Point2d& pos) { m_ccSprite->setPosition(cocos2d::Vec2(pos.x, pos.y)); }
 
 	private:

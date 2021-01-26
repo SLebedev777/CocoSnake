@@ -4,11 +4,12 @@
 #include "MainMenuScene.h"
 #include "DirectedSprite.h"
 #include "Snake.h"
+#include "GameGrid.h"
 #include "ui/CocosGUI.h"
 #include "CCHelpers.h"
 #include <string>
 #include <vector>
-
+#include "ccRandom.h"
 
 USING_NS_CC;
 
@@ -81,6 +82,8 @@ bool GameScene::init()
     
     using namespace NS_Snake;
 
+    grid = std::make_unique<GameGrid>(80, 80, 640, 480, 40);
+
     // tile background with sand bitmap
     Texture2D::TexParams texParams;
     texParams.magFilter = backend::SamplerFilter::LINEAR;
@@ -149,7 +152,7 @@ bool GameScene::init()
     parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_tail));
 
     // setup parts and construct snake
-    for (int i = 0; i <parts.size(); i++)
+    for (size_t i = 0; i < parts.size(); i++)
     {
         parts[i]->setPosition(Point2d(start_x, start_y - i*cell_size));
         parts[i]->setDirPair(DIRECTION_PAIR_UP);
@@ -157,6 +160,18 @@ bool GameScene::init()
     }
     snake = std::make_unique<Snake>(parts, /*speed*/cell_size, /*accel*/accel);
 
+    // test: auto spawn food every 5 seconds at random free grid cell
+    game_layer->schedule([this](float dt) {
+            auto cell = NS_Snake::GameGrid::Cell(-1, -1);
+            if (grid->getRandomFreeCell(cell))
+            {
+                auto sprt = Sprite::createWithSpriteFrameName("apple.png");
+                grid->occupyCell(cell);
+                NS_Snake::Point2d pos = grid->cellToXy(cell);
+                sprt->setPosition(Vec2(pos.x, pos.y));
+                this->getChildByTag(TAG_GAME_LAYER)->addChild(sprt);
+            }
+        }, 5.0f, "food_spawn");
 
     //////////////////////////////////////////////////
     // HUD LAYER

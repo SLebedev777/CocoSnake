@@ -43,6 +43,7 @@ public:
 protected:
     GameLevel currLevel;
     NS_Snake::SnakePtr snake;
+    NS_Snake::GameGridPtr grid;
     float time_elapsed = 0.0f;
 
     bool up_pressed;
