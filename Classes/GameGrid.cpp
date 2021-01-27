@@ -4,8 +4,8 @@
 
 namespace NS_Snake
 {
-	GameGrid::GameGrid(int x, int y, int width, int height, size_t cell_size) :
-		m_x(x), m_y(y), m_width(width), m_height(height), m_cellSize(cell_size), m_numOccupied(0)
+	GameGrid::GameGrid(int ox, int oy, int width, int height, size_t cell_size) :
+		m_ox(ox), m_oy(oy), m_width(width), m_height(height), m_cellSize(cell_size), m_numOccupied(0)
 	{
 		m_width -= m_width % m_cellSize;
 		m_height -= m_height % m_cellSize;
@@ -36,8 +36,8 @@ namespace NS_Snake
 
 	GameGrid::Cell GameGrid::xyToCell(int x, int y) const
 	{
-		x -= m_x;
-		y -= m_y;
+		x -= m_ox;
+		y -= m_oy;
 		int dx = x % m_cellSize;
 		int dy = y % m_cellSize;
 		int cix = (x - dx) / m_cellSize;
@@ -54,9 +54,17 @@ namespace NS_Snake
 	{
 		if (bound)
 			cell = boundToRect(cell);
-		int x = m_x + cell.cix * m_cellSize;
-		int y = m_y + cell.ciy * m_cellSize;
+		int x = m_ox + cell.cix * m_cellSize;
+		int y = m_oy + cell.ciy * m_cellSize;
 		return Point2d(x, y);
+	}
+
+	Point2d GameGrid::cellToXyCenter(Cell& cell, bool bound) const
+	{
+		Point2d point = cellToXy(cell, bound);
+		point.x += m_cellSize * 0.5f;
+		point.y += m_cellSize * 0.5f;
+		return point;
 	}
 
 	GameGrid::CellType GameGrid::getCellType(Cell& cell) const

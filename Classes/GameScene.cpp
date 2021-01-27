@@ -82,29 +82,34 @@ bool GameScene::init()
     
     using namespace NS_Snake;
 
-    grid = std::make_unique<GameGrid>(80, 80, 640, 480, 40);
+    // detect grid cell size (sprite size), depending on design resolution, scale factor and loaded art
+    int cell_size = Sprite::createWithSpriteFrameName("apple.png")->getTextureRect().size.width;
+    int border = 2 * cell_size;
 
+    grid = std::make_unique<GameGrid>(origin.x + border, origin.y + border, visibleSize.width - 2*border, visibleSize.height - 2*border, cell_size);
+
+    auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
+    
     // tile background with sand bitmap
     Texture2D::TexParams texParams;
     texParams.magFilter = backend::SamplerFilter::LINEAR;
     texParams.minFilter = backend::SamplerFilter::LINEAR;
     texParams.sAddressMode = backend::SamplerAddressMode::REPEAT;
     texParams.tAddressMode = backend::SamplerAddressMode::REPEAT;
-    Sprite* background = Sprite::create("ground32x32.png", Rect(0, 0, visibleSize.width, visibleSize.height));
+    Sprite* background = Sprite::create("ground32x32.png", GAMEGRIDRECT);
     background->getTexture()->setTexParameters(texParams);
-    background->setPosition(visibleSize.width * 0.5f, visibleSize.height * 0.5f);
+    background->setAnchorPoint(Vec2(0, 0));
+    background->setPosition(grid->getOrigin().x, grid->getOrigin().y);
     game_layer->addChild(background);
 
     std::vector<DirectedSpritePtr> parts;
-    int start_x = origin.x + visibleSize.width / 2;
-    int start_y = origin.y + visibleSize.height / 2;
+    int start_x = grid->getOrigin().x + grid->getWidth() / 2;
+    int start_y = grid->getOrigin().y + grid->getHeight() / 2;
     int num_parts_body = 7;
     uint8_t accel = 7;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
     parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_head));
-
-    int cell_size = parts[0]->getSprite()->getTextureRect().size.width;
 
     // make body
     DirToFrameTable snakeDFT_body = dirToFrameTemplate("body_straight.png");
@@ -168,10 +173,27 @@ bool GameScene::init()
                 auto sprt = Sprite::createWithSpriteFrameName("apple.png");
                 grid->occupyCell(cell);
                 NS_Snake::Point2d pos = grid->cellToXy(cell);
+                sprt->setAnchorPoint(Vec2(0, 0));
                 sprt->setPosition(Vec2(pos.x, pos.y));
                 this->getChildByTag(TAG_GAME_LAYER)->addChild(sprt);
             }
         }, 5.0f, "food_spawn");
+
+    auto grid_draw = DrawNode::create(2);
+    grid_draw->drawRect(Vec2(grid->getOrigin().x, grid->getOrigin().y), 
+        Vec2(grid->getOrigin().x + grid->getWidth(), grid->getOrigin().y + grid->getHeight()),
+        Color4F::RED);
+    for (size_t row = 0; row < grid->getNumCellsY(); ++row)
+    {
+        for (size_t col = 0; col < grid->getNumCellsX(); ++col)
+        {
+            auto cell_corner = grid->cellToXy(GameGrid::Cell(col, row));
+            grid_draw->drawRect(Vec2(cell_corner.x, cell_corner.y),
+                Vec2(cell_corner.x + grid->getCellSize(), cell_corner.y + grid->getCellSize()),
+                Color4F::RED);
+        }
+    }
+    game_layer->addChild(grid_draw);
 
     //////////////////////////////////////////////////
     // HUD LAYER

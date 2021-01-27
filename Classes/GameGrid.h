@@ -27,11 +27,12 @@ namespace NS_Snake
 		};
 
 	public:
-		GameGrid(int x, int y, int width, int height, size_t cell_size);
+		GameGrid(int ox, int oy, int width, int height, size_t cell_size);
 		Cell boundToRect(Cell& cell) const;
 		Cell xyToCell(int x, int y) const;
 		Cell xyToCell(Point2d& point) const;
 		Point2d cellToXy(Cell& cell, bool bound = true) const;
+		Point2d cellToXyCenter(Cell& cell, bool bound = true) const;
 		bool isCellOccupied(Cell& cell) const;
 		CellType getCellType(Cell& cell) const;
 		bool occupyCell(Cell& cell, CellType type = CellType::OCCUPIED);  // you can not occupy cell just assigning some other cell type. You must release it first
@@ -39,11 +40,17 @@ namespace NS_Snake
 		//getCellRect(Cell& cell);
 		bool getRandomFreeCell(Cell& out) const;
 		bool isFull() const { return m_numOccupied >= m_numCellsX * m_numCellsY; }
+		Point2d getOrigin() const { return Point2d(m_ox, m_oy); }
+		int getWidth() const { return m_width; }
+		int getHeight() const { return m_height; }
+		size_t getCellSize() const { return m_cellSize; }
+		size_t getNumCellsY() const { return m_numCellsY; }
+		size_t getNumCellsX() const { return m_numCellsX; }
 
 	private:
 		std::vector<std::vector<CellType>> m_grid;
-		int m_x;
-		int m_y;
+		int m_ox;  // origin
+		int m_oy;
 		int m_width;
 		int m_height;
 		size_t m_cellSize;
