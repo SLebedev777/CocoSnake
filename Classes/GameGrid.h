@@ -46,6 +46,9 @@ namespace NS_Snake
 		size_t getCellSize() const { return m_cellSize; }
 		size_t getNumCellsY() const { return m_numCellsY; }
 		size_t getNumCellsX() const { return m_numCellsX; }
+		bool isLocked() const { return m_lock; }
+		void lock() { m_lock = true; }
+		void unlock() { m_lock = false; }
 
 	private:
 		std::vector<std::vector<CellType>> m_grid;
@@ -57,6 +60,7 @@ namespace NS_Snake
 		size_t m_numCellsX;  // num columns
 		size_t m_numCellsY;  // num rows
 		size_t m_numOccupied;
+		bool m_lock;
 
 	};
 

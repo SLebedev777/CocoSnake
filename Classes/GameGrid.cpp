@@ -5,7 +5,7 @@
 namespace NS_Snake
 {
 	GameGrid::GameGrid(int ox, int oy, int width, int height, size_t cell_size) :
-		m_ox(ox), m_oy(oy), m_width(width), m_height(height), m_cellSize(cell_size), m_numOccupied(0)
+		m_ox(ox), m_oy(oy), m_width(width), m_height(height), m_cellSize(cell_size), m_numOccupied(0), m_lock(false)
 	{
 		m_width -= m_width % m_cellSize;
 		m_height -= m_height % m_cellSize;
@@ -80,7 +80,7 @@ namespace NS_Snake
 
 	bool GameGrid::occupyCell(Cell& cell, CellType type)
 	{
-		if (isFull())
+		if (isLocked() || isFull())
 			return false;
 
 		cell = boundToRect(cell);
@@ -93,6 +93,9 @@ namespace NS_Snake
 
 	void GameGrid::releaseCell(Cell& cell)
 	{
+		if (isLocked())
+			return;
+
 		cell = boundToRect(cell);
 		if (!isCellOccupied(cell))
 			return;
@@ -102,7 +105,7 @@ namespace NS_Snake
 
 	bool GameGrid::getRandomFreeCell(Cell& out) const
 	{
-		if (isFull())
+		if (isLocked() || isFull())
 			return false;
 		// TODO: replace while (true) to max_attempts loop
 		while (true)
