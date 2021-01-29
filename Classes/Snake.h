@@ -10,7 +10,7 @@ namespace NS_Snake
 	class Snake
 	{
 	public:
-		Snake(std::vector<DirectedSpritePtr>& parts, 
+		Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
 			uint8_t speed, uint8_t accel, uint8_t max_health = 100);
 		~Snake() {}
 
@@ -28,6 +28,7 @@ namespace NS_Snake
 		const_iterator end() const { return m_parts.end(); }
 	private:
 		std::vector<DirectedSpritePtr> m_parts;
+		GameGridPtr m_grid;
 		uint8_t m_speed;
 		uint8_t m_maxHealth;
 		uint8_t m_currSpeed;

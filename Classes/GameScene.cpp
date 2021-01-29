@@ -86,7 +86,7 @@ bool GameScene::init()
     int cell_size = Sprite::createWithSpriteFrameName("apple.png")->getTextureRect().size.width;
     int border = 2 * cell_size;
 
-    grid = std::make_unique<GameGrid>(origin.x + border, origin.y + border, visibleSize.width - 2*border, visibleSize.height - 2*border, cell_size);
+    grid = std::make_shared<GameGrid>(origin.x + border, origin.y + border, visibleSize.width - 2*border, visibleSize.height - 2*border, cell_size);
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
     
@@ -163,7 +163,7 @@ bool GameScene::init()
         parts[i]->setDirPair(DIRECTION_PAIR_UP);
         game_layer->addChild(parts[i]->getSprite());
     }
-    snake = std::make_unique<Snake>(parts, /*speed*/cell_size, /*accel*/accel);
+    snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel);
 
     // test: auto spawn food every 5 seconds at random free grid cell
     game_layer->schedule([this](float dt) {
@@ -469,6 +469,7 @@ void GameScene::update(float dt)
     updateInputDirectionState();
     // GAME LOGIC HERE
     
+    // TODO: attach grid to snake. Move grid cells logic inside snake, for snake moving and growing
     for (auto part = snake->begin(); part != snake->end(); ++part)
         grid->releaseCell(grid->xyToCell((*part)->getPosition()));
 
@@ -480,6 +481,7 @@ void GameScene::update(float dt)
         grid->occupyCell(grid->xyToCell((*part)->getPosition()));
 
     snake->update();
+
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
     if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()))
     {

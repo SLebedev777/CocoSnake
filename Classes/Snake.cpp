@@ -1,13 +1,15 @@
 #include "Snake.h"
 #include "DirectedSprite.h"
+#include "GameGrid.h"
 
 namespace NS_Snake
 {
-	Snake::Snake(std::vector<DirectedSpritePtr>& parts,
+	Snake::Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
 		uint8_t speed, uint8_t accel, uint8_t max_health) :
 		m_speed(speed),
 		m_accel(accel),
-		m_maxHealth(max_health)
+		m_maxHealth(max_health),
+		m_grid(grid)
 	{
 		if (m_accel > m_speed)
 			m_accel = m_speed;

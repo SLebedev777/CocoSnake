@@ -9,5 +9,5 @@ namespace NS_Snake
 	typedef std::unique_ptr<Snake> SnakePtr;
 
 	class GameGrid;
-	typedef std::unique_ptr<GameGrid> GameGridPtr;
+	typedef std::shared_ptr<GameGrid> GameGridPtr;
 }
