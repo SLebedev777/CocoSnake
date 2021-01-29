@@ -3,6 +3,7 @@
 
 #include "Snake_fwd.h"
 #include <vector>
+#include <iterator>
 
 namespace NS_Snake
 {
@@ -22,6 +23,9 @@ namespace NS_Snake
 		DirectedSprite& tail() { return *(m_parts.back()); }
 		DirectedSprite& neck() { return *(m_parts[1]); }
 
+		typedef std::vector<DirectedSpritePtr>::const_iterator const_iterator;
+		const_iterator begin() const { return m_parts.begin(); }
+		const_iterator end() const { return m_parts.end(); }
 	private:
 		std::vector<DirectedSpritePtr> m_parts;
 		uint8_t m_speed;
