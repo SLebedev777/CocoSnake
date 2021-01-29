@@ -105,7 +105,7 @@ bool GameScene::init()
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
     int start_y = grid->getOrigin().y + grid->getHeight() / 2;
-    int num_parts_body = 7;
+    int num_parts_body = 10;
     uint8_t accel = 7;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
@@ -171,13 +171,14 @@ bool GameScene::init()
             if (grid->getRandomFreeCell(cell))
             {
                 auto sprt = Sprite::createWithSpriteFrameName("apple.png");
+                food.push_back(sprt);
                 grid->occupyCell(cell);
                 NS_Snake::Point2d pos = grid->cellToXy(cell);
                 sprt->setAnchorPoint(Vec2(0, 0));
                 sprt->setPosition(Vec2(pos.x, pos.y));
                 this->getChildByTag(TAG_GAME_LAYER)->addChild(sprt);
             }
-        }, 5.0f, "food_spawn");
+        }, 1.0f, "food_spawn");
 
     auto grid_draw = DrawNode::create(2);
     grid_draw->drawRect(Vec2(grid->getOrigin().x, grid->getOrigin().y), 
@@ -467,8 +468,36 @@ void GameScene::update(float dt)
 {
     updateInputDirectionState();
     // GAME LOGIC HERE
+    
+    for (auto part = snake->begin(); part != snake->end(); ++part)
+        grid->releaseCell(grid->xyToCell((*part)->getPosition()));
+
+    grid->lock();
     snake->move(up, right);
+    grid->unlock();
+
+    for (auto part = snake->begin(); part != snake->end(); ++part)
+        grid->occupyCell(grid->xyToCell((*part)->getPosition()));
+
     snake->update();
+    auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
+    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()))
+    {
+        onGameLoose(nullptr);
+    }
+    float half_cell_size = grid->getCellSize() * 0.5f;
+    for (auto& f : food)
+    {
+        if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getPosition() + Vec2(half_cell_size, half_cell_size)))
+        {
+            auto food_pos = NS_Snake::Point2d::fromVec2(f->getPosition());
+            auto food_cell = grid->xyToCell(food_pos);
+            grid->releaseCell(food_cell);
+            f->removeFromParent();
+            food.remove(f);
+            break;
+        }
+    }
     //
     drawInputDirectionStateString();
 }
