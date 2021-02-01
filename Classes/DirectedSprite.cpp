@@ -3,6 +3,32 @@
 
 namespace NS_Snake
 {
+	SPRITE_DIRECTION oppositeDir(SPRITE_DIRECTION dir)
+	{
+		switch (dir)
+		{
+		case SPRITE_DIRECTION::NONE:
+			return SPRITE_DIRECTION::NONE;
+			break;
+		case SPRITE_DIRECTION::UP:
+			return SPRITE_DIRECTION::DOWN;
+			break;
+		case SPRITE_DIRECTION::DOWN:
+			return SPRITE_DIRECTION::UP;
+			break;
+		case SPRITE_DIRECTION::RIGHT:
+			return SPRITE_DIRECTION::LEFT;
+			break;
+		case SPRITE_DIRECTION::LEFT:
+			return SPRITE_DIRECTION::RIGHT;
+			break;
+		default:
+			return SPRITE_DIRECTION::NONE;
+			break;
+		}
+	}
+
+
 	DirToFrameTable dirToFrameTemplate(const std::string& image_name)
 	{
 		DirToFrameTable table;

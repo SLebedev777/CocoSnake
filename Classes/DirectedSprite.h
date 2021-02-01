@@ -17,6 +17,8 @@ namespace NS_Snake
 		LEFT = -2
 	};
 
+	SPRITE_DIRECTION oppositeDir(SPRITE_DIRECTION dir);
+
 	/* Struct that holds sprite frame and transformation parameters that can be applied to it later */
 	struct SpriteFrameTransform
 	{   
