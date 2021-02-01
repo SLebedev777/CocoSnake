@@ -1,6 +1,7 @@
 #include "Snake.h"
 #include "DirectedSprite.h"
 #include "GameGrid.h"
+#include <map>
 
 namespace NS_Snake
 {
@@ -60,6 +61,11 @@ namespace NS_Snake
 		if (new_direction == SPRITE_DIRECTION::NONE)
 			return false;
 
+		// make successful movement
+
+		for (auto& part : m_parts)
+			m_grid->releaseCell(m_grid->xyToCell((part)->getPosition()));
+
 		// move all parts except head
 		for (int i = m_parts.size() - 1; i >= 1; --i)
 		{
@@ -76,10 +82,68 @@ namespace NS_Snake
 		head().setPosition(new_head_pos);
 		head().setDirPair({ new_direction, new_direction });
 
+		for (auto& part : m_parts)
+			m_grid->occupyCell(m_grid->xyToCell((part)->getPosition()));
+
 		m_currSpeed = 0;
 		return true;
 	}
 
+
+	void Snake::addPart()
+	{
+		DirectedSpritePtr new_part = std::make_unique<DirectedSprite>(neck().getTable());
+		DirectedSpritePtr new_tail = std::make_unique<DirectedSprite>(tail().getTable());
+		new_part->setPosition(tail().getPosition());
+		new_part->setDirPair({tail().getDirTo(), tail().getDirTo() });
+		auto cc_layer = tail().getSprite()->getParent();
+		cc_layer->addChild(new_part->getSprite());
+		new_part->update();
+
+		std::map<SPRITE_DIRECTION, std::pair<int, int>> tail_cell_shifts = {
+			{SPRITE_DIRECTION::UP, {0, -1}},
+			{SPRITE_DIRECTION::DOWN, {0, 1}},
+			{SPRITE_DIRECTION::LEFT, {1, 0}},
+			{SPRITE_DIRECTION::RIGHT, {-1, 0}},
+		};
+
+		Point2d tail_old_pos = tail().getPosition();
+		GameGrid::Cell tail_old_cell = m_grid->xyToCell(tail_old_pos);
+
+		std::vector<SPRITE_DIRECTION> try_directions;
+		try_directions.push_back(tail().getDirTo());
+		for (const auto& it : tail_cell_shifts)
+		{
+			auto dir = it.first;
+			if (dir == tail().getDirTo() || dir == oppositeDir(tail().getDirTo()))
+				continue;
+			try_directions.push_back(dir);
+		}
+
+		for (auto& dir : try_directions)
+		{
+			auto shift = tail_cell_shifts[dir];
+			GameGrid::Cell tail_new_cell(tail_old_cell.cix + shift.first, tail_old_cell.ciy + shift.second);
+			if (!m_grid->contains(tail_new_cell))
+				continue;
+			if (m_grid->isCellOccupied(tail_new_cell))
+				continue;
+			m_grid->occupyCell(tail_new_cell);
+			Point2d tail_new_pos = m_grid->cellToXyCenter(tail_new_cell);
+			new_tail->setPosition(tail_new_pos);
+			new_tail->setDirPair({ dir, dir });
+			new_tail->update();
+			cc_layer->addChild(new_tail->getSprite());
+			break;
+		}
+		new_part->setDirFrom(new_tail->getDirTo());
+
+		m_parts.pop_back();
+		// TODO: FIXME: rare case: when lots of food, no appropriate free cell is found for grown new tail, 
+		// loop over tail shifts exits and new_tail is not added to CC layer, but it's added to parts vector!
+		m_parts.push_back(std::move(new_part));
+		m_parts.push_back(std::move(new_tail));
+	}
 
 	void Snake::update()
 	{

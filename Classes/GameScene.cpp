@@ -105,7 +105,7 @@ bool GameScene::init()
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
     int start_y = grid->getOrigin().y + grid->getHeight() / 2;
-    int num_parts_body = 10;
+    int num_parts_body = 3;
     uint8_t accel = 7;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
@@ -157,6 +157,8 @@ bool GameScene::init()
     parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_tail));
 
     // setup parts and construct snake
+    // IMPORTANT: because we use interactively transformed sprites (rotated sprites) while snake moves and turns,
+    // we must hold anchor point = (0.5, 0.5) for snake parts to correctly rotate sprite within the SAME grid cell!
     for (size_t i = 0; i < parts.size(); i++)
     {
         parts[i]->setPosition(Point2d(start_x, start_y - i*cell_size));
@@ -470,15 +472,8 @@ void GameScene::update(float dt)
     // GAME LOGIC HERE
     
     // TODO: attach grid to snake. Move grid cells logic inside snake, for snake moving and growing
-    for (auto part = snake->begin(); part != snake->end(); ++part)
-        grid->releaseCell(grid->xyToCell((*part)->getPosition()));
 
-    grid->lock();
     snake->move(up, right);
-    grid->unlock();
-
-    for (auto part = snake->begin(); part != snake->end(); ++part)
-        grid->occupyCell(grid->xyToCell((*part)->getPosition()));
 
     snake->update();
 
@@ -497,6 +492,7 @@ void GameScene::update(float dt)
             grid->releaseCell(food_cell);
             f->removeFromParent();
             food.remove(f);
+            snake->addPart();
             break;
         }
     }
