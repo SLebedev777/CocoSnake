@@ -29,6 +29,7 @@ namespace NS_Snake
 	public:
 		GameGrid(int ox, int oy, int width, int height, size_t cell_size);
 		Cell boundToRect(Cell& cell) const;
+		bool contains(Cell& cell) const;
 		Cell xyToCell(int x, int y) const;
 		Cell xyToCell(Point2d& point) const;
 		Point2d cellToXy(Cell& cell, bool bound = true) const;

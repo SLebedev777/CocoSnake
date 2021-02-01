@@ -34,6 +34,16 @@ namespace NS_Snake
 		return GameGrid::Cell(bcix, bciy);
 	}
 
+	bool GameGrid::contains(Cell& cell) const
+	{
+		int bcix = cell.cix;
+		int bciy = cell.ciy;
+		if (bcix < 0 || bcix > m_numCellsX - 1 || bciy < 0 || bciy > m_numCellsY - 1)
+			return false;
+		return true;
+
+	}
+
 	GameGrid::Cell GameGrid::xyToCell(int x, int y) const
 	{
 		x -= m_ox;
