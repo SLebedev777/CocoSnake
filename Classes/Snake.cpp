@@ -90,7 +90,7 @@ namespace NS_Snake
 	}
 
 
-	void Snake::addPart()
+	bool Snake::addPart()
 	{
 		DirectedSpritePtr new_part = std::make_unique<DirectedSprite>(neck().getTable());
 		DirectedSpritePtr new_tail = std::make_unique<DirectedSprite>(tail().getTable());
@@ -120,6 +120,7 @@ namespace NS_Snake
 			try_directions.push_back(dir);
 		}
 
+		bool new_tail_pos_found = false;
 		for (auto& dir : try_directions)
 		{
 			auto shift = tail_cell_shifts[dir];
@@ -134,15 +135,21 @@ namespace NS_Snake
 			new_tail->setDirPair({ dir, dir });
 			new_tail->update();
 			cc_layer->addChild(new_tail->getSprite());
+			new_tail_pos_found = true;
 			break;
 		}
+		// failed to find free grid cell for new tail.
+		// doing simple - just not enlarging snake at all
+		if (!new_tail_pos_found)
+			return false;
+
 		new_part->setDirFrom(new_tail->getDirTo());
 
 		m_parts.pop_back();
-		// TODO: FIXME: rare case: when lots of food, no appropriate free cell is found for grown new tail, 
-		// loop over tail shifts exits and new_tail is not added to CC layer, but it's added to parts vector!
 		m_parts.push_back(std::move(new_part));
 		m_parts.push_back(std::move(new_tail));
+
+		return true;
 	}
 
 	void Snake::update()
