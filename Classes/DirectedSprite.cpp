@@ -58,7 +58,7 @@ namespace NS_Snake
 	}
 
 
-	DirectedSprite::DirectedSprite(DirectedSprite& other) :
+	DirectedSprite::DirectedSprite(const DirectedSprite& other) :
 		m_dirToFrameTable(other.getTable()),
 		m_ccSprite(cocos2d::Sprite::createWithSpriteFrame(other.getSprite()->getSpriteFrame())),
 		m_dirPair(DIRECTION_PAIR_NONE)

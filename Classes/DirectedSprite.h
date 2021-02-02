@@ -61,11 +61,11 @@ namespace NS_Snake
 	{
 	public:
 		DirectedSprite(DirToFrameTable& table);
-		DirectedSprite(DirectedSprite& other);
+		DirectedSprite(const DirectedSprite& other);
 		DirectedSprite& operator=(DirectedSprite& other);
 		~DirectedSprite();
 
-		DirToFrameTable getTable() { return m_dirToFrameTable; }  // refactor to ref
+		DirToFrameTable getTable() const { return m_dirToFrameTable; }  // refactor to ref
 		cocos2d::Sprite* getSprite() const { return m_ccSprite; }
 		void setDirFrom(SPRITE_DIRECTION from) { m_dirPair.first = from; }
 		void setDirTo(SPRITE_DIRECTION to) { m_dirPair.second = to; }
