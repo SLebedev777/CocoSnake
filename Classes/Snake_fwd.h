@@ -10,4 +10,10 @@ namespace NS_Snake
 
 	class GameGrid;
 	typedef std::shared_ptr<GameGrid> GameGridPtr;
+
+	class Food;
+	typedef std::unique_ptr<Food> FoodPtr;
+
+	class FoodFactory;
+	typedef std::unique_ptr<FoodFactory> FoodFactoryPtr;
 }

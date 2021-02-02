@@ -5,6 +5,7 @@
 #include "DirectedSprite.h"
 #include "Snake.h"
 #include "GameGrid.h"
+#include "Food.h"
 #include "ui/CocosGUI.h"
 #include "CCHelpers.h"
 #include <string>
@@ -167,18 +168,29 @@ bool GameScene::init()
     }
     snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel);
 
+    std::map<NS_Snake::FoodType, NS_Snake::FoodDescription> food_table;
+    NS_Snake::FoodDescription fd_apple("apple.png", 1, 1, 0.5);
+    NS_Snake::FoodDescription fd_banana("banana.png", 1, 1, 0.5);
+    NS_Snake::FoodDescription fd_mushroom("mushroom.png", -1, 1, 0.5);
+    NS_Snake::FoodDescription fd_ananas("ananas.png", 1, 3, 0.5);
+    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::APPLE, fd_apple}));
+    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::BANANA, fd_banana }));
+    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::MUSHROOM, fd_mushroom }));
+    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::ANANAS, fd_ananas }));
+
+    foodFactory = std::make_unique<FoodFactory>(food_table);
+
     // test: auto spawn food every 5 seconds at random free grid cell
     game_layer->schedule([this](float dt) {
             auto cell = NS_Snake::GameGrid::Cell(-1, -1);
             if (grid->getRandomFreeCell(cell))
             {
-                auto sprt = Sprite::createWithSpriteFrameName("apple.png");
-                food.push_back(sprt);
                 grid->occupyCell(cell);
-                NS_Snake::Point2d pos = grid->cellToXy(cell);
-                sprt->setAnchorPoint(Vec2(0, 0));
-                sprt->setPosition(Vec2(pos.x, pos.y));
-                this->getChildByTag(TAG_GAME_LAYER)->addChild(sprt);
+                auto new_food = foodFactory->makeRandom();
+                NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
+                new_food->getSprite()->setPosition(Vec2(pos.x, pos.y));
+                this->getChildByTag(TAG_GAME_LAYER)->addChild(new_food->getSprite());
+                food.push_back(std::move(new_food));
             }
         }, 1.0f, "food_spawn");
 
@@ -471,8 +483,6 @@ void GameScene::update(float dt)
     updateInputDirectionState();
     // GAME LOGIC HERE
     
-    // TODO: attach grid to snake. Move grid cells logic inside snake, for snake moving and growing
-
     snake->move(up, right);
 
     snake->update();
@@ -482,15 +492,13 @@ void GameScene::update(float dt)
     {
         onGameLoose(nullptr);
     }
-    float half_cell_size = grid->getCellSize() * 0.5f;
     for (auto& f : food)
     {
-        if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getPosition() + Vec2(half_cell_size, half_cell_size)))
+        if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getSprite()->getPosition()))
         {
-            auto food_pos = NS_Snake::Point2d::fromVec2(f->getPosition());
+            auto food_pos = NS_Snake::Point2d::fromVec2(f->getSprite()->getPosition());
             auto food_cell = grid->xyToCell(food_pos);
             grid->releaseCell(food_cell);
-            f->removeFromParent();
             food.remove(f);
             snake->addPart();
             break;

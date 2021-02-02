@@ -803,6 +803,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="Classes\CCHelpers.h" />
     <ClInclude Include="Classes\DirectedSprite.h" />
+    <ClInclude Include="Classes\Food.h" />
     <ClInclude Include="Classes\GameGrid.h" />
     <ClInclude Include="Classes\GameLevel.h" />
     <ClInclude Include="Classes\GameMenuLayer.h" />
@@ -816,6 +817,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\main.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\resource.h" />
     <ClCompile Include="Classes\DirectedSprite.cpp" />
+    <ClCompile Include="Classes\Food.cpp" />
     <ClCompile Include="Classes\GameGrid.cpp" />
     <ClCompile Include="Classes\GameLevel.cpp" />
     <ClCompile Include="Classes\GameMenuLayer.cpp" />

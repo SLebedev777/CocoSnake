@@ -5,6 +5,7 @@
 #include "GameLevel.h"
 #include "Snake_fwd.h"
 #include <list>
+#include <map>
 
 USING_NS_CC;
 
@@ -45,7 +46,8 @@ protected:
     GameLevel currLevel;
     NS_Snake::SnakePtr snake;
     NS_Snake::GameGridPtr grid;
-    std::list<Sprite*> food;
+    NS_Snake::FoodFactoryPtr foodFactory;
+    std::list<NS_Snake::FoodPtr> food;
     float time_elapsed = 0.0f;
 
     bool up_pressed;
