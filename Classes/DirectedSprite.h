@@ -60,9 +60,9 @@ namespace NS_Snake
 	class DirectedSprite
 	{
 	public:
-		DirectedSprite(DirToFrameTable& table);
+		DirectedSprite(const DirToFrameTable& table);
 		DirectedSprite(const DirectedSprite& other);
-		DirectedSprite& operator=(DirectedSprite& other);
+		DirectedSprite& operator=(const DirectedSprite& other);
 		~DirectedSprite();
 
 		DirToFrameTable getTable() const { return m_dirToFrameTable; }  // refactor to ref

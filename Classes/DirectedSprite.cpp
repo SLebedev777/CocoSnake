@@ -43,7 +43,7 @@ namespace NS_Snake
 	}
 
 
-	DirectedSprite::DirectedSprite(DirToFrameTable& table) :
+	DirectedSprite::DirectedSprite(const DirToFrameTable& table) :
 		m_dirToFrameTable(table),
 		m_ccSprite(nullptr),
 		m_dirPair(DIRECTION_PAIR_NONE)
@@ -65,7 +65,7 @@ namespace NS_Snake
 	{
 	}
 
-	DirectedSprite& DirectedSprite::operator=(DirectedSprite& other)
+	DirectedSprite& DirectedSprite::operator=(const DirectedSprite& other)
 	{
 		if (this == &other)
 			return *this;
