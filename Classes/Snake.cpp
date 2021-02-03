@@ -166,4 +166,16 @@ namespace NS_Snake
 			part->update();
 		}
 	}
+
+	bool Snake::intersectsItself()
+	{
+		auto head_cell = m_grid->xyToCell(head().getPosition());
+		for (size_t i = 1; i < m_parts.size(); i++)
+		{
+			auto part_cell = m_grid->xyToCell(m_parts[i]->getPosition());
+			if (part_cell == head_cell)
+				return true;
+		}
+		return false;
+	}
 }

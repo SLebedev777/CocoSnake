@@ -15,7 +15,7 @@ namespace NS_Snake
 		~Snake() {}
 
 		bool move(int up, int right);
-		void checkIntersectItself() {}
+		bool intersectsItself();
 		bool addPart();
 		void update();
 		DirectedSprite& head() { return *(m_parts.front()); }

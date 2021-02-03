@@ -15,6 +15,11 @@ namespace NS_Snake
 			Cell(int _cix, int _ciy) : cix(_cix), ciy(_ciy)
 			{}
 
+			friend bool operator==(const Cell& c1, const Cell& c2)
+			{
+				return (c1.cix == c2.cix) && (c1.ciy == c2.ciy);
+			}
+
 			int cix;
 			int ciy;
 		};

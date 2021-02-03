@@ -507,7 +507,7 @@ void GameScene::update(float dt)
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || !snake->isAlive())
+    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || !snake->isAlive() || snake->intersectsItself())
     {
         onGameLoose(nullptr);
     }
