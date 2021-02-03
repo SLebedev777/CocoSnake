@@ -30,7 +30,8 @@ enum GameLayerTags
 enum HUDLayerTags
 {
     TAG_HUD_LAYER_TIMER_STRING = 1,
-    TAG_HUD_LAYER_ARROWS_STATE_STRING
+    TAG_HUD_LAYER_ARROWS_STATE_STRING,
+    TAG_HUD_LAYER_SNAKE_HEALTH_STRING
 };
 
 GameScene::GameScene(GameLevel& level) :
@@ -171,7 +172,7 @@ bool GameScene::init()
     std::map<NS_Snake::FoodType, NS_Snake::FoodDescription> food_table;
     NS_Snake::FoodDescription fd_apple("apple.png", 1, 1, 0.5);
     NS_Snake::FoodDescription fd_banana("banana.png", 1, 1, 0.5);
-    NS_Snake::FoodDescription fd_mushroom("mushroom.png", -1, 1, 0.5);
+    NS_Snake::FoodDescription fd_mushroom("mushroom.png", -10, 1, 0.5);
     NS_Snake::FoodDescription fd_ananas("ananas.png", 1, 3, 0.5);
     food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::APPLE, fd_apple}));
     food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::BANANA, fd_banana }));
@@ -242,6 +243,15 @@ bool GameScene::init()
     }
 
     hud_layer->addChild(label_arrows, 1, TAG_HUD_LAYER_ARROWS_STATE_STRING);
+
+    auto label_snake_health = Label::createWithTTF("health: 100", "fonts/Marker Felt.ttf", 24);
+    if (label_snake_health)
+    {
+        label_snake_health->setPosition(Vec2(origin.x + visibleSize.width - 100,
+            origin.y + visibleSize.height - 50));
+    }
+
+    hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
 
 
     //////////////////////////////////////////////////
@@ -478,6 +488,15 @@ void GameScene::drawInputDirectionStateString()
     label_arrows->setString("up: " + std::to_string(up) + "  right: " + std::to_string(right));
 }
 
+void GameScene::drawSnakeHealthString()
+{
+    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
+    auto label_node = hud_layer->getChildByTag(TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
+    auto label = static_cast<cocos2d::Label*> (label_node);
+    label->setString("health: " + std::to_string(snake->getHealth()));
+}
+
+
 void GameScene::update(float dt)
 {
     updateInputDirectionState();
@@ -488,7 +507,7 @@ void GameScene::update(float dt)
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()))
+    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || !snake->isAlive())
     {
         onGameLoose(nullptr);
     }
@@ -499,6 +518,12 @@ void GameScene::update(float dt)
             auto food_pos = NS_Snake::Point2d::fromVec2(f->getSprite()->getPosition());
             auto food_cell = grid->xyToCell(food_pos);
             grid->releaseCell(food_cell);
+
+            snake->setHealth(f->getHealth());
+            if (f->getHealth() > 0)
+            {
+                // change score
+            }
             food.remove(f);
             snake->addPart();
             break;
@@ -506,4 +531,5 @@ void GameScene::update(float dt)
     }
     //
     drawInputDirectionStateString();
+    drawSnakeHealthString();
 }

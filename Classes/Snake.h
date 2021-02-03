@@ -11,28 +11,34 @@ namespace NS_Snake
 	{
 	public:
 		Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
-			uint8_t speed, uint8_t accel, uint8_t max_health = 100);
+			uint8_t speed, uint8_t accel, int max_health = 100);
 		~Snake() {}
 
 		bool move(int up, int right);
 		void checkIntersectItself() {}
-		void checkHealth() {}
 		bool addPart();
 		void update();
 		DirectedSprite& head() { return *(m_parts.front()); }
 		DirectedSprite& tail() { return *(m_parts.back()); }
 		DirectedSprite& neck() { return *(m_parts[1]); }
 
-		typedef std::vector<DirectedSpritePtr>::const_iterator const_iterator;
-		const_iterator begin() const { return m_parts.begin(); }
-		const_iterator end() const { return m_parts.end(); }
+		void checkHealth()
+		{
+			if (m_health <= 0) { m_health = 0; m_alive = false; }
+			if (m_health > m_maxHealth) { m_health = m_maxHealth; }
+		}
+		void setHealth(int h) { m_health += h; checkHealth(); }
+		int getHealth() const { return m_health; }
+		bool isAlive() const { return m_alive; }
 	private:
 		std::vector<DirectedSpritePtr> m_parts;
 		GameGridPtr m_grid;
 		uint8_t m_speed;
-		uint8_t m_maxHealth;
+		int m_maxHealth;
+		int m_health;
 		uint8_t m_currSpeed;
 		uint8_t m_accel;
+		bool m_alive;
 	};
 }
 

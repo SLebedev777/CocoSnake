@@ -39,6 +39,8 @@ public:
     // calc up and right based on pressed and released keyboard keys
     void updateInputDirectionState();
     void drawInputDirectionStateString();
+    
+    void drawSnakeHealthString();
 
     void update(float dt) override;
 
@@ -49,6 +51,7 @@ protected:
     NS_Snake::FoodFactoryPtr foodFactory;
     std::list<NS_Snake::FoodPtr> food;
     float time_elapsed = 0.0f;
+    int score;
 
     bool up_pressed;
     bool down_pressed;

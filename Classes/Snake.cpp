@@ -6,12 +6,19 @@
 namespace NS_Snake
 {
 	Snake::Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
-		uint8_t speed, uint8_t accel, uint8_t max_health) :
+		uint8_t speed, uint8_t accel, int max_health) :
 		m_speed(speed),
 		m_accel(accel),
 		m_maxHealth(max_health),
+		m_health(max_health),
+		m_alive(true),
 		m_grid(grid)
 	{
+		if (max_health <= 0)
+		{
+			throw std::invalid_argument("Max health must be positive");
+		}
+
 		if (m_accel > m_speed)
 			m_accel = m_speed;
 
