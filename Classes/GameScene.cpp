@@ -104,6 +104,23 @@ bool GameScene::init()
     background->setPosition(grid->getOrigin().x, grid->getOrigin().y);
     game_layer->addChild(background);
 
+    auto grid_draw = DrawNode::create(2);
+    grid_draw->drawRect(Vec2(grid->getOrigin().x, grid->getOrigin().y),
+        Vec2(grid->getOrigin().x + grid->getWidth(), grid->getOrigin().y + grid->getHeight()),
+        Color4F::RED);
+    for (size_t row = 0; row < grid->getNumCellsY(); ++row)
+    {
+        for (size_t col = 0; col < grid->getNumCellsX(); ++col)
+        {
+            auto cell_corner = grid->cellToXy(GameGrid::Cell(col, row));
+            grid_draw->drawRect(Vec2(cell_corner.x, cell_corner.y),
+                Vec2(cell_corner.x + grid->getCellSize(), cell_corner.y + grid->getCellSize()),
+                Color4F::RED);
+        }
+    }
+    game_layer->addChild(grid_draw);
+
+
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
     int start_y = grid->getOrigin().y + grid->getHeight() / 2;
@@ -195,21 +212,20 @@ bool GameScene::init()
             }
         }, 1.0f, "food_spawn");
 
-    auto grid_draw = DrawNode::create(2);
-    grid_draw->drawRect(Vec2(grid->getOrigin().x, grid->getOrigin().y), 
-        Vec2(grid->getOrigin().x + grid->getWidth(), grid->getOrigin().y + grid->getHeight()),
-        Color4F::RED);
-    for (size_t row = 0; row < grid->getNumCellsY(); ++row)
+    // create some walls
+    for (int i = 0; i < 20; i++)
     {
-        for (size_t col = 0; col < grid->getNumCellsX(); ++col)
+        auto cell = NS_Snake::GameGrid::Cell(-1, -1);
+        if (grid->getRandomFreeCell(cell))
         {
-            auto cell_corner = grid->cellToXy(GameGrid::Cell(col, row));
-            grid_draw->drawRect(Vec2(cell_corner.x, cell_corner.y),
-                Vec2(cell_corner.x + grid->getCellSize(), cell_corner.y + grid->getCellSize()),
-                Color4F::RED);
+            grid->occupyCell(cell, NS_Snake::GameGrid::CellType::WALL);
+            auto wall = Sprite::createWithSpriteFrameName("wall.png");
+            NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
+            wall->setPosition(pos.toVec2());
+            game_layer->addChild(wall);
         }
     }
-    game_layer->addChild(grid_draw);
+
 
     //////////////////////////////////////////////////
     // HUD LAYER

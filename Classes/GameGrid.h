@@ -27,7 +27,8 @@ namespace NS_Snake
 		enum class CellType
 		{
 			EMPTY = 0,
-			OCCUPIED
+			OCCUPIED = 1,
+			WALL = OCCUPIED << 1
 			// supports extension to some specific cell types: food, wall...
 		};
 

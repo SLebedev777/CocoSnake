@@ -29,6 +29,15 @@ namespace NS_Snake
 
 		for (auto& part : parts)
 		{
+			if (!m_grid->occupyCell(m_grid->xyToCell(part->getPosition())))
+			{
+				throw std::runtime_error("Failed to create snake. Cell occupied.");
+			}
+
+		}
+
+		for (auto& part : parts)
+		{
 			m_parts.push_back(std::move(part));
 		}
 	}
@@ -66,6 +75,12 @@ namespace NS_Snake
 		}
 
 		if (new_direction == SPRITE_DIRECTION::NONE)
+			return false;
+
+		// detect walls collision
+		Point2d poss_new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
+		auto poss_new_head_cell = m_grid->xyToCell(poss_new_head_pos);
+		if (m_grid->isCellOccupied(poss_new_head_cell) && m_grid->getCellType(poss_new_head_cell) == NS_Snake::GameGrid::CellType::WALL)
 			return false;
 
 		// make successful movement
