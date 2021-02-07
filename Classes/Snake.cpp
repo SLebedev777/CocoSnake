@@ -57,6 +57,7 @@ namespace NS_Snake
 		int head_shift_y = 0;
 		SPRITE_DIRECTION new_direction = SPRITE_DIRECTION::NONE;
 
+		// handle single arrow pressed
 		if (up != 0 && right == 0)
 		{
 			if ((up > 0 && head().getDirTo() == SPRITE_DIRECTION::DOWN) ||
@@ -72,6 +73,38 @@ namespace NS_Snake
 				return false;
 			head_shift_x += right * m_speed;
 			new_direction = (right > 0) ? SPRITE_DIRECTION::RIGHT : SPRITE_DIRECTION::LEFT;
+		}
+		// handle combo when 2 arrows are pressed simultaneously
+		if (up != 0 && right != 0)
+		{
+			// cases when 1 arrow is the same as snake head direction
+			if ((head().getDirTo() == SPRITE_DIRECTION::UP && up > 0) || 
+				(head().getDirTo() == SPRITE_DIRECTION::DOWN && up < 0))
+			{
+				if (!move(0, right))
+					move(up, 0);
+			}
+			else if ((head().getDirTo() == SPRITE_DIRECTION::LEFT && right < 0) || 
+				(head().getDirTo() == SPRITE_DIRECTION::RIGHT && right > 0))
+			{
+				if (!move(up, 0))
+					move(0, right);
+			}
+			// cases when 1 arrow is the opposite to snake head direction
+			else if ((head().getDirTo() == SPRITE_DIRECTION::UP && up < 0) ||
+				(head().getDirTo() == SPRITE_DIRECTION::DOWN && up > 0))
+			{
+				move(0, right);
+			}
+			else if ((head().getDirTo() == SPRITE_DIRECTION::LEFT && right > 0) ||
+				(head().getDirTo() == SPRITE_DIRECTION::RIGHT && right < 0))
+			{
+				move(up, 0);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		if (new_direction == SPRITE_DIRECTION::NONE)
