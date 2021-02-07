@@ -808,6 +808,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Classes\GameLevel.h" />
     <ClInclude Include="Classes\GameMenuLayer.h" />
     <ClInclude Include="Classes\GameScene.h" />
+    <ClInclude Include="Classes\Levels.h" />
     <ClInclude Include="Classes\MainMenuScene.h" />
     <ClInclude Include="Classes\Snake.h" />
     <ClInclude Include="Classes\Snake_fwd.h" />

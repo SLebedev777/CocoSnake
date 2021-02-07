@@ -102,6 +102,9 @@
     <ClInclude Include="Classes\Food.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\Levels.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\semen\games\cocos2d-x_projects\CocoSnake\CMakeLists.txt" />
