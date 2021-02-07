@@ -495,28 +495,13 @@ void GameScene::updateInputDirectionState()
     right = int(right_pressed) - int(left_pressed);
 }
 
-void GameScene::drawInputDirectionStateString()
+void GameScene::drawHUDString(int str_tag, const std::string& str)
 {
     auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
-    auto label_arrows_node = hud_layer->getChildByTag(TAG_HUD_LAYER_ARROWS_STATE_STRING);
-    auto label_arrows = static_cast<cocos2d::Label*> (label_arrows_node);
-    label_arrows->setString("up: " + std::to_string(up) + "  right: " + std::to_string(right));
-}
-
-void GameScene::drawSnakeHealthString()
-{
-    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
-    auto label_node = hud_layer->getChildByTag(TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
+    auto label_node = hud_layer->getChildByTag(str_tag);
     auto label = static_cast<cocos2d::Label*> (label_node);
-    label->setString("health: " + std::to_string(snake->getHealth()));
-}
+    label->setString(str);
 
-void GameScene::drawScoreString()
-{
-    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
-    auto label_node = hud_layer->getChildByTag(TAG_HUD_LAYER_SCORE_STRING);
-    auto label = static_cast<cocos2d::Label*> (label_node);
-    label->setString("score: " + std::to_string(score));
 }
 
 void GameScene::spawnFood(float dt, cocos2d::Node* parent)
@@ -544,7 +529,10 @@ void GameScene::update(float dt)
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || !snake->isAlive() || snake->intersectsItself())
+    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || 
+        !snake->isAlive() || 
+        snake->intersectsItself() ||
+        time_elapsed >= currLevel.getMaxTime())
     {
         onGameLoose(nullptr);
     }
@@ -574,7 +562,8 @@ void GameScene::update(float dt)
     }
 
     //
-    drawInputDirectionStateString();
-    drawSnakeHealthString();
-    drawScoreString();
+    drawHUDString(TAG_HUD_LAYER_ARROWS_STATE_STRING, "up: " + std::to_string(up) + "  right: " + std::to_string(right));
+    drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
+    drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score));
+
 }

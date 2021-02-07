@@ -38,10 +38,8 @@ public:
 
     // calc up and right based on pressed and released keyboard keys
     void updateInputDirectionState();
-    void drawInputDirectionStateString();
-    
-    void drawSnakeHealthString();
-    void drawScoreString();
+
+    void drawHUDString(int tag, const std::string& str);
 
     void spawnFood(float dt, cocos2d::Node* parent);
 
