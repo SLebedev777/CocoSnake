@@ -32,7 +32,7 @@ enum HUDLayerTags
     TAG_HUD_LAYER_TIMER_STRING = 1,
     TAG_HUD_LAYER_ARROWS_STATE_STRING,
     TAG_HUD_LAYER_SNAKE_HEALTH_STRING,
-    TAG_HUD_LAYER_SCORE_STRING
+    TAG_HUD_LAYER_SCORE_STRING,
 };
 
 GameScene::GameScene(GameLevel& level) :
@@ -221,20 +221,20 @@ bool GameScene::init()
     
     auto hud_layer = LayerColor::create(Color4B(0, 0, 0, 0));
 
-    auto label = Label::createWithTTF("GameScene, level=" + std::to_string(this->currLevel.getNumber()), "fonts/Marker Felt.ttf", 24);
-    if (label)
+    auto label_level = Label::createWithTTF("level: " + std::to_string(this->currLevel.getNumber()), "fonts/Marker Felt.ttf", 24);
+    if (label_level)
     {
-        label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-            origin.y + visibleSize.height - label->getContentSize().height));
+        label_level->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200,
+            origin.y + visibleSize.height - 50));
     }
 
-    hud_layer->addChild(label);
+    hud_layer->addChild(label_level);
 
     auto label_time = Label::createWithTTF("time elapsed: ", "fonts/Marker Felt.ttf", 24);
     if (label_time)
     {
-        label_time->setPosition(Vec2(origin.x + visibleSize.width  - 100,
-            origin.y + label_time->getContentSize().height));
+        label_time->setPosition(Vec2(origin.x + visibleSize.width/2  + 50,
+            origin.y + visibleSize.height - 50));
     }
 
     hud_layer->addChild(label_time, 1, TAG_HUD_LAYER_TIMER_STRING);
@@ -265,6 +265,7 @@ bool GameScene::init()
     }
 
     hud_layer->addChild(label_score, 1, TAG_HUD_LAYER_SCORE_STRING);
+
 
 
     //////////////////////////////////////////////////
@@ -482,11 +483,7 @@ void GameScene::onGameLoose(Ref* sender)
 
 void GameScene::updateTimer(float dt)
 {
-    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
-    auto label_time_node = hud_layer->getChildByTag(TAG_HUD_LAYER_TIMER_STRING);
-    auto label_time = static_cast<cocos2d::Label*> (label_time_node);
     time_elapsed += dt;
-    label_time->setString("time elapsed: " + std::to_string(int(time_elapsed)));
 }
 
 void GameScene::updateInputDirectionState()
@@ -536,6 +533,7 @@ void GameScene::update(float dt)
     {
         onGameLoose(nullptr);
     }
+
     for (auto& f : food)
     {
         if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getSprite()->getPosition()))
@@ -563,7 +561,9 @@ void GameScene::update(float dt)
 
     //
     drawHUDString(TAG_HUD_LAYER_ARROWS_STATE_STRING, "up: " + std::to_string(up) + "  right: " + std::to_string(right));
-    drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
     drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score));
+    drawHUDString(TAG_HUD_LAYER_TIMER_STRING, "time elapsed: " + std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
+    drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
+
 
 }
