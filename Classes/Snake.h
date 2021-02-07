@@ -11,7 +11,7 @@ namespace NS_Snake
 	{
 	public:
 		Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
-			uint8_t speed, uint8_t accel, int max_health = 100);
+			uint8_t speed, uint8_t accel, int max_health = 100, bool can_move_alone = false);
 		~Snake() {}
 
 		bool move(int up, int right);
@@ -39,6 +39,7 @@ namespace NS_Snake
 		uint8_t m_currSpeed;
 		uint8_t m_accel;
 		bool m_alive;
+		bool m_canMoveAlone;
 	};
 }
 

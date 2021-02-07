@@ -6,13 +6,14 @@
 namespace NS_Snake
 {
 	Snake::Snake(std::vector<DirectedSpritePtr>& parts, GameGridPtr grid,
-		uint8_t speed, uint8_t accel, int max_health) :
+		uint8_t speed, uint8_t accel, int max_health, bool can_move_alone) :
 		m_speed(speed),
 		m_accel(accel),
 		m_maxHealth(max_health),
 		m_health(max_health),
 		m_alive(true),
-		m_grid(grid)
+		m_grid(grid),
+		m_canMoveAlone(can_move_alone)
 	{
 		if (max_health <= 0)
 		{
@@ -46,8 +47,30 @@ namespace NS_Snake
 	{
 		if (!up && !right)
 		{
-			m_currSpeed = 0;
-			return false;
+			if (m_canMoveAlone)
+			{
+				switch (head().getDirTo())
+				{
+				case SPRITE_DIRECTION::UP:
+					up = 1;
+					break;
+				case SPRITE_DIRECTION::DOWN:
+					up = -1;
+					break;
+				case SPRITE_DIRECTION::LEFT:
+					right = -1;
+					break;
+				case SPRITE_DIRECTION::RIGHT:
+					right = 1;
+					break;
+				default: break;
+				}
+			}
+			else
+			{
+				m_currSpeed = 0;
+				return false;
+			}
 		}
 		m_currSpeed += m_accel;
 		if (m_currSpeed < m_speed)
