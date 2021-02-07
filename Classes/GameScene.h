@@ -41,6 +41,9 @@ public:
     void drawInputDirectionStateString();
     
     void drawSnakeHealthString();
+    void drawScoreString();
+
+    void spawnFood(float dt, cocos2d::Node* parent);
 
     void update(float dt) override;
 

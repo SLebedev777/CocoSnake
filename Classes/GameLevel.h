@@ -1,6 +1,7 @@
 #ifndef __GAMELEVEL_H__
 #define __GAMELEVEL_H__
 
+#include "Food.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -11,7 +12,7 @@ class GameLevel
 public:
 	GameLevel(
 		int number,
-		/* FoodTable* food_table, */
+		NS_Snake::FoodTable& food_table,
 		std::string level_name = "", 
 		uint16_t snake_starting_length = 3, 
 		uint16_t num_starting_food = 10,
@@ -20,7 +21,7 @@ public:
 		uint16_t max_time = -1
 		):
 		m_number(number),
-		/*m_pFoodTable(food_table),*/
+		m_foodTable(food_table),
 		m_levelName(level_name),
 		m_snakeStartingLength(snake_starting_length),
     	m_numStartingFood(num_starting_food),
@@ -29,18 +30,19 @@ public:
 	    m_maxTime(max_time)
 	{}
 
-	int getNumber() { return m_number; }
-	uint16_t getSnakeStartingLength() { return m_snakeStartingLength; }
-	uint16_t getNumStartingFood() { return m_numStartingFood; }
-	uint16_t getNumStartingWalls() { return m_numStartingWalls; }
-	uint16_t getScoreNeeded() { return m_scoreNeeded; }
-	uint16_t getMaxTime() { return m_maxTime; }
+	NS_Snake::FoodTable getFoodTable() const { return m_foodTable; }
+	int getNumber() const { return m_number; }
+	uint16_t getSnakeStartingLength() const { return m_snakeStartingLength; }
+	uint16_t getNumStartingFood() const { return m_numStartingFood; }
+	uint16_t getNumStartingWalls() const { return m_numStartingWalls; }
+	uint16_t getScoreNeeded() const { return m_scoreNeeded; }
+	uint16_t getMaxTime() const { return m_maxTime; }
 
 	~GameLevel() {}
 
 
 private:
-	/* FoodTable* m_pFoodTable; */
+	NS_Snake::FoodTable m_foodTable;
 	int m_number;
 	std::string m_levelName;
 	uint16_t m_snakeStartingLength;

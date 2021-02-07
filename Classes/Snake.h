@@ -27,7 +27,7 @@ namespace NS_Snake
 			if (m_health <= 0) { m_health = 0; m_alive = false; }
 			if (m_health > m_maxHealth) { m_health = m_maxHealth; }
 		}
-		void setHealth(int h) { m_health += h; checkHealth(); }
+		void addHealth(int h) { m_health += h; checkHealth(); }
 		int getHealth() const { return m_health; }
 		bool isAlive() const { return m_alive; }
 	private:

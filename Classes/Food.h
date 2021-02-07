@@ -20,6 +20,7 @@ namespace NS_Snake
 
 	struct FoodDescription
 	{
+		// really bad default ctor
 		FoodDescription() :
 			image_name(""),
 			health(1),

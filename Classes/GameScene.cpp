@@ -31,7 +31,8 @@ enum HUDLayerTags
 {
     TAG_HUD_LAYER_TIMER_STRING = 1,
     TAG_HUD_LAYER_ARROWS_STATE_STRING,
-    TAG_HUD_LAYER_SNAKE_HEALTH_STRING
+    TAG_HUD_LAYER_SNAKE_HEALTH_STRING,
+    TAG_HUD_LAYER_SCORE_STRING
 };
 
 GameScene::GameScene(GameLevel& level) :
@@ -124,7 +125,7 @@ bool GameScene::init()
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
     int start_y = grid->getOrigin().y + grid->getHeight() / 2;
-    int num_parts_body = 3;
+    int num_parts_body = currLevel.getSnakeStartingLength();
     uint8_t accel = 7;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
@@ -184,36 +185,23 @@ bool GameScene::init()
         parts[i]->setDirPair(DIRECTION_PAIR_UP);
         game_layer->addChild(parts[i]->getSprite());
     }
+    // TODO: refactor to Builder pattern
     snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel);
+ 
+    // setup food factory according to level's food table settings
+    foodFactory = std::make_unique<FoodFactory>(currLevel.getFoodTable());
 
-    std::map<NS_Snake::FoodType, NS_Snake::FoodDescription> food_table;
-    NS_Snake::FoodDescription fd_apple("apple.png", 1, 1, 0.5);
-    NS_Snake::FoodDescription fd_banana("banana.png", 1, 1, 0.5);
-    NS_Snake::FoodDescription fd_mushroom("mushroom.png", -10, 1, 0.5);
-    NS_Snake::FoodDescription fd_ananas("ananas.png", 1, 3, 0.5);
-    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::APPLE, fd_apple}));
-    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::BANANA, fd_banana }));
-    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::MUSHROOM, fd_mushroom }));
-    food_table.insert(std::pair<NS_Snake::FoodType, NS_Snake::FoodDescription>({ NS_Snake::FoodType::ANANAS, fd_ananas }));
+    // create some food
+    for (int i = 0; i < currLevel.getNumStartingFood(); i++)
+    {
+        spawnFood(0, game_layer);
+    }
 
-    foodFactory = std::make_unique<FoodFactory>(food_table);
-
-    // test: auto spawn food every 5 seconds at random free grid cell
-    game_layer->schedule([this](float dt) {
-            auto cell = NS_Snake::GameGrid::Cell(-1, -1);
-            if (grid->getRandomFreeCell(cell))
-            {
-                grid->occupyCell(cell);
-                auto new_food = foodFactory->makeRandom();
-                NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
-                new_food->getSprite()->setPosition(Vec2(pos.x, pos.y));
-                this->getChildByTag(TAG_GAME_LAYER)->addChild(new_food->getSprite());
-                food.push_back(std::move(new_food));
-            }
-        }, 1.0f, "food_spawn");
+    //set food spawner callback at random free grid cell
+    game_layer->schedule([this](float dt) { spawnFood(dt, this->getChildByTag(TAG_GAME_LAYER)); }, 1.0f, "food_spawn");
 
     // create some walls
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < currLevel.getNumStartingWalls(); i++)
     {
         auto cell = NS_Snake::GameGrid::Cell(-1, -1);
         if (grid->getRandomFreeCell(cell))
@@ -268,6 +256,15 @@ bool GameScene::init()
     }
 
     hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
+
+    auto label_score = Label::createWithTTF("score: 0", "fonts/Marker Felt.ttf", 24);
+    if (label_score)
+    {
+        label_score->setPosition(Vec2(origin.x + 50,
+            origin.y + visibleSize.height - 50));
+    }
+
+    hud_layer->addChild(label_score, 1, TAG_HUD_LAYER_SCORE_STRING);
 
 
     //////////////////////////////////////////////////
@@ -347,6 +344,8 @@ bool GameScene::init()
     left_pressed = false;
     up = 0;
     right = 0;
+
+    score = 0;
 
     this->scheduleUpdate();
 
@@ -512,6 +511,28 @@ void GameScene::drawSnakeHealthString()
     label->setString("health: " + std::to_string(snake->getHealth()));
 }
 
+void GameScene::drawScoreString()
+{
+    auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
+    auto label_node = hud_layer->getChildByTag(TAG_HUD_LAYER_SCORE_STRING);
+    auto label = static_cast<cocos2d::Label*> (label_node);
+    label->setString("score: " + std::to_string(score));
+}
+
+void GameScene::spawnFood(float dt, cocos2d::Node* parent)
+{
+    auto cell = NS_Snake::GameGrid::Cell(-1, -1);
+    if (grid->getRandomFreeCell(cell))
+    {
+        grid->occupyCell(cell);
+        auto new_food = foodFactory->makeRandom();
+        NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
+        new_food->getSprite()->setPosition(Vec2(pos.x, pos.y));
+        parent->addChild(new_food->getSprite());
+        food.push_back(std::move(new_food));
+    }
+}
+
 
 void GameScene::update(float dt)
 {
@@ -535,17 +556,25 @@ void GameScene::update(float dt)
             auto food_cell = grid->xyToCell(food_pos);
             grid->releaseCell(food_cell);
 
-            snake->setHealth(f->getHealth());
+            snake->addHealth(f->getHealth());
             if (f->getHealth() > 0)
             {
                 // change score
+                score += f->getScore();
             }
             food.remove(f);
             snake->addPart();
             break;
         }
     }
+
+    if (score >= currLevel.getScoreNeeded())
+    {
+        onGameWin(nullptr);
+    }
+
     //
     drawInputDirectionStateString();
     drawSnakeHealthString();
+    drawScoreString();
 }

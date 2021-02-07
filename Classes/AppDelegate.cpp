@@ -25,6 +25,7 @@
 #include "AppDelegate.h"
 #include "MainMenuScene.h"
 #include "GameLevel.h"
+#include "Levels.h"
 
 // #define USE_AUDIO_ENGINE 1
 
@@ -117,11 +118,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // load and init Levels Manager singleton
-    GameLevelsArray levels;
-    levels.push_back(std::make_shared<GameLevel>(1));
-    levels.push_back(std::make_shared<GameLevel>(2));
-    levels.push_back(std::make_shared<GameLevel>(3));
-    GameLevelManager::getInstance().setGameLevelsArray(levels);
+    GameLevelManager::getInstance().setGameLevelsArray(getGameLevels());
 
     // load art into sprite cache
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("snake.plist");
