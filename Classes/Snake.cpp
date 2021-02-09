@@ -13,7 +13,8 @@ namespace NS_Snake
 		m_health(max_health),
 		m_alive(true),
 		m_grid(grid),
-		m_canMoveAlone(can_move_alone)
+		m_canMoveAlone(can_move_alone),
+		m_wrapAround(false)
 	{
 		if (max_health <= 0)
 		{
@@ -133,9 +134,26 @@ namespace NS_Snake
 		if (new_direction == SPRITE_DIRECTION::NONE)
 			return false;
 
-		// detect walls collision
+		// get new possible head position
 		Point2d poss_new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
 		auto poss_new_head_cell = m_grid->xyToCell(poss_new_head_pos);
+
+		// wrap around mode
+		if (m_wrapAround)
+		{			
+			if (poss_new_head_pos.x < m_grid->getOrigin().x)
+				poss_new_head_cell.cix = m_grid->getNumCellsX() - 1;
+			else if (poss_new_head_pos.x > m_grid->getOrigin().x + m_grid->getWidth())
+				poss_new_head_cell.cix = 0;
+
+			if (poss_new_head_pos.y < m_grid->getOrigin().y)
+				poss_new_head_cell.ciy = m_grid->getNumCellsY() - 1;
+			else if (poss_new_head_pos.y > m_grid->getOrigin().y + m_grid->getHeight())
+				poss_new_head_cell.ciy = 0;
+
+		}
+
+		// detect walls collision
 		if (m_grid->isCellOccupied(poss_new_head_cell) && m_grid->getCellType(poss_new_head_cell) == NS_Snake::GameGrid::CellType::WALL)
 			return false;
 
@@ -156,7 +174,7 @@ namespace NS_Snake
 		neck().setDirFrom(neck().getDirTo());
 		neck().setDirTo(new_direction);
 		// move head
-		Point2d new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
+		Point2d new_head_pos = m_grid->cellToXyCenter(poss_new_head_cell);
 		head().setPosition(new_head_pos);
 		head().setDirPair({ new_direction, new_direction });
 

@@ -187,6 +187,7 @@ bool GameScene::init()
     }
     // TODO: refactor to Builder pattern
     snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel, /*max_health*/100, /*can_move_alone*/true);
+    snake->setWrapAround(true);
  
     // setup food factory according to level's food table settings
     foodFactory = std::make_unique<FoodFactory>(currLevel.getFoodTable());
@@ -526,7 +527,7 @@ void GameScene::update(float dt)
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-    if (!GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2()) || 
+    if ((!snake->getWrapAround() && !GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2())) || 
         !snake->isAlive() || 
         snake->intersectsItself() ||
         time_elapsed >= currLevel.getMaxTime())

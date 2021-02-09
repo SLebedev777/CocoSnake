@@ -30,6 +30,9 @@ namespace NS_Snake
 		void addHealth(int h) { m_health += h; checkHealth(); }
 		int getHealth() const { return m_health; }
 		bool isAlive() const { return m_alive; }
+		bool canMoveAlone() const { return m_canMoveAlone; }
+		void setWrapAround(bool wrap_around) { m_wrapAround = wrap_around; }
+		bool getWrapAround() const { return m_wrapAround; }
 	private:
 		std::vector<DirectedSpritePtr> m_parts;
 		GameGridPtr m_grid;
@@ -40,6 +43,7 @@ namespace NS_Snake
 		uint8_t m_accel;
 		bool m_alive;
 		bool m_canMoveAlone;
+		bool m_wrapAround;
 	};
 }
 
