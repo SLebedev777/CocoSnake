@@ -4,7 +4,9 @@
 #include "Snake_types.h"
 #include "Snake_fwd.h"
 #include "cocos/2d/CCSprite.h"
+#include "cocos/2d/CCAction.h"
 #include <string>
+#include <functional>
 
 namespace NS_Snake
 {
@@ -20,18 +22,34 @@ namespace NS_Snake
 
 	struct FoodDescription
 	{
-		// really bad default ctor
+		// TODO: refactor: really bad default ctor
 		FoodDescription() :
 			image_name(""),
 			health(1),
 			score(1),
 			proba(0.0f)
 		{}
+
 		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba) :
 			image_name(_image_name),
 			health(_health),
 			score(_score),
-			proba(_proba)
+			proba(_proba),
+			actionCallback([]() {return nullptr; })
+		{
+			if (proba < 0.0f || proba > 1.0f)
+			{
+				throw std::invalid_argument("proba value should be in range [0;1]");
+			}
+		}
+
+
+		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, std::function<cocos2d::Action*()> action_callback) :
+			image_name(_image_name),
+			health(_health),
+			score(_score),
+			proba(_proba),
+			actionCallback(action_callback)
 		{
 			if (proba < 0.0f || proba > 1.0f)
 			{
@@ -43,6 +61,7 @@ namespace NS_Snake
 		int health;
 		int score;
 		float proba;
+		std::function<cocos2d::Action* ()> actionCallback;
 	};
 
 

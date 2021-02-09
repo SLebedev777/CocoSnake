@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <ctime>
 #include <vector>
+#include "cocos2d.h"
 
 namespace NS_Snake
 {
@@ -14,7 +15,11 @@ namespace NS_Snake
 		if (!m_ccSprite)
 		{
 			throw std::runtime_error("failed to create Food by sprite frame name: " + food_descr.image_name);
-		}	
+		}
+
+		auto action = food_descr.actionCallback();
+		if (action)
+			m_ccSprite->runAction(action);
 	}
 
 	Food::Food(const Food& other) :
