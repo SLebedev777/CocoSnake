@@ -187,7 +187,7 @@ bool GameScene::init()
     }
     // TODO: refactor to Builder pattern
     snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel, /*max_health*/100, /*can_move_alone*/true);
-    snake->setWrapAround(true);
+    snake->setWrapAround(false);
  
     // setup food factory according to level's food table settings
     foodFactory = std::make_unique<FoodFactory>(currLevel.getFoodTable());
@@ -199,7 +199,7 @@ bool GameScene::init()
     }
 
     //set food spawner callback at random free grid cell
-    game_layer->schedule([this](float dt) { spawnFood(dt, this->getChildByTag(TAG_GAME_LAYER)); }, 1.0f, "food_spawn");
+    game_layer->schedule([this](float dt) { spawnFood(dt, this->getChildByTag(TAG_GAME_LAYER)); }, currLevel.getSpawnFoodInterval(), "food_spawn");
 
     // create some walls
     for (int i = 0; i < currLevel.getNumStartingWalls(); i++)
@@ -549,8 +549,15 @@ void GameScene::update(float dt)
                 // change score
                 score += f->getScore();
             }
+
+            if (f->getFoodType() == NS_Snake::FoodType::PORTAL)
+            {
+                snake->setWrapAround(true);
+            }
+
             food.remove(f);
             snake->addPart();
+            spawnFood(0, this->getChildByTag(TAG_GAME_LAYER));
             break;
         }
     }

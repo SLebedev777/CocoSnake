@@ -18,7 +18,8 @@ public:
 		uint16_t num_starting_food = 10,
 		uint16_t num_starting_walls = 5,
 		uint16_t score_needed = 10,
-		uint16_t max_time = -1
+		uint16_t max_time = -1,
+		float spawn_food_interval = 10.0f
 		):
 		m_number(number),
 		m_foodTable(food_table),
@@ -27,7 +28,8 @@ public:
     	m_numStartingFood(num_starting_food),
 	    m_numStartingWalls(num_starting_walls),
 	    m_scoreNeeded(score_needed),
-	    m_maxTime(max_time)
+	    m_maxTime(max_time),
+		m_spawnFoodInterval(spawn_food_interval)
 	{}
 
 	NS_Snake::FoodTable getFoodTable() const { return m_foodTable; }
@@ -37,6 +39,7 @@ public:
 	uint16_t getNumStartingWalls() const { return m_numStartingWalls; }
 	uint16_t getScoreNeeded() const { return m_scoreNeeded; }
 	uint16_t getMaxTime() const { return m_maxTime; }
+	float getSpawnFoodInterval() const { return m_spawnFoodInterval; }
 
 	~GameLevel() {}
 
@@ -50,6 +53,7 @@ private:
 	uint16_t m_numStartingWalls;
 	uint16_t m_scoreNeeded;
 	uint16_t m_maxTime;
+	float m_spawnFoodInterval;
 	/* uint8_t m_gameSpeedCoeff; */
 };
 
