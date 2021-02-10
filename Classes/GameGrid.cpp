@@ -48,6 +48,8 @@ namespace NS_Snake
 	{
 		x -= m_ox;
 		y -= m_oy;
+		if (x < 0) { x = 0; }  // prevent unpleasant feature of C++ when taking mod of negative number
+		if (y < 0) { y = 0; }
 		int dx = x % m_cellSize;
 		int dy = y % m_cellSize;
 		int cix = (x - dx) / m_cellSize;

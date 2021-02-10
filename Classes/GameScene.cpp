@@ -32,6 +32,7 @@ enum HUDLayerTags
     TAG_HUD_LAYER_TIMER_STRING = 1,
     TAG_HUD_LAYER_SNAKE_HEALTH_STRING,
     TAG_HUD_LAYER_SCORE_STRING,
+    TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING
 };
 
 GameScene::GameScene(GameLevel& level) :
@@ -257,6 +258,14 @@ bool GameScene::init()
 
     hud_layer->addChild(label_score, 1, TAG_HUD_LAYER_SCORE_STRING);
 
+    auto label_snake_debug = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    if (label_snake_debug)
+    {
+        label_snake_debug->setPosition(Vec2(origin.x + 500,
+            origin.y + 50));
+    }
+
+    hud_layer->addChild(label_snake_debug, 1, TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING);
 
 
     //////////////////////////////////////////////////
@@ -517,6 +526,7 @@ void GameScene::update(float dt)
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
+
     if ((!snake->getWrapAround() && !GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2())) || 
         !snake->isAlive() || 
         snake->intersectsItself() ||
@@ -561,6 +571,12 @@ void GameScene::update(float dt)
     drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score));
     drawHUDString(TAG_HUD_LAYER_TIMER_STRING, "time elapsed: " + std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
     drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
+
+    auto head_cell = grid->xyToCell(snake->head().getPosition());
+    drawHUDString(TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING, 
+        "head_x:  " + std::to_string(snake->head().getPosition().x) + "   head_y:   " + std::to_string(snake->head().getPosition().y) + 
+        "   head_cell_cix(col):  " + std::to_string(head_cell.cix) + "   head_cell_ciy(row):   " + std::to_string(head_cell.ciy)
+    );
 
 
 }

@@ -137,7 +137,7 @@ namespace NS_Snake
 		// get new possible head position
 		Point2d poss_new_head_pos = Point2d(head().getPosition().x + head_shift_x, head().getPosition().y + head_shift_y);
 		auto poss_new_head_cell = m_grid->xyToCell(poss_new_head_pos);
-
+		
 		// wrap around mode
 		if (m_wrapAround)
 		{			
@@ -152,7 +152,7 @@ namespace NS_Snake
 				poss_new_head_cell.ciy = 0;
 
 		}
-
+		
 		// detect walls collision
 		if (m_grid->isCellOccupied(poss_new_head_cell) && m_grid->getCellType(poss_new_head_cell) == NS_Snake::GameGrid::CellType::WALL)
 			return false;
