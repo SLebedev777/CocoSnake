@@ -801,6 +801,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Classes\CategoricalDistribution.h" />
     <ClInclude Include="Classes\CCHelpers.h" />
     <ClInclude Include="Classes\DirectedSprite.h" />
     <ClInclude Include="Classes\Food.h" />
@@ -817,6 +818,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\main.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\resource.h" />
+    <ClCompile Include="Classes\CategoricalDistribution.cpp" />
     <ClCompile Include="Classes\DirectedSprite.cpp" />
     <ClCompile Include="Classes\Food.cpp" />
     <ClCompile Include="Classes\GameGrid.cpp" />

@@ -7,6 +7,7 @@
 #include "cocos/2d/CCAction.h"
 #include <string>
 #include <functional>
+#include "CategoricalDistribution.h"
 
 namespace NS_Snake
 {
@@ -95,13 +96,13 @@ namespace NS_Snake
 	class FoodFactory
 	{
 	public:
-		FoodFactory(const FoodTable& food_table):
-			m_foodTable(food_table)
-		{}
+		FoodFactory(const FoodTable& food_table);
 
-		FoodPtr makeRandom();
+		FoodPtr makeRandom();	
 	private:
 		FoodTable m_foodTable;
+		std::vector<float> m_probas;
+		CategoricalDistribution m_distr;
 	};
 
 }

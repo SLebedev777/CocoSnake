@@ -37,6 +37,9 @@
     <ClCompile Include="Classes\Food.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\CategoricalDistribution.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h">
@@ -103,6 +106,9 @@
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Levels.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\CategoricalDistribution.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>

@@ -64,12 +64,23 @@ namespace NS_Snake
 	}
 
 
+	FoodFactory::FoodFactory(const FoodTable& food_table) :
+		m_foodTable(food_table)
+	{
+		for (const auto& it : m_foodTable)
+		{
+			m_probas.push_back(it.second.proba);
+		}
+		m_distr = CategoricalDistribution(m_probas);
+	}
+
+
 	FoodPtr FoodFactory::makeRandom()
 	{
 		std::vector<FoodType> keys;
 		for (const auto& it : m_foodTable)
 			keys.push_back(it.first);
-		int index = rand() % m_foodTable.size();
+		int index = m_distr.drawOnce();  // get random index according to probas of food types
 		FoodType ft = keys[index];
 		FoodDescription fd = m_foodTable[ft];
 		return std::make_unique<Food>(ft, fd);
