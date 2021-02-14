@@ -31,12 +31,12 @@ GameLevelsArray getGameLevels()
 {
 	using namespace NS_Snake;
 
-	FoodDescription fd_apple_def("apple.png", 1, 1, 0.5, actionCallbackBounce);
-	FoodDescription fd_banana_def("banana.png", 1, 1, 0.5, actionCallbackRockSideToSide);
-	FoodDescription fd_mushroom_def("mushroom.png", -10, 1, 0.5);
-	FoodDescription fd_ananas_def("ananas.png", 1, 3, 0.5);
-	FoodDescription fd_potion_def("potion.png", 1, 1, 0.5);
-	FoodDescription fd_portal_def("portal.png", 1, 1, 0.5, actionCallbackRotateForever);
+	FoodDescription fd_apple_def("apple.png", 1, 1, 0.5, false, actionCallbackBounce);
+	FoodDescription fd_banana_def("banana.png", 1, 1, 0.5, false, actionCallbackRockSideToSide);
+	FoodDescription fd_mushroom_def("mushroom.png", -10, 1, 0.5, false);
+	FoodDescription fd_ananas_def("ananas.png", 1, 3, 0.5, false);
+	FoodDescription fd_potion_def("potion.png", 1, 1, 0.5, false);
+	FoodDescription fd_portal_def("portal.png", 1, 1, 0.5, true, actionCallbackRotateForever);
 
 	FoodTable food_table_default = {
 		{ FoodType::APPLE, fd_apple_def },
@@ -48,8 +48,9 @@ GameLevelsArray getGameLevels()
 	};
 
 	FoodTable food_table1 = {
-	{ FoodType::APPLE,  FoodDescription("apple.png", 1, 1, 0.9, actionCallbackBounce) },
-	{ FoodType::PORTAL, FoodDescription("portal.png", 1, 1, 0.1, actionCallbackRotateForever) }
+	{ FoodType::APPLE,  FoodDescription("apple.png", 1, 1, 0.5, true, actionCallbackBounce) },
+	{ FoodType::BANANA, FoodDescription("banana.png", 1, 1, 0.5, true, actionCallbackRockSideToSide) },
+	{ FoodType::PORTAL, FoodDescription("portal.png", 1, 1, 0.5, false, actionCallbackRotateForever) }
 	};
 
 	FoodTable food_table2 = {

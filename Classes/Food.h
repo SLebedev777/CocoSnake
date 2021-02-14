@@ -28,14 +28,16 @@ namespace NS_Snake
 			image_name(""),
 			health(1),
 			score(1),
-			proba(0.0f)
+			proba(0.0f),
+			once(false)
 		{}
 
-		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba) :
+		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once) :
 			image_name(_image_name),
 			health(_health),
 			score(_score),
 			proba(_proba),
+			once(_once),
 			actionCallback([]() {return nullptr; })
 		{
 			if (proba < 0.0f || proba > 1.0f)
@@ -45,11 +47,13 @@ namespace NS_Snake
 		}
 
 
-		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, std::function<cocos2d::Action*()> action_callback) :
+		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once, 
+			std::function<cocos2d::Action*()> action_callback) :
 			image_name(_image_name),
 			health(_health),
 			score(_score),
 			proba(_proba),
+			once(_once),
 			actionCallback(action_callback)
 		{
 			if (proba < 0.0f || proba > 1.0f)
@@ -62,6 +66,8 @@ namespace NS_Snake
 		int health;
 		int score;
 		float proba;
+		bool once;  // flag to generate this food only once per level
+		//float lifetime;  // in seconds. If <=0 then endless.
 		std::function<cocos2d::Action* ()> actionCallback;
 	};
 
@@ -88,6 +94,7 @@ namespace NS_Snake
 		FoodType m_foodType;
 		int m_health;
 		int m_score;
+		//float m_lifetime;
 	};
 
 	typedef std::map<FoodType, FoodDescription> FoodTable;
@@ -101,7 +108,7 @@ namespace NS_Snake
 		FoodPtr makeRandom();	
 	private:
 		FoodTable m_foodTable;
-		std::vector<float> m_probas;
+		std::map<int, float> m_foodTypeProbas;
 		CategoricalDistribution m_distr;
 	};
 

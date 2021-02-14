@@ -67,11 +67,13 @@ namespace NS_Snake
 	FoodFactory::FoodFactory(const FoodTable& food_table) :
 		m_foodTable(food_table)
 	{
+		int i = 0;
 		for (const auto& it : m_foodTable)
 		{
-			m_probas.push_back(it.second.proba);
+			m_foodTypeProbas.insert({i, it.second.proba });
+			i++;
 		}
-		m_distr = CategoricalDistribution(m_probas);
+		m_distr = CategoricalDistribution(m_foodTypeProbas);
 	}
 
 
@@ -83,6 +85,20 @@ namespace NS_Snake
 		int index = m_distr.drawOnce();  // get random index according to probas of food types
 		FoodType ft = keys[index];
 		FoodDescription fd = m_foodTable[ft];
+		if (fd.once)
+		{
+			// TODO: FIXME: if food with index 0 has 'once' flag, it will continue generating!
+			FoodTable::iterator ft_iter = m_foodTable.find(ft);
+			m_foodTable.erase(ft_iter);
+			m_foodTypeProbas.clear();
+			int i = 0;
+			for (const auto& it : m_foodTable)
+			{
+				m_foodTypeProbas.insert({ i, it.second.proba });
+				i++;
+			}
+			m_distr = CategoricalDistribution(m_foodTypeProbas);
+		}
 		return std::make_unique<Food>(ft, fd);
 	}
 }

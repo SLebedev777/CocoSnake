@@ -7,7 +7,7 @@ CategoricalDistribution::CategoricalDistribution() :
 {}
 
 
-CategoricalDistribution::CategoricalDistribution(const std::vector<float>& cat_probas) :
+CategoricalDistribution::CategoricalDistribution(const std::map<int, float>& cat_probas) :
 	gen((std::random_device())())
 {
 	if (cat_probas.empty())
@@ -17,8 +17,9 @@ CategoricalDistribution::CategoricalDistribution(const std::vector<float>& cat_p
 	std::vector<float> probas;
 	for (const auto& p : cat_probas)
 	{
-		probas.push_back(p);
-		sum_probas += p;
+		categories.push_back(p.first);
+		probas.push_back(p.second);
+		sum_probas += p.second;
 	}
 	
 	// normalize probas to range [0.0; 1.0]
@@ -41,6 +42,7 @@ CategoricalDistribution& CategoricalDistribution::operator=(const CategoricalDis
 		return *this;
 
 	this->gen = other.gen;
+	this->categories = other.categories;
 	this->cdf = other.cdf;
 
 	return *this;
@@ -54,5 +56,6 @@ int CategoricalDistribution::drawOnce()
 	std::uniform_real_distribution<float> dis(0.0, 1.0);
 	float r = dis(gen);
 	auto lb = std::lower_bound(cdf.begin(), cdf.end(), r);
-	return lb - cdf.begin() - 1;
+	int index = lb - cdf.begin() - 1;
+	return categories[index];
 }

@@ -19,7 +19,7 @@ public:
 		uint16_t num_starting_walls = 5,
 		uint16_t score_needed = 10,
 		uint16_t max_time = -1,
-		float spawn_food_interval = 10.0f
+		float spawn_food_interval = 1.0f
 		):
 		m_number(number),
 		m_foodTable(food_table),
