@@ -34,10 +34,10 @@
     <ClCompile Include="Classes\GameGrid.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\Food.cpp">
+    <ClCompile Include="Classes\CategoricalDistribution.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\CategoricalDistribution.cpp">
+    <ClCompile Include="Classes\FoodImpl.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,13 +102,13 @@
     <ClInclude Include="Classes\Snake_types.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Food.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\Levels.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\CategoricalDistribution.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\IFood.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>

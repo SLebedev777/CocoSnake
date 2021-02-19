@@ -5,7 +5,7 @@
 #include "DirectedSprite.h"
 #include "Snake.h"
 #include "GameGrid.h"
-#include "Food.h"
+#include "IFood.h"
 #include "ui/CocosGUI.h"
 #include "CCHelpers.h"
 #include <string>
@@ -190,7 +190,7 @@ bool GameScene::init()
     snake->setWrapAround(false);
  
     // setup food factory according to level's food table settings
-    foodFactory = std::make_unique<FoodFactory>(currLevel.getFoodTable());
+    food_gen = std::make_unique<FoodGenerator>(currLevel.getFoodTable());
 
     // create some food
     for (int i = 0; i < currLevel.getNumStartingFood(); i++)
@@ -507,7 +507,7 @@ void GameScene::spawnFood(float dt, cocos2d::Node* parent)
     if (grid->getRandomFreeCell(cell))
     {
         grid->occupyCell(cell);
-        auto new_food = foodFactory->makeRandom();
+        auto new_food = food_gen->makeRandom();
         NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
         new_food->getSprite()->setPosition(Vec2(pos.x, pos.y));
         parent->addChild(new_food->getSprite());
@@ -534,7 +534,23 @@ void GameScene::update(float dt)
     {
         onGameLoose(nullptr);
     }
-
+    
+    for (auto food_iter = food.begin(); food_iter != food.end(); )
+    {
+        auto& f = *food_iter;
+        if (f->getLifetime() > 0 && f->getTimeElapsed() >= f->getLifetime())
+        {
+            auto food_pos = NS_Snake::Point2d::fromVec2(f->getSprite()->getPosition());
+            auto food_cell = grid->xyToCell(food_pos);
+            grid->releaseCell(food_cell);
+            food_iter = food.erase(food_iter);
+        }
+        else
+        {
+            ++food_iter;
+        }
+    }
+    
     for (auto& f : food)
     {
         if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getSprite()->getPosition()))
@@ -550,7 +566,7 @@ void GameScene::update(float dt)
                 score += f->getScore();
             }
 
-            if (f->getFoodType() == NS_Snake::FoodType::PORTAL)
+            if (f->getFoodSubType() == NS_Snake::StaticFoodType::PORTAL)
             {
                 snake->setWrapAround(true);
             }

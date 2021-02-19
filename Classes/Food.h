@@ -29,15 +29,17 @@ namespace NS_Snake
 			health(1),
 			score(1),
 			proba(0.0f),
-			once(false)
+			once(false),
+			lifetime(-1)
 		{}
 
-		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once) :
+		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once, float _lifetime=-1) :
 			image_name(_image_name),
 			health(_health),
 			score(_score),
 			proba(_proba),
 			once(_once),
+			lifetime(_lifetime),
 			actionCallback([]() {return nullptr; })
 		{
 			if (proba < 0.0f || proba > 1.0f)
@@ -47,13 +49,14 @@ namespace NS_Snake
 		}
 
 
-		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once, 
+		FoodDescription(const std::string& _image_name, int _health, int _score, float _proba, bool _once, float _lifetime,
 			std::function<cocos2d::Action*()> action_callback) :
 			image_name(_image_name),
 			health(_health),
 			score(_score),
 			proba(_proba),
 			once(_once),
+			lifetime(_lifetime),
 			actionCallback(action_callback)
 		{
 			if (proba < 0.0f || proba > 1.0f)
@@ -67,7 +70,7 @@ namespace NS_Snake
 		int score;
 		float proba;
 		bool once;  // flag to generate this food only once per level
-		//float lifetime;  // in seconds. If <=0 then endless.
+		float lifetime;  // in seconds. If <=0 then endless.
 		std::function<cocos2d::Action* ()> actionCallback;
 	};
 
@@ -87,14 +90,17 @@ namespace NS_Snake
 		void update() {}
 		Point2d getPosition() const { const auto pos = m_ccSprite->getPosition(); return Point2d(pos.x, pos.y); }
 		void setPosition(Point2d& pos) { m_ccSprite->setPosition(cocos2d::Vec2(pos.x, pos.y)); }
-		void setPosition(int x, int y) { m_ccSprite->setPosition(cocos2d::Vec2(x, y)); }
+		void setPosition(float x, float y) { m_ccSprite->setPosition(cocos2d::Vec2(x, y)); }
+		float getLifetime() const { return m_lifetime; }
+		float getTimeElapsed() const { return m_timeElapsed; }
 
 	private:
 		cocos2d::Sprite* m_ccSprite;
 		FoodType m_foodType;
 		int m_health;
 		int m_score;
-		//float m_lifetime;
+		float m_lifetime;  // limit of lifetime in seconds
+		float m_timeElapsed; // seconds since object was created
 	};
 
 	typedef std::map<FoodType, FoodDescription> FoodTable;

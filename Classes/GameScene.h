@@ -49,8 +49,8 @@ protected:
     GameLevel currLevel;
     NS_Snake::SnakePtr snake;
     NS_Snake::GameGridPtr grid;
-    NS_Snake::FoodFactoryPtr foodFactory;
-    std::list<NS_Snake::FoodPtr> food;
+    NS_Snake::FoodGeneratorPtr food_gen;
+    std::list<NS_Snake::IFoodPtr> food;
     float time_elapsed = 0.0f;
     int score;
 

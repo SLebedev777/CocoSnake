@@ -9,7 +9,9 @@ namespace NS_Snake
 	Food::Food(FoodType ft, const FoodDescription& food_descr) :
 		m_foodType(ft),
 		m_health(food_descr.health),
-		m_score(food_descr.score)
+		m_score(food_descr.score),
+		m_lifetime(food_descr.lifetime),
+		m_timeElapsed(0)
 	{
 		m_ccSprite = cocos2d::Sprite::createWithSpriteFrameName(food_descr.image_name);
 		if (!m_ccSprite)
@@ -20,19 +22,32 @@ namespace NS_Snake
 		auto action = food_descr.actionCallback();
 		if (action)
 			m_ccSprite->runAction(action);
+
+		if (m_lifetime)
+		{
+			m_ccSprite->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
+		}
 	}
 
 	Food::Food(const Food& other) :
 		m_foodType(other.getFoodType()),
 		m_health(other.getHealth()),
 		m_score(other.getScore()),
-		m_ccSprite(cocos2d::Sprite::createWithSpriteFrame(other.getSprite()->getSpriteFrame()))
+		m_ccSprite(cocos2d::Sprite::createWithSpriteFrame(other.getSprite()->getSpriteFrame())),
+		m_lifetime(other.m_lifetime),
+		m_timeElapsed(0)
 	{
 		auto parent = other.getSprite()->getParent();
 		if (parent)
 		{
 			parent->addChild(m_ccSprite);
 		}
+
+		if (m_lifetime)
+		{
+			m_ccSprite->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
+		}
+
 	}
 
 	Food& Food::operator=(const Food& other)
@@ -43,6 +58,8 @@ namespace NS_Snake
 		this->m_foodType = other.getFoodType();
 		this->m_health = other.getHealth();
 		this->m_score = other.getScore();
+		this->m_lifetime = other.getLifetime();
+		// TODO: m_timeElapsed ??? reset to 0 or remain as was in this?
 		m_ccSprite->release();
 		m_ccSprite = cocos2d::Sprite::createWithSpriteFrame(other.getSprite()->getSpriteFrame());
 
@@ -51,6 +68,12 @@ namespace NS_Snake
 		{
 			parent->addChild(m_ccSprite);
 		}
+		// TODO: Warning: what if food had not time limit, but assigned to it a copy of another food with time limit?
+		if (m_lifetime)
+		{
+			m_ccSprite->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
+		}
+
 
 		return *this;
 	}
@@ -87,7 +110,6 @@ namespace NS_Snake
 		FoodDescription fd = m_foodTable[ft];
 		if (fd.once)
 		{
-			// TODO: FIXME: if food with index 0 has 'once' flag, it will continue generating!
 			FoodTable::iterator ft_iter = m_foodTable.find(ft);
 			m_foodTable.erase(ft_iter);
 			m_foodTypeProbas.clear();

@@ -30,13 +30,13 @@ cocos2d::Action* actionCallbackRockSideToSide()
 GameLevelsArray getGameLevels()
 {
 	using namespace NS_Snake;
-
-	FoodDescription fd_apple_def("apple.png", 1, 1, 0.5, false, actionCallbackBounce);
-	FoodDescription fd_banana_def("banana.png", 1, 1, 0.5, false, actionCallbackRockSideToSide);
-	FoodDescription fd_mushroom_def("mushroom.png", -10, 1, 0.5, false);
-	FoodDescription fd_ananas_def("ananas.png", 1, 3, 0.5, false);
-	FoodDescription fd_potion_def("potion.png", 1, 1, 0.5, false);
-	FoodDescription fd_portal_def("portal.png", 1, 1, 0.5, true, actionCallbackRotateForever);
+	/*
+	FoodDescription fd_apple_def("apple.png", 1, 1, 0.5, false, -1, actionCallbackBounce);
+	FoodDescription fd_banana_def("banana.png", 1, 1, 0.5, false, -1, actionCallbackRockSideToSide);
+	FoodDescription fd_mushroom_def("mushroom.png", -10, 1, 0.5, false, -1);
+	FoodDescription fd_ananas_def("ananas.png", 1, 3, 0.5, false, -1);
+	FoodDescription fd_potion_def("potion.png", 1, 1, 0.5, false, -1);
+	FoodDescription fd_portal_def("portal.png", 1, 1, 0.5, true, -1, actionCallbackRotateForever);
 
 	FoodTable food_table_default = {
 		{ FoodType::APPLE, fd_apple_def },
@@ -48,20 +48,43 @@ GameLevelsArray getGameLevels()
 	};
 
 	FoodTable food_table1 = {
-	{ FoodType::APPLE,  FoodDescription("apple.png", 1, 1, 0.5, true, actionCallbackBounce) },
-	{ FoodType::BANANA, FoodDescription("banana.png", 1, 1, 0.5, true, actionCallbackRockSideToSide) },
-	{ FoodType::PORTAL, FoodDescription("portal.png", 1, 1, 0.5, false, actionCallbackRotateForever) }
+	{ FoodType::APPLE,  FoodDescription("apple.png", 1, 1, 0.5, false, 3, actionCallbackBounce) },
+	{ FoodType::BANANA, FoodDescription("banana.png", 1, 1, 0.5, false, 5, actionCallbackRockSideToSide) },
+	{ FoodType::PORTAL, FoodDescription("portal.png", 1, 1, 0.5, true, -1, actionCallbackRotateForever) }
 	};
 
 	FoodTable food_table2 = {
 	{ FoodType::BANANA, fd_banana_def },
 	};
+	*/
+	StaticFoodTable static_food_table1 = {
+		{ StaticFoodType::APPLE,  StaticFoodDescription("apple.png", 1, 1, false, 3, actionCallbackBounce) },
+		{ StaticFoodType::BANANA, StaticFoodDescription("banana.png", 1, 1, false, 5, actionCallbackRockSideToSide) },
+		{ StaticFoodType::PORTAL, StaticFoodDescription("portal.png", 1, 1, true, -1, actionCallbackRotateForever) }
+	};
+	MovingFoodTable moving_food_table1 = {
+		{MovingFoodType::BIRD, MovingFoodDescription()}
+	};
+	TypeToProbasMap static_food_probas1 = {
+		{StaticFoodType::APPLE, 0.5},
+		{StaticFoodType::BANANA, 0.3},
+		{StaticFoodType::PORTAL, 0.2}
+	};
+	TypeToProbasMap moving_food_probas1 = {
+		{MovingFoodType::BIRD, 0.0}
+	};
+	TypeToProbasMap food_type_probas1 = {
+		{FoodType::STATIC, 1.0},
+		{FoodType::MOVING, 0.0}
+	};
+
+	FoodTable food_table1(static_food_table1, moving_food_table1, static_food_probas1, moving_food_probas1, food_type_probas1);
 
 	GameLevelsArray levels;
 
 	levels.push_back(std::make_shared<GameLevel>(1, food_table1, "Level1", 3, 10, 5, 10, 120));
-	levels.push_back(std::make_shared<GameLevel>(2, food_table2, "Level2", 4, 8, 6, 15, 90));
-	levels.push_back(std::make_shared<GameLevel>(3, food_table_default, "Level3", 5, 7, 8, 20, 60));
+	levels.push_back(std::make_shared<GameLevel>(2, food_table1, "Level2", 4, 8, 6, 15, 90));
+	levels.push_back(std::make_shared<GameLevel>(3, food_table1, "Level3", 5, 7, 8, 20, 60));
 
 	return levels;
 

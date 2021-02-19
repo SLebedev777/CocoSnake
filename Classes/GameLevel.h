@@ -1,7 +1,7 @@
 #ifndef __GAMELEVEL_H__
 #define __GAMELEVEL_H__
 
-#include "Food.h"
+#include "IFood.h"
 #include <vector>
 #include <string>
 #include <memory>
