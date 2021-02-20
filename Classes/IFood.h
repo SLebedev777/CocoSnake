@@ -100,7 +100,7 @@ namespace NS_Snake
 
 
 	/// <summary>
-	/// Food base and derived
+	/// IFood base and derived
 	/// </summary>
 	class IFood
 	{
