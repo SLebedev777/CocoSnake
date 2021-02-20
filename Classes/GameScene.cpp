@@ -190,7 +190,7 @@ bool GameScene::init()
     snake->setWrapAround(false);
  
     // setup food factory according to level's food table settings
-    food_gen = std::make_unique<FoodGenerator>(currLevel.getFoodTable());
+    food_gen = std::make_unique<FoodGenerator>(currLevel.getFoodTable(), grid);
 
     // create some food
     for (int i = 0; i < currLevel.getNumStartingFood(); i++)
@@ -539,30 +539,18 @@ void GameScene::update(float dt)
     {
         auto& f = *food_iter;
         if (f->getLifetime() > 0 && f->getTimeElapsed() >= f->getLifetime())
-        {
-            auto food_pos = NS_Snake::Point2d::fromVec2(f->getSprite()->getPosition());
-            auto food_cell = grid->xyToCell(food_pos);
-            grid->releaseCell(food_cell);
             food_iter = food.erase(food_iter);
-        }
         else
-        {
             ++food_iter;
-        }
     }
     
     for (auto& f : food)
     {
         if (snake->head().getSprite()->getBoundingBox().containsPoint(f->getSprite()->getPosition()))
         {
-            auto food_pos = NS_Snake::Point2d::fromVec2(f->getSprite()->getPosition());
-            auto food_cell = grid->xyToCell(food_pos);
-            grid->releaseCell(food_cell);
-
             snake->addHealth(f->getHealth());
             if (f->getHealth() > 0)
             {
-                // change score
                 score += f->getScore();
             }
 

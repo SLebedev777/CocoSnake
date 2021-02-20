@@ -4,20 +4,22 @@
 #include <vector>
 #include <memory>
 #include "cocos2d.h"
+#include "GameGrid.h"
 
 namespace NS_Snake
 {
-	IFood::IFood(FoodType ft, FoodSubType fst, int health, int score, int lifetime) :
+	IFood::IFood(FoodType ft, FoodSubType fst, GameGridPtr grid, int health, int score, int lifetime) :
 		m_foodType(ft),
 		m_foodSubType(static_cast<FoodSubType>(fst)),
+		m_grid(grid),
 		m_health(health),
 		m_score(score),
 		m_lifetime(lifetime),
 		m_timeElapsed(0)
 	{}
 
-	StaticFood::StaticFood(StaticFoodType ft, const StaticFoodDescription& fd) :
-		IFood(FoodType::STATIC, static_cast<FoodSubType>(ft), fd.health, fd.score, fd.lifetime)
+	StaticFood::StaticFood(StaticFoodType ft, const StaticFoodDescription& fd, GameGridPtr grid) :
+		IFood(FoodType::STATIC, static_cast<FoodSubType>(ft), grid, fd.health, fd.score, fd.lifetime)
 	{
 		m_ccSprite = cocos2d::Sprite::createWithSpriteFrameName(fd.image_name);
 		if (!m_ccSprite)
@@ -37,26 +39,36 @@ namespace NS_Snake
 
 	StaticFood::~StaticFood()
 	{
+		auto food_pos = Point2d::fromVec2(m_ccSprite->getPosition());
+		auto food_cell = m_grid->xyToCell(food_pos);
+		m_grid->releaseCell(food_cell);
+
 		if (m_ccSprite)
 		{
 			m_ccSprite->removeFromParent();
 		}
+
 	}
 
 
-	MovingFood::MovingFood(MovingFoodType ft, const MovingFoodDescription& fd) :
-		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), fd.health, fd.score, fd.lifetime),
+	MovingFood::MovingFood(MovingFoodType ft, const MovingFoodDescription& fd, GameGridPtr grid) :
+		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), grid, fd.health, fd.score, fd.lifetime),
 		m_dirSprite(std::make_unique<DirectedSprite>(fd.m_dtfTable))
 	{
 	}
 
 	MovingFood::MovingFood(const MovingFood& other) :
-		IFood(FoodType::MOVING, static_cast<FoodSubType>(other.getFoodSubType()), other.getHealth(), other.getScore(), other.getLifetime()),
+		IFood(FoodType::MOVING, static_cast<FoodSubType>(other.getFoodSubType()), other.getGameGrid(), 
+			other.getHealth(), other.getScore(), other.getLifetime()),
 		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite()))
 	{}
 
 	MovingFood::~MovingFood()
 	{
+		auto food_pos = Point2d::fromVec2(getSprite()->getPosition());
+		auto food_cell = m_grid->xyToCell(food_pos);
+		m_grid->releaseCell(food_cell);
+
 	}
 
 
@@ -70,14 +82,15 @@ namespace NS_Snake
 	{}
 
 
-	IFoodFactory::IFoodFactory(const TypeToProbasMap& probas) :
+	IFoodFactory::IFoodFactory(const TypeToProbasMap& probas, GameGridPtr grid) :
 		m_foodTypeProbas(probas),
-		m_distr(probas)
+		m_distr(probas),
+		m_grid(grid)
 	{}
 
 
-	StaticFoodFactory::StaticFoodFactory(const TypeToProbasMap& probas, const StaticFoodTable& food_table) :
-		IFoodFactory(probas),
+	StaticFoodFactory::StaticFoodFactory(const TypeToProbasMap& probas, const StaticFoodTable& food_table, GameGridPtr grid) :
+		IFoodFactory(probas, grid),
 		m_foodTable(food_table)
 	{
 	}
@@ -96,12 +109,12 @@ namespace NS_Snake
 			m_foodTypeProbas.erase(fp_iter);
 			m_distr = CategoricalDistribution(m_foodTypeProbas);
 		}
-		return std::make_unique<StaticFood>(ft, fd);
+		return std::make_unique<StaticFood>(ft, fd, m_grid);
 	}
 
 
-	MovingFoodFactory::MovingFoodFactory(const TypeToProbasMap& probas, const MovingFoodTable& food_table) :
-		IFoodFactory(probas),
+	MovingFoodFactory::MovingFoodFactory(const TypeToProbasMap& probas, const MovingFoodTable& food_table, GameGridPtr grid) :
+		IFoodFactory(probas, grid),
 		m_foodTable(food_table)
 	{
 	}
@@ -119,15 +132,16 @@ namespace NS_Snake
 			m_foodTypeProbas.erase(fp_iter);
 			m_distr = CategoricalDistribution(m_foodTypeProbas);
 		}
-		return std::make_unique<MovingFood>(ft, fd);
+		return std::make_unique<MovingFood>(ft, fd, m_grid);
 	}
 
 	
-	FoodGenerator::FoodGenerator(const FoodTable& t) :
+	FoodGenerator::FoodGenerator(const FoodTable& t, GameGridPtr grid) :
 		m_foodTable(t),
-		m_staticFoodFactory(std::make_unique<StaticFoodFactory>(t.staticFoodProbas, t.staticFoodTable)),
-		m_movingFoodFactory(std::make_unique<MovingFoodFactory>(t.movingFoodProbas, t.movingFoodTable)),
-		m_foodTypeDistr(t.foodTypeProbas)
+		m_staticFoodFactory(std::make_unique<StaticFoodFactory>(t.staticFoodProbas, t.staticFoodTable, grid)),
+		m_movingFoodFactory(std::make_unique<MovingFoodFactory>(t.movingFoodProbas, t.movingFoodTable, grid)),
+		m_foodTypeDistr(t.foodTypeProbas),
+		m_grid(grid)
 	{}
 
 	IFoodPtr FoodGenerator::makeRandom()

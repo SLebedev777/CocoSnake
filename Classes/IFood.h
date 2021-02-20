@@ -116,7 +116,7 @@ namespace NS_Snake
 	class IFood
 	{
 	public:
-		IFood(FoodType ft, FoodSubType fst, int health, int score, int lifetime);
+		IFood(FoodType ft, FoodSubType fst, GameGridPtr grid, int health, int score, int lifetime);
 		virtual ~IFood() {}
 
 		virtual cocos2d::Sprite* getSprite() const = 0;
@@ -131,8 +131,10 @@ namespace NS_Snake
 		void setPosition(float x, float y) { getSprite()->setPosition(cocos2d::Vec2(x, y)); }
 		float getLifetime() const { return m_lifetime; }
 		float getTimeElapsed() const { return m_timeElapsed; }
+		GameGridPtr getGameGrid() const { return m_grid; }
 
 	protected:
+		GameGridPtr m_grid;
 		FoodType m_foodType;  // static or moving
 		FoodSubType m_foodSubType;
 		int m_health;
@@ -145,7 +147,7 @@ namespace NS_Snake
 	class StaticFood : public IFood
 	{
 	public:
-		StaticFood(StaticFoodType ft, const StaticFoodDescription& fd);
+		StaticFood(StaticFoodType ft, const StaticFoodDescription& fd, GameGridPtr grid);
 		// Rule of Three: make copy ctor and operator=
 		cocos2d::Sprite* getSprite() const override { return m_ccSprite; }
 		void update() override {}
@@ -159,7 +161,7 @@ namespace NS_Snake
 	class MovingFood : public IFood
 	{
 	public:
-		MovingFood(MovingFoodType ft, const MovingFoodDescription& fd);
+		MovingFood(MovingFoodType ft, const MovingFoodDescription& fd, GameGridPtr grid);
 		// Rule of Three: make copy ctor and operator=
 		MovingFood(const MovingFood& other);
 
@@ -206,19 +208,19 @@ namespace NS_Snake
 	class IFoodFactory
 	{
 	public:
-		IFoodFactory(const TypeToProbasMap& probas);
+		IFoodFactory(const TypeToProbasMap& probas, GameGridPtr grid);
 		virtual IFoodPtr makeRandom() = 0;
 
 	protected:
 		TypeToProbasMap m_foodTypeProbas;
 		CategoricalDistribution m_distr;
-
+		GameGridPtr m_grid;
 	};
 
 	class StaticFoodFactory : public IFoodFactory
 	{
 	public:
-		StaticFoodFactory(const TypeToProbasMap& probas, const StaticFoodTable& food_table);
+		StaticFoodFactory(const TypeToProbasMap& probas, const StaticFoodTable& food_table, GameGridPtr grid);
 		IFoodPtr makeRandom() override;	
 	private:
 		StaticFoodTable m_foodTable;
@@ -227,7 +229,7 @@ namespace NS_Snake
 	class MovingFoodFactory : public IFoodFactory
 	{
 	public:
-		MovingFoodFactory(const TypeToProbasMap& probas, const MovingFoodTable& food_table);
+		MovingFoodFactory(const TypeToProbasMap& probas, const MovingFoodTable& food_table, GameGridPtr grid);
 		IFoodPtr makeRandom() override;
 	private:
 		MovingFoodTable m_foodTable;
@@ -239,13 +241,14 @@ namespace NS_Snake
 	class FoodGenerator
 	{
 	public:
-		FoodGenerator(const FoodTable& t);
+		FoodGenerator(const FoodTable& t, GameGridPtr grid);
 		IFoodPtr makeRandom();
 	private:
 		FoodTable m_foodTable;
 		IFoodFactoryPtr m_staticFoodFactory;
 		IFoodFactoryPtr m_movingFoodFactory;
 		CategoricalDistribution m_foodTypeDistr;
+		GameGridPtr m_grid;
 	};
 	
 }
