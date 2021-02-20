@@ -45,13 +45,29 @@ namespace NS_Snake
 
 
 	MovingFood::MovingFood(MovingFoodType ft, const MovingFoodDescription& fd) :
-		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), fd.health, fd.score, fd.lifetime)
+		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), fd.health, fd.score, fd.lifetime),
+		m_dirSprite(std::make_unique<DirectedSprite>(fd.m_dtfTable))
 	{
 	}
+
+	MovingFood::MovingFood(const MovingFood& other) :
+		IFood(FoodType::MOVING, static_cast<FoodSubType>(other.getFoodSubType()), other.getHealth(), other.getScore(), other.getLifetime()),
+		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite()))
+	{}
 
 	MovingFood::~MovingFood()
 	{
 	}
+
+
+	MovingFoodDescription::MovingFoodDescription(const MovingFoodDescription& other):
+		m_dtfTable(other.m_dtfTable),
+		health(other.health),
+		score(other.score),
+		once(other.once),
+		lifetime(other.lifetime),
+		actionCallback(other.actionCallback)
+	{}
 
 
 	IFoodFactory::IFoodFactory(const TypeToProbasMap& probas) :
@@ -69,9 +85,6 @@ namespace NS_Snake
 
 	IFoodPtr StaticFoodFactory::makeRandom()
 	{
-		std::vector<StaticFoodType> keys;
-		for (const auto& it : m_foodTable)
-			keys.push_back(it.first);
 		int index = m_distr.drawOnce();  // get random index according to probas of food types
 		auto ft = static_cast<StaticFoodType>(index);
 		auto fd = m_foodTable[ft];
@@ -93,14 +106,10 @@ namespace NS_Snake
 	{
 	}
 
-
 	IFoodPtr MovingFoodFactory::makeRandom()
 	{
-		std::vector<MovingFoodType> keys;
-		for (const auto& it : m_foodTable)
-			keys.push_back(it.first);
 		int index = m_distr.drawOnce();  // get random index according to probas of food types
-		auto ft = keys[index];
+		auto ft = static_cast<MovingFoodType>(index);
 		auto fd = m_foodTable[ft];
 		if (fd.once)
 		{

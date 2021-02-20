@@ -84,18 +84,29 @@ namespace NS_Snake
 	struct MovingFoodDescription
 	{
 		MovingFoodDescription() :
-			image_name(""),
 			health(1),
 			score(1),
 			once(false),
 			lifetime(-1)
 		{}
 
-		std::string image_name;
+		MovingFoodDescription(DirToFrameTable& _dir_to_frame_table, int _health, int _score, bool _once, float _lifetime = -1) :
+			m_dtfTable(_dir_to_frame_table),
+			health(_health),
+			score(_score),
+			once(_once),
+			lifetime(_lifetime),
+			actionCallback([]() {return nullptr; })
+		{}
+
+		MovingFoodDescription(const MovingFoodDescription& other);
+
+		DirToFrameTable m_dtfTable;
 		int health;
 		int score;
 		bool once;  // flag to generate this food only once per level
 		float lifetime;  // in seconds. If <=0 then endless.
+		std::function<cocos2d::Action* ()> actionCallback;
 	};
 
 
@@ -135,7 +146,7 @@ namespace NS_Snake
 	{
 	public:
 		StaticFood(StaticFoodType ft, const StaticFoodDescription& fd);
-
+		// Rule of Three: make copy ctor and operator=
 		cocos2d::Sprite* getSprite() const override { return m_ccSprite; }
 		void update() override {}
 		~StaticFood();
@@ -149,11 +160,15 @@ namespace NS_Snake
 	{
 	public:
 		MovingFood(MovingFoodType ft, const MovingFoodDescription& fd);
+		// Rule of Three: make copy ctor and operator=
+		MovingFood(const MovingFood& other);
+
 		~MovingFood();
 
-		cocos2d::Sprite* getSprite() const override { return nullptr; /* m_dirSprite->getSprite(); */ }
+		cocos2d::Sprite* getSprite() const override { return m_dirSprite->getSprite(); }
 		void update() override {};
 
+		const DirectedSprite& getDirectedSprite() const { return *m_dirSprite; }
 	private:
 		DirectedSpritePtr m_dirSprite;
 	};

@@ -117,12 +117,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
+    // load art into sprite cache
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("snake.plist");
+
     // load and init Levels Manager singleton
     GameLevelManager::getInstance().setGameLevelsArray(getGameLevels());
 
-    // load art into sprite cache
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("snake.plist");
-    
     // create a scene. it's an autorelease object
     auto main_menu_scene = MainMenuScene::createScene();
 

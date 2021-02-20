@@ -62,8 +62,10 @@ GameLevelsArray getGameLevels()
 		{ StaticFoodType::BANANA, StaticFoodDescription("banana.png", 1, 1, false, 5, actionCallbackRockSideToSide) },
 		{ StaticFoodType::PORTAL, StaticFoodDescription("portal.png", 1, 1, true, -1, actionCallbackRotateForever) }
 	};
+
+	DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
 	MovingFoodTable moving_food_table1 = {
-		{MovingFoodType::BIRD, MovingFoodDescription()}
+		{MovingFoodType::BIRD, MovingFoodDescription(snakeDFT_head, 1, 1, false)}
 	};
 	TypeToProbasMap static_food_probas1 = {
 		{StaticFoodType::APPLE, 0.5},
@@ -71,11 +73,11 @@ GameLevelsArray getGameLevels()
 		{StaticFoodType::PORTAL, 0.2}
 	};
 	TypeToProbasMap moving_food_probas1 = {
-		{MovingFoodType::BIRD, 0.0}
+		{MovingFoodType::BIRD, 0.5}
 	};
 	TypeToProbasMap food_type_probas1 = {
-		{FoodType::STATIC, 1.0},
-		{FoodType::MOVING, 0.0}
+		{FoodType::STATIC, 0.7},
+		{FoodType::MOVING, 0.3}
 	};
 
 	FoodTable food_table1(static_food_table1, moving_food_table1, static_food_probas1, moving_food_probas1, food_type_probas1);
