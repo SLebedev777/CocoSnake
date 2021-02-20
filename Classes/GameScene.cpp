@@ -564,6 +564,8 @@ void GameScene::update(float dt)
             spawnFood(0, this->getChildByTag(TAG_GAME_LAYER));
             break;
         }
+
+        f->update();
     }
 
     if (score >= currLevel.getScoreNeeded())

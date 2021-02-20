@@ -55,13 +55,24 @@ namespace NS_Snake
 		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), grid, fd.health, fd.score, fd.lifetime),
 		m_dirSprite(std::make_unique<DirectedSprite>(fd.m_dtfTable))
 	{
+		if (m_lifetime)
+		{
+			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
+		}
+		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 2.0f, "MoveCallback");
 	}
 
 	MovingFood::MovingFood(const MovingFood& other) :
 		IFood(FoodType::MOVING, static_cast<FoodSubType>(other.getFoodSubType()), other.getGameGrid(), 
 			other.getHealth(), other.getScore(), other.getLifetime()),
 		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite()))
-	{}
+	{
+		if (m_lifetime)
+		{
+			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
+		}
+		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 2.0f, "MoveCallback");
+	}
 
 	MovingFood::~MovingFood()
 	{
@@ -71,6 +82,25 @@ namespace NS_Snake
 
 	}
 
+	void MovingFood::update()
+	{
+	}
+
+	void MovingFood::moveCallback(float dt)
+	{
+		auto food_pos = Point2d::fromVec2(getSprite()->getPosition());
+		auto food_cell = m_grid->xyToCell(food_pos);
+		int shift_cix = int(m_timeElapsed) % 2 == 0 ? 1 : -1;
+		int shift_ciy = int(m_timeElapsed) % 2 == 0 ? -1 : 1;
+		auto new_cell = GameGrid::Cell(food_cell.cix + shift_cix, food_cell.ciy + shift_ciy);
+		new_cell = m_grid->boundToRect(new_cell);
+		if (m_grid->isCellOccupied(new_cell))
+			return;
+		m_grid->releaseCell(food_cell);
+		m_grid->occupyCell(new_cell);
+		getSprite()->setPosition(m_grid->cellToXyCenter(new_cell).toVec2());
+
+	}
 
 	MovingFoodDescription::MovingFoodDescription(const MovingFoodDescription& other):
 		m_dtfTable(other.m_dtfTable),

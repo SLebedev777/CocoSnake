@@ -168,8 +168,9 @@ namespace NS_Snake
 		~MovingFood();
 
 		cocos2d::Sprite* getSprite() const override { return m_dirSprite->getSprite(); }
-		void update() override {};
+		void update() override;
 
+		void moveCallback(float dt);
 		const DirectedSprite& getDirectedSprite() const { return *m_dirSprite; }
 	private:
 		DirectedSpritePtr m_dirSprite;
