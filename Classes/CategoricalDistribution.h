@@ -8,6 +8,7 @@ class CategoricalDistribution
 public:
 	CategoricalDistribution();
 	CategoricalDistribution(const std::map<int, float>& cat_probas);
+	CategoricalDistribution(const CategoricalDistribution& other);
 	CategoricalDistribution& operator=(const CategoricalDistribution& other);
 	int drawOnce();
 

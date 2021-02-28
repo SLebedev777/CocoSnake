@@ -36,6 +36,12 @@ CategoricalDistribution::CategoricalDistribution(const std::map<int, float>& cat
 	}
 }
 
+CategoricalDistribution::CategoricalDistribution(const CategoricalDistribution& other) :
+	gen((std::random_device())()),
+	categories(other.categories),
+	cdf(other.cdf)
+{}
+
 CategoricalDistribution& CategoricalDistribution::operator=(const CategoricalDistribution& other)
 {
 	if (this == &other)
