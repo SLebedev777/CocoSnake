@@ -8,7 +8,7 @@
 
 namespace NS_Snake
 {
-	enum class SPRITE_DIRECTION
+	enum SPRITE_DIRECTION
 	{
 		NONE = 0,
 		UP = 1,

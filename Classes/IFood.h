@@ -87,26 +87,29 @@ namespace NS_Snake
 			health(1),
 			score(1),
 			once(false),
-			lifetime(-1)
+			lifetime(-1),
+			moveProba(1.0)
 		{}
 
-		MovingFoodDescription(DirToFrameTable& _dir_to_frame_table, int _health, int _score, bool _once, float _lifetime = -1) :
-			m_dtfTable(_dir_to_frame_table),
+		MovingFoodDescription(DirToFrameTable& _dir_to_frame_table, int _health, int _score, bool _once, float _lifetime = -1, float _move_proba=1.0) :
+			dtfTable(_dir_to_frame_table),
 			health(_health),
 			score(_score),
 			once(_once),
 			lifetime(_lifetime),
+			moveProba(_move_proba),
 			actionCallback([]() {return nullptr; })
 		{}
 
 		MovingFoodDescription(const MovingFoodDescription& other);
 
-		DirToFrameTable m_dtfTable;
+		DirToFrameTable dtfTable;
 		int health;
 		int score;
 		bool once;  // flag to generate this food only once per level
 		float lifetime;  // in seconds. If <=0 then endless.
 		std::function<cocos2d::Action* ()> actionCallback;
+		float moveProba;
 	};
 
 
@@ -172,8 +175,12 @@ namespace NS_Snake
 
 		void moveCallback(float dt);
 		const DirectedSprite& getDirectedSprite() const { return *m_dirSprite; }
+		const CategoricalDistribution& getMoveDistr() const { return m_moveDistr; }
+		const CategoricalDistribution& getChooseDirectionDistr() const { return m_chooseDirectionDistr; }
 	private:
 		DirectedSpritePtr m_dirSprite;
+		CategoricalDistribution m_moveDistr;
+		CategoricalDistribution m_chooseDirectionDistr;
 	};
 
 	/// <summary>

@@ -30,42 +30,15 @@ cocos2d::Action* actionCallbackRockSideToSide()
 GameLevelsArray getGameLevels()
 {
 	using namespace NS_Snake;
-	/*
-	FoodDescription fd_apple_def("apple.png", 1, 1, 0.5, false, -1, actionCallbackBounce);
-	FoodDescription fd_banana_def("banana.png", 1, 1, 0.5, false, -1, actionCallbackRockSideToSide);
-	FoodDescription fd_mushroom_def("mushroom.png", -10, 1, 0.5, false, -1);
-	FoodDescription fd_ananas_def("ananas.png", 1, 3, 0.5, false, -1);
-	FoodDescription fd_potion_def("potion.png", 1, 1, 0.5, false, -1);
-	FoodDescription fd_portal_def("portal.png", 1, 1, 0.5, true, -1, actionCallbackRotateForever);
-
-	FoodTable food_table_default = {
-		{ FoodType::APPLE, fd_apple_def },
-		{ FoodType::BANANA, fd_banana_def },
-		{ FoodType::MUSHROOM, fd_mushroom_def },
-		{ FoodType::ANANAS, fd_ananas_def },
-		{ FoodType::POTION, fd_potion_def },
-		{ FoodType::PORTAL, fd_portal_def }
-	};
-
-	FoodTable food_table1 = {
-	{ FoodType::APPLE,  FoodDescription("apple.png", 1, 1, 0.5, false, 3, actionCallbackBounce) },
-	{ FoodType::BANANA, FoodDescription("banana.png", 1, 1, 0.5, false, 5, actionCallbackRockSideToSide) },
-	{ FoodType::PORTAL, FoodDescription("portal.png", 1, 1, 0.5, true, -1, actionCallbackRotateForever) }
-	};
-
-	FoodTable food_table2 = {
-	{ FoodType::BANANA, fd_banana_def },
-	};
-	*/
 	StaticFoodTable static_food_table1 = {
 		{ StaticFoodType::APPLE,  StaticFoodDescription("apple.png", 1, 1, false, 3, actionCallbackBounce) },
 		{ StaticFoodType::BANANA, StaticFoodDescription("banana.png", 1, 1, false, 5, actionCallbackRockSideToSide) },
 		{ StaticFoodType::PORTAL, StaticFoodDescription("portal.png", 1, 1, true, -1, actionCallbackRotateForever) }
 	};
 
-	DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
+	DirToFrameTable DFT_butterfly = dirToFrameTemplate("butterfly.png");
 	MovingFoodTable moving_food_table1 = {
-		{MovingFoodType::BIRD, MovingFoodDescription(snakeDFT_head, 1, 1, false)}
+		{MovingFoodType::BUTTERFLY, MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7)}
 	};
 	TypeToProbasMap static_food_probas1 = {
 		{StaticFoodType::APPLE, 0.5},
@@ -73,11 +46,11 @@ GameLevelsArray getGameLevels()
 		{StaticFoodType::PORTAL, 0.2}
 	};
 	TypeToProbasMap moving_food_probas1 = {
-		{MovingFoodType::BIRD, 0.5}
+		{MovingFoodType::BUTTERFLY, 0.5}
 	};
 	TypeToProbasMap food_type_probas1 = {
-		{FoodType::STATIC, 0.7},
-		{FoodType::MOVING, 0.3}
+		{FoodType::STATIC, 0.9},
+		{FoodType::MOVING, 0.1}
 	};
 
 	FoodTable food_table1(static_food_table1, moving_food_table1, static_food_probas1, moving_food_probas1, food_type_probas1);

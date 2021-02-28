@@ -1,10 +1,12 @@
 #include "IFood.h"
 #include <stdexcept>
+#include <cstdlib>
 #include <ctime>
 #include <vector>
 #include <memory>
 #include "cocos2d.h"
 #include "GameGrid.h"
+
 
 namespace NS_Snake
 {
@@ -53,25 +55,36 @@ namespace NS_Snake
 
 	MovingFood::MovingFood(MovingFoodType ft, const MovingFoodDescription& fd, GameGridPtr grid) :
 		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), grid, fd.health, fd.score, fd.lifetime),
-		m_dirSprite(std::make_unique<DirectedSprite>(fd.m_dtfTable))
+		m_dirSprite(std::make_unique<DirectedSprite>(fd.dtfTable)),
+		m_moveDistr(TypeToProbasMap({{0, 1.0 - fd.moveProba}, {1, fd.moveProba}})),
+		m_chooseDirectionDistr(TypeToProbasMap({{SPRITE_DIRECTION::UP, 1.0}, 
+			{SPRITE_DIRECTION::DOWN, 1.0}, {SPRITE_DIRECTION::RIGHT, 1.0}, {SPRITE_DIRECTION::LEFT, 1.0}}))
 	{
+		auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.8f, 1.0f);
+		auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f, 1.0f);
+		auto delay = cocos2d::DelayTime::create(1);
+		auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr);
+		getSprite()->runAction(cocos2d::RepeatForever::create(seq));
+
 		if (m_lifetime)
 		{
 			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
 		}
-		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 2.0f, "MoveCallback");
+		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 1.0f, "MoveCallback");
 	}
 
 	MovingFood::MovingFood(const MovingFood& other) :
 		IFood(FoodType::MOVING, static_cast<FoodSubType>(other.getFoodSubType()), other.getGameGrid(), 
 			other.getHealth(), other.getScore(), other.getLifetime()),
-		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite()))
+		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite())),
+		m_moveDistr(other.getMoveDistr()),
+		m_chooseDirectionDistr(other.getChooseDirectionDistr())
 	{
 		if (m_lifetime)
 		{
 			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
 		}
-		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 2.0f, "MoveCallback");
+		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 0.5f, "MoveCallback");
 	}
 
 	MovingFood::~MovingFood()
@@ -88,27 +101,59 @@ namespace NS_Snake
 
 	void MovingFood::moveCallback(float dt)
 	{
+		// proba not to make movement
+		if (m_moveDistr.drawOnce() == 0)
+			return;
+
 		auto food_pos = Point2d::fromVec2(getSprite()->getPosition());
 		auto food_cell = m_grid->xyToCell(food_pos);
-		int shift_cix = int(m_timeElapsed) % 2 == 0 ? 1 : -1;
-		int shift_ciy = int(m_timeElapsed) % 2 == 0 ? -1 : 1;
+
+		int shift_cix = 0;
+		int shift_ciy = 0;
+		auto new_dir = static_cast<SPRITE_DIRECTION>(m_chooseDirectionDistr.drawOnce());
+		switch (new_dir)
+		{
+		case SPRITE_DIRECTION::UP:
+			shift_ciy = 1;
+			break;
+		case SPRITE_DIRECTION::DOWN:
+			shift_ciy = -1;
+			break;
+		case SPRITE_DIRECTION::RIGHT:
+			shift_cix = 1;
+			break;
+		case SPRITE_DIRECTION::LEFT:
+			shift_cix = -1;
+			break;
+
+		}
 		auto new_cell = GameGrid::Cell(food_cell.cix + shift_cix, food_cell.ciy + shift_ciy);
 		new_cell = m_grid->boundToRect(new_cell);
 		if (m_grid->isCellOccupied(new_cell))
 			return;
 		m_grid->releaseCell(food_cell);
 		m_grid->occupyCell(new_cell);
-		getSprite()->setPosition(m_grid->cellToXyCenter(new_cell).toVec2());
+		float move_time = 0.4f;
+		auto mover = cocos2d::MoveTo::create(move_time, m_grid->cellToXyCenter(new_cell).toVec2());
+		auto bouncer = cocos2d::ScaleTo::create(0.25f * move_time, 0.7f, 1.0f);
+		auto unbouncer = cocos2d::ScaleTo::create(0.25f * move_time, 1.0f, 1.0f);
+		auto delay = cocos2d::DelayTime::create(0.5f * move_time);
+		auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, /*delay,*/ nullptr);
 
+		getSprite()->runAction(mover);
+		getSprite()->runAction(seq);
+		m_dirSprite->setDirPair({ new_dir, new_dir });
+		m_dirSprite->update();
 	}
 
 	MovingFoodDescription::MovingFoodDescription(const MovingFoodDescription& other):
-		m_dtfTable(other.m_dtfTable),
+		dtfTable(other.dtfTable),
 		health(other.health),
 		score(other.score),
 		once(other.once),
 		lifetime(other.lifetime),
-		actionCallback(other.actionCallback)
+		actionCallback(other.actionCallback),
+		moveProba(other.moveProba)
 	{}
 
 
