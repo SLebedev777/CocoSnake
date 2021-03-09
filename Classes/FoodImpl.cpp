@@ -56,21 +56,21 @@ namespace NS_Snake
 	MovingFood::MovingFood(MovingFoodType ft, const MovingFoodDescription& fd, GameGridPtr grid) :
 		IFood(FoodType::MOVING, static_cast<FoodSubType>(ft), grid, fd.health, fd.score, fd.lifetime),
 		m_dirSprite(std::make_unique<DirectedSprite>(fd.dtfTable)),
-		m_moveDistr(TypeToProbasMap({{0, 1.0 - fd.moveProba}, {1, fd.moveProba}})),
-		m_chooseDirectionDistr(TypeToProbasMap({{SPRITE_DIRECTION::UP, 1.0}, 
-			{SPRITE_DIRECTION::DOWN, 1.0}, {SPRITE_DIRECTION::RIGHT, 1.0}, {SPRITE_DIRECTION::LEFT, 1.0}}))
+		m_moveDistr(TypeToProbasMap({ {0, 1.0 - fd.moveProba}, {1, fd.moveProba} })),
+		m_chooseDirectionDistr(TypeToProbasMap({ {SPRITE_DIRECTION::UP, 1.0}, 
+												 {SPRITE_DIRECTION::DOWN, 1.0}, 
+												 {SPRITE_DIRECTION::RIGHT, 1.0}, 
+												 {SPRITE_DIRECTION::LEFT, 1.0} })),
+		m_moveActionCallback(fd.moveActionCallback),
+		m_moveDuration(fd.moveDuration)
 	{
-		auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.8f, 1.0f);
-		auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f, 1.0f);
-		auto delay = cocos2d::DelayTime::create(1);
-		auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr);
-		getSprite()->runAction(cocos2d::RepeatForever::create(seq));
+		if (fd.idleActionCallback)
+			getSprite()->runAction(fd.idleActionCallback());
 
 		if (m_lifetime)
-		{
 			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
-		}
-		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 1.0f, "MoveCallback");
+
+		getSprite()->schedule([this](float dt) { moveCallback(dt); }, m_moveDuration, "MoveCallback");
 	}
 
 	MovingFood::MovingFood(const MovingFood& other) :
@@ -78,12 +78,13 @@ namespace NS_Snake
 			other.getHealth(), other.getScore(), other.getLifetime()),
 		m_dirSprite(std::make_unique<DirectedSprite>(other.getDirectedSprite())),
 		m_moveDistr(other.getMoveDistr()),
-		m_chooseDirectionDistr(other.getChooseDirectionDistr())
+		m_chooseDirectionDistr(other.getChooseDirectionDistr()),
+		m_moveActionCallback(other.getMoveActionCallback()),
+		m_moveDuration(other.getMoveDuration())
 	{
 		if (m_lifetime)
-		{
 			getSprite()->schedule([this](float dt) { m_timeElapsed++; }, 1.0f, "FoodTimer");
-		}
+
 		getSprite()->schedule([this](float dt) { moveCallback(dt); }, 0.5f, "MoveCallback");
 	}
 
@@ -125,7 +126,6 @@ namespace NS_Snake
 		case SPRITE_DIRECTION::LEFT:
 			shift_cix = -1;
 			break;
-
 		}
 		auto new_cell = GameGrid::Cell(food_cell.cix + shift_cix, food_cell.ciy + shift_ciy);
 		new_cell = m_grid->boundToRect(new_cell);
@@ -133,15 +133,10 @@ namespace NS_Snake
 			return;
 		m_grid->releaseCell(food_cell);
 		m_grid->occupyCell(new_cell);
-		float move_time = 0.4f;
-		auto mover = cocos2d::MoveTo::create(move_time, m_grid->cellToXyCenter(new_cell).toVec2());
-		auto bouncer = cocos2d::ScaleTo::create(0.25f * move_time, 0.7f, 1.0f);
-		auto unbouncer = cocos2d::ScaleTo::create(0.25f * move_time, 1.0f, 1.0f);
-		auto delay = cocos2d::DelayTime::create(0.5f * move_time);
-		auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, /*delay,*/ nullptr);
 
-		getSprite()->runAction(mover);
-		getSprite()->runAction(seq);
+		if (m_moveActionCallback)
+			getSprite()->runAction(m_moveActionCallback(m_moveDuration, m_grid->cellToXyCenter(new_cell).toVec2()));
+
 		m_dirSprite->setDirPair({ new_dir, new_dir });
 		m_dirSprite->update();
 	}
@@ -152,8 +147,10 @@ namespace NS_Snake
 		score(other.score),
 		once(other.once),
 		lifetime(other.lifetime),
-		actionCallback(other.actionCallback),
-		moveProba(other.moveProba)
+		idleActionCallback(other.idleActionCallback),
+		moveActionCallback(other.moveActionCallback),
+		moveProba(other.moveProba),
+		moveDuration(other.moveDuration)
 	{}
 
 

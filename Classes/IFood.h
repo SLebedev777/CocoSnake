@@ -88,17 +88,23 @@ namespace NS_Snake
 			score(1),
 			once(false),
 			lifetime(-1),
-			moveProba(1.0)
+			moveProba(1.0),
+			moveDuration(1.0)
 		{}
 
-		MovingFoodDescription(DirToFrameTable& _dir_to_frame_table, int _health, int _score, bool _once, float _lifetime = -1, float _move_proba=1.0) :
+		MovingFoodDescription(DirToFrameTable& _dir_to_frame_table, int _health, int _score, 
+			bool _once, float _lifetime = -1, float _move_proba=1.0,  float _move_duration=1.0,
+			std::function<cocos2d::Action* ()> idle_action_callback = nullptr,
+			std::function<cocos2d::Action* (float, cocos2d::Vec2)> move_action_callback = nullptr) :
 			dtfTable(_dir_to_frame_table),
 			health(_health),
 			score(_score),
 			once(_once),
 			lifetime(_lifetime),
 			moveProba(_move_proba),
-			actionCallback([]() {return nullptr; })
+			moveDuration(_move_duration),
+			idleActionCallback(idle_action_callback),
+			moveActionCallback(move_action_callback)
 		{}
 
 		MovingFoodDescription(const MovingFoodDescription& other);
@@ -108,8 +114,10 @@ namespace NS_Snake
 		int score;
 		bool once;  // flag to generate this food only once per level
 		float lifetime;  // in seconds. If <=0 then endless.
-		std::function<cocos2d::Action* ()> actionCallback;
+		std::function<cocos2d::Action* ()> idleActionCallback;
+		std::function<cocos2d::Action* (float, cocos2d::Vec2)> moveActionCallback;
 		float moveProba;
+		float moveDuration;
 	};
 
 
@@ -177,10 +185,15 @@ namespace NS_Snake
 		const DirectedSprite& getDirectedSprite() const { return *m_dirSprite; }
 		const CategoricalDistribution& getMoveDistr() const { return m_moveDistr; }
 		const CategoricalDistribution& getChooseDirectionDistr() const { return m_chooseDirectionDistr; }
+		std::function<cocos2d::Action* (float, cocos2d::Vec2)> getMoveActionCallback() const { return m_moveActionCallback; }
+		float getMoveDuration() const { return m_moveDuration; }
 	private:
+
 		DirectedSpritePtr m_dirSprite;
 		CategoricalDistribution m_moveDistr;
 		CategoricalDistribution m_chooseDirectionDistr;
+		std::function<cocos2d::Action* (float, cocos2d::Vec2)> m_moveActionCallback;
+		float m_moveDuration;
 	};
 
 	/// <summary>

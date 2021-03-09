@@ -26,6 +26,26 @@ cocos2d::Action* actionCallbackRockSideToSide()
 	return cocos2d::RepeatForever::create(seq);
 }
 
+cocos2d::Action* actionCallbackButterflyIdle()
+{
+	auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.8f, 1.0f);
+	auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f, 1.0f);
+	auto delay = cocos2d::DelayTime::create(1);
+	auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr);
+	return cocos2d::RepeatForever::create(seq);
+
+}
+
+cocos2d::Action* actionCallbackButterflyMove(float move_time, cocos2d::Vec2 pos_to)
+{
+	//float move_time = 0.4f;
+	auto mover = cocos2d::MoveTo::create(move_time, pos_to);
+	auto bouncer = cocos2d::ScaleTo::create(0.25f * move_time, 0.7f, 1.0f);
+	auto unbouncer = cocos2d::ScaleTo::create(0.25f * move_time, 1.0f, 1.0f);
+	auto delay = cocos2d::DelayTime::create(0.5f * move_time);
+	auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, nullptr);
+	return cocos2d::Spawn::createWithTwoActions(mover, seq);
+}
 
 GameLevelsArray getGameLevels()
 {
@@ -38,7 +58,8 @@ GameLevelsArray getGameLevels()
 
 	DirToFrameTable DFT_butterfly = dirToFrameTemplate("butterfly.png");
 	MovingFoodTable moving_food_table1 = {
-		{MovingFoodType::BUTTERFLY, MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7)}
+		{MovingFoodType::BUTTERFLY, 
+		MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7, 0.4f, actionCallbackButterflyIdle, actionCallbackButterflyMove)}
 	};
 	TypeToProbasMap static_food_probas1 = {
 		{StaticFoodType::APPLE, 0.5},
