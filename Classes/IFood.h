@@ -35,7 +35,7 @@ namespace NS_Snake
 		BUTTERFLY = 0,
 		BIRD,
 		MOUSE,
-		LIZARD
+		SPYDER
 	};
 
 	/// <summary>

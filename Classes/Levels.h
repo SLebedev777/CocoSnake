@@ -38,12 +38,21 @@ cocos2d::Action* actionCallbackButterflyIdle()
 
 cocos2d::Action* actionCallbackButterflyMove(float move_time, cocos2d::Vec2 pos_to)
 {
-	//float move_time = 0.4f;
 	auto mover = cocos2d::MoveTo::create(move_time, pos_to);
 	auto bouncer = cocos2d::ScaleTo::create(0.25f * move_time, 0.7f, 1.0f);
 	auto unbouncer = cocos2d::ScaleTo::create(0.25f * move_time, 1.0f, 1.0f);
 	auto delay = cocos2d::DelayTime::create(0.5f * move_time);
 	auto seq = cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, nullptr);
+	return cocos2d::Spawn::createWithTwoActions(mover, seq);
+}
+
+cocos2d::Action* actionCallbackSpyderMove(float move_time, cocos2d::Vec2 pos_to)
+{
+	auto mover = cocos2d::MoveTo::create(move_time, pos_to);
+	auto flipper = cocos2d::FlipX::create(true);
+	auto unflipper = cocos2d::FlipX::create(false);
+	auto delay = cocos2d::DelayTime::create(0.25f * move_time);
+	auto seq = cocos2d::Sequence::create(flipper, delay, unflipper, delay, flipper, delay, unflipper, delay, nullptr);
 	return cocos2d::Spawn::createWithTwoActions(mover, seq);
 }
 
@@ -57,9 +66,13 @@ GameLevelsArray getGameLevels()
 	};
 
 	DirToFrameTable DFT_butterfly = dirToFrameTemplate("butterfly.png");
+	DirToFrameTable DFT_spyder = dirToFrameTemplate("spyder.png");
 	MovingFoodTable moving_food_table1 = {
 		{MovingFoodType::BUTTERFLY, 
-		MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7, 0.4f, actionCallbackButterflyIdle, actionCallbackButterflyMove)}
+		MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7, 0.4f, actionCallbackButterflyIdle, actionCallbackButterflyMove)},
+		{MovingFoodType::SPYDER,
+		MovingFoodDescription(DFT_spyder, 1, 1, false, -1, 0.7, 1.0f, nullptr, actionCallbackSpyderMove)},
+
 	};
 	TypeToProbasMap static_food_probas1 = {
 		{StaticFoodType::APPLE, 0.5},
@@ -67,7 +80,8 @@ GameLevelsArray getGameLevels()
 		{StaticFoodType::PORTAL, 0.2}
 	};
 	TypeToProbasMap moving_food_probas1 = {
-		{MovingFoodType::BUTTERFLY, 0.5}
+		{MovingFoodType::BUTTERFLY, 0.5},
+		{MovingFoodType::SPYDER, 0.5}
 	};
 	TypeToProbasMap food_type_probas1 = {
 		{FoodType::STATIC, 0.9},
