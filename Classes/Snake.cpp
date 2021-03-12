@@ -14,7 +14,8 @@ namespace NS_Snake
 		m_alive(true),
 		m_grid(grid),
 		m_canMoveAlone(can_move_alone),
-		m_wrapAround(false)
+		m_wrapAround(false),
+		m_startedMoving(false)
 	{
 		if (max_health <= 0)
 		{
@@ -48,6 +49,9 @@ namespace NS_Snake
 	{
 		if (!up && !right)
 		{
+			if (!m_startedMoving)
+				return false;
+
 			if (m_canMoveAlone)
 			{
 				switch (head().getDirTo())
@@ -80,6 +84,8 @@ namespace NS_Snake
 		int head_shift_x = 0;
 		int head_shift_y = 0;
 		SPRITE_DIRECTION new_direction = SPRITE_DIRECTION::NONE;
+
+		m_startedMoving = true;
 
 		// handle single arrow pressed
 		if (up != 0 && right == 0)

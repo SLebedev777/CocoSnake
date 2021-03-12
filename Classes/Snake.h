@@ -44,6 +44,7 @@ namespace NS_Snake
 		bool m_alive;
 		bool m_canMoveAlone;
 		bool m_wrapAround;
+		bool m_startedMoving;
 	};
 }
 
