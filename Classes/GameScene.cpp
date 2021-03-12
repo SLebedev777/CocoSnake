@@ -340,6 +340,18 @@ bool GameScene::init()
     time_elapsed = 0.0f;
     this->schedule(CC_SCHEDULE_SELECTOR(GameScene::updateTimer), 1.0f);
 
+    // callback when time is running out
+    this->schedule([this](float dt) {
+        if (time_elapsed > currLevel.getMaxTime() - 10)
+        {
+            AudioEngine::play2d("sound/tick.mp3");
+            auto hud_layer = this->getChildByTag(TAG_HUD_LAYER);
+            auto label_node = hud_layer->getChildByTag(TAG_HUD_LAYER_TIMER_STRING);
+            auto label_time = static_cast<cocos2d::Label*> (label_node);
+            label_time->setColor(cocos2d::Color3B::RED);
+        }
+     }, 1.0f, "clock_tick");
+
     up_pressed = false;
     down_pressed = false;
     right_pressed = false;

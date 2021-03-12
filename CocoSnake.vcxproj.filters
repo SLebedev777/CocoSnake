@@ -153,4 +153,9 @@
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\background.mp3">
+      <Filter>Resources</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

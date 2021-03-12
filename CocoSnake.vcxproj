@@ -908,6 +908,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <None Include="Resources\HD\snake.plist" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Resources\background.mp3" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
