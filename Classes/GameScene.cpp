@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include "ccRandom.h"
+#include "audio/include/AudioEngine.h"
 
 USING_NS_CC;
 
@@ -552,8 +553,12 @@ void GameScene::update(float dt)
             if (f->getHealth() > 0)
             {
                 score += f->getScore();
+                AudioEngine::play2d("sound/eat_good_food.mp3", false, 0.5f);
             }
-
+            else
+            {
+                AudioEngine::play2d("sound/eat_bad_food.ogg", false, 0.5f);
+            }
             if (f->getFoodSubType() == NS_Snake::StaticFoodType::PORTAL)
             {
                 snake->setWrapAround(true);

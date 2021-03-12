@@ -1,5 +1,6 @@
 #include "SplashScene.h"
 #include "MainMenuScene.h"
+#include "audio/include/AudioEngine.h"
 
 USING_NS_CC;
 
@@ -49,6 +50,7 @@ bool WinSplashScene::init()
         this->addChild(label, 1);
     }
 
+    AudioEngine::play2d("sound/you_win.mp3", false, 0.5f);
 
     return true;
 }
@@ -56,14 +58,14 @@ bool WinSplashScene::init()
 
 void WinSplashScene::onContinueCallback(Ref* pSender)
 {
+    AudioEngine::stopAll();
     Director::getInstance()->popScene();
-    //Director::getInstance()->replaceScene(GameScene::create(GameLevel(555)));
-
 }
 
 
 void WinSplashScene::onQuitCallback(cocos2d::Ref* pSender)
 {
+    AudioEngine::stopAll();
     Director::getInstance()->replaceScene(MainMenuScene::create());
 }
 
@@ -114,6 +116,7 @@ bool LooseSplashScene::init()
         this->addChild(label, 1);
     }
 
+    AudioEngine::play2d("sound/you_loose.mp3", false, 0.5f);
 
     return true;
 }
@@ -121,12 +124,14 @@ bool LooseSplashScene::init()
 
 void LooseSplashScene::onContinueCallback(Ref* pSender)
 {
+    AudioEngine::stopAll();
     Director::getInstance()->popScene();
 }
 
 
 void LooseSplashScene::onQuitCallback(cocos2d::Ref* pSender)
 {
+    AudioEngine::stopAll();
     Director::getInstance()->replaceScene(MainMenuScene::create());
 }
 
@@ -177,6 +182,7 @@ bool FinalSplashScene::init()
         this->addChild(label, 1);
     }
 
+    AudioEngine::play2d("sound/final_tune.ogg", false, 0.5f);
 
     return true;
 }
@@ -185,5 +191,6 @@ bool FinalSplashScene::init()
 
 void FinalSplashScene::onQuitCallback(cocos2d::Ref* pSender)
 {
+    AudioEngine::stopAll();
     Director::getInstance()->replaceScene(MainMenuScene::create());
 }

@@ -71,7 +71,7 @@ GameLevelsArray getGameLevels()
 		{MovingFoodType::BUTTERFLY, 
 		MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7, 0.4f, actionCallbackButterflyIdle, actionCallbackButterflyMove)},
 		{MovingFoodType::SPYDER,
-		MovingFoodDescription(DFT_spyder, 1, 1, false, -1, 0.7, 1.0f, nullptr, actionCallbackSpyderMove)},
+		MovingFoodDescription(DFT_spyder, -10, 1, false, -1, 0.7, 1.0f, nullptr, actionCallbackSpyderMove)},
 
 	};
 	TypeToProbasMap static_food_probas1 = {

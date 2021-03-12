@@ -1,6 +1,7 @@
 #include "MainMenuScene.h"
 #include "GameScene.h"
 #include "GameLevel.h"
+#include "audio/include/AudioEngine.h"
 
 USING_NS_CC;
 
@@ -50,6 +51,7 @@ bool MainMenuScene::init()
         this->addChild(label, 1);
     }
 
+    AudioEngine::play2d("background.mp3", true, 0.25f);
 
     return true;
 }
@@ -59,12 +61,13 @@ void MainMenuScene::menuCloseCallback(Ref* pSender)
 {
     //Close the cocos2d-x game scene and quit the application
     Director::getInstance()->end();
-
+    AudioEngine::end();
 }
 
 
 void MainMenuScene::menuNewGameCallback(cocos2d::Ref* pSender)
 {
+    AudioEngine::stopAll();
     GameLevelManager::getInstance().rewind();
     auto& curr_level = GameLevelManager::getInstance().getCurrLevel();
     game_scene = GameScene::create(curr_level);
