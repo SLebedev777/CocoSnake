@@ -804,6 +804,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Classes\CategoricalDistribution.h" />
     <ClInclude Include="Classes\CCHelpers.h" />
     <ClInclude Include="Classes\DirectedSprite.h" />
+    <ClInclude Include="Classes\GameScene_VFX.h" />
     <ClInclude Include="Classes\IFood.h" />
     <ClInclude Include="Classes\GameGrid.h" />
     <ClInclude Include="Classes\GameLevel.h" />
@@ -825,6 +826,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="Classes\GameLevel.cpp" />
     <ClCompile Include="Classes\GameMenuLayer.cpp" />
     <ClCompile Include="Classes\GameScene.cpp" />
+    <ClCompile Include="Classes\GameScene_VFX.cpp" />
     <ClCompile Include="Classes\MainMenuScene.cpp" />
     <ClCompile Include="Classes\Snake.cpp" />
     <ClCompile Include="Classes\SplashScene.cpp" />

@@ -12,6 +12,8 @@
 #include <vector>
 #include "ccRandom.h"
 #include "audio/include/AudioEngine.h"
+#include "cocos/2d/CCParticleSystemQuad.h"
+#include "GameScene_VFX.h"
 
 USING_NS_CC;
 
@@ -516,12 +518,19 @@ void GameScene::drawHUDString(int str_tag, const std::string& str)
 
 void GameScene::spawnFood(float dt, cocos2d::Node* parent)
 {
+    using namespace NS_Snake;
     auto cell = NS_Snake::GameGrid::Cell(-1, -1);
     if (grid->getRandomFreeCell(cell))
     {
         grid->occupyCell(cell);
         auto new_food = food_gen->makeRandom();
         NS_Snake::Point2d pos = grid->cellToXyCenter(cell);
+        
+        // particle effect
+        auto emitter = getParticleVFXSpawnFood(new_food->getFoodType(), new_food->getFoodSubType());
+        parent->addChild(emitter, 10);
+        emitter->setPosition(Vec2(pos.x, pos.y));
+
         new_food->getSprite()->setPosition(Vec2(pos.x, pos.y));
         parent->addChild(new_food->getSprite());
         food.push_back(std::move(new_food));
