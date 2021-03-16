@@ -40,6 +40,7 @@ public:
     void updateInputDirectionState();
 
     void drawHUDString(int tag, const std::string& str);
+    void createHUDMovingScoreLabel(NS_Snake::IFoodPtr& f);
 
     void spawnFood(float dt, cocos2d::Node* parent);
 

@@ -516,6 +516,19 @@ void GameScene::drawHUDString(int str_tag, const std::string& str)
 
 }
 
+void GameScene::createHUDMovingScoreLabel(NS_Snake::IFoodPtr& f)
+{
+    float score_label_duration = 1.0f;
+    auto score_label = cocos2d::Label::createWithTTF("+" + std::to_string(f->getScore()), "fonts/Marker Felt.ttf", 18);
+    auto score_label_action = cocos2d::MoveBy::create(score_label_duration, cocos2d::Vec2(-40, 40));
+    score_label->setPosition(f->getPosition().toVec2());
+    score_label->runAction(score_label_action);
+    auto score_label_name = "score_label_" + std::to_string(time_elapsed);
+    this->getChildByTag(TAG_HUD_LAYER)->addChild(score_label, 999, score_label_name);
+    score_label->scheduleOnce(
+        [=](float dt) {score_label->removeFromParentAndCleanup(true); }, score_label_duration, "auto_remove_score_label");
+}
+
 void GameScene::spawnFood(float dt, cocos2d::Node* parent)
 {
     using namespace NS_Snake;
@@ -591,6 +604,8 @@ void GameScene::update(float dt)
                 snake->setWrapAround(true);
             }
 
+            createHUDMovingScoreLabel(f);
+ 
             food.remove(f);
             snake->addPart();
             spawnFood(0, this->getChildByTag(TAG_GAME_LAYER));
