@@ -52,3 +52,21 @@ ParticleSystemQuad* getParticleVFXSpawnFood(FoodType ft, FoodSubType fst)
 
     return emitter;
 }
+
+ParticleSystemQuad* getParticleVFXDisappearFood(FoodType ft, FoodSubType fst)
+{
+    auto emitter = ParticleSmoke::createWithTotalParticles(50);
+    
+    emitter->setDuration(0.3f);
+    emitter->setLife(1.0f);
+    emitter->setStartSize(30.0f);
+    emitter->setEndSize(50.0f);
+
+    auto start_color = cocos2d::Color4F::GRAY;
+    emitter->setStartColor(start_color);
+    emitter->setStartColorVar(cocos2d::Color4F(0.1, 0.1, 0.1, 0));
+    emitter->setEndColor(cocos2d::Color4F(1.0f, 1.0f, 1.0f, 0.2f));
+    emitter->setEndColorVar(cocos2d::Color4F(0, 0, 0, 0));
+    
+    return emitter;
+}

@@ -561,7 +561,13 @@ void GameScene::update(float dt)
     {
         auto& f = *food_iter;
         if (f->getLifetime() > 0 && f->getTimeElapsed() >= f->getLifetime())
+        {
+            auto emitter = getParticleVFXDisappearFood(f->getFoodType(), f->getFoodSubType());
+            this->getChildByTag(TAG_GAME_LAYER)->addChild(emitter, 10);
+            emitter->setPosition(f->getPosition().toVec2());
+
             food_iter = food.erase(food_iter);
+        }
         else
             ++food_iter;
     }
