@@ -619,9 +619,9 @@ void GameScene::update(float dt)
     {
         onGameWin(nullptr);
     }
-
+    
     //
-    drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score));
+    drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score) + "/" + std::to_string(currLevel.getScoreNeeded()));
     drawHUDString(TAG_HUD_LAYER_TIMER_STRING, "time elapsed: " + std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
     drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
 
