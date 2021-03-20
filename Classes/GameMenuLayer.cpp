@@ -1,6 +1,7 @@
 #include "GameMenuLayer.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include "ui/CocosGUI.h"
 
 USING_NS_CC;
 
@@ -26,46 +27,38 @@ GameMenuLayer* GameMenuLayer::create(GameScene* from)
 
 bool GameMenuLayer::init()
 {
-    this->initWithColor(Color4B(0, 0, 0, 255));
+    this->initWithColor(Color4B(127, 0, 127, 100));
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-    //this->setColor(Color3B(0, 0, 0));
-
-    auto resume_label = Label::createWithTTF("Resume", "fonts/Marker Felt.ttf", 24);
-    auto back_to_main_label = Label::createWithTTF("Back to Main Menu", "fonts/Marker Felt.ttf", 24);
-
-    auto resume_menu_item = MenuItemLabel::create(resume_label, [&](Ref* sender) { menuResumeCallback(sender); } );
-    auto back_to_main_menu_item = MenuItemLabel::create(back_to_main_label, [&](Ref* sender) { menuBackToMainMenuCallback(sender); });
-
-    // create menu, it's an autorelease object
-    Vector<MenuItem*> menu_items;
-
-    menu_items.pushBack(resume_menu_item);
-    menu_items.pushBack(back_to_main_menu_item);
-
-    auto menu = Menu::createWithArray(menu_items);
-    menu->alignItemsVertically();
-    this->addChild(menu, 1);
-
     auto s = Director::getInstance()->getWinSize();
 
-    menu->setPosition(Vec2(s.width / 2, s.height / 2));
+    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
+    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
+    auto delay = cocos2d::DelayTime::create(3);
+    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
 
-    /////////////////////////////
-    // 3. add your codes below...
+    auto button_resume = ui::Button::create("button_green.png", "button_green.png");
+    button_resume->setTitleText("Resume");
+    button_resume->setTitleFontName("fonts/arial.ttf");
+    button_resume->setTitleFontSize(32);
+    button_resume->setPosition(Vec2(s.width / 2, s.height / 2));
+    button_resume->addClickEventListener([=](Ref* sender) {
+        menuResumeCallback(sender);
+        });
+    button_resume->runAction(seq);
+    this->addChild(button_resume);
 
-    auto label = Label::createWithTTF("Game Menu", "fonts/Marker Felt.ttf", 24);
-    if (label)
-    {
-        // position the label on the center of the screen
-        label->setPosition(Vec2(origin.x + visibleSize.width / 2,
-            origin.y + visibleSize.height - label->getContentSize().height));
-
-        // add the label as a child to this layer
-        this->addChild(label, 1);
-    }
+    auto button_quit = ui::Button::create("button_red.png", "button_red.png");
+    button_quit->setTitleText("Main Menu");
+    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontSize(24);
+    button_quit->setScale(0.8);
+    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_resume->getContentSize().height - 20));
+    button_quit->addClickEventListener([=](Ref* sender) {
+        menuBackToMainMenuCallback(sender);
+        });
+    this->addChild(button_quit);
 
     return true;
 }

@@ -51,35 +51,6 @@ bool MainMenuScene::init()
         });
     this->addChild(button_quit);
 
-    /*
-    auto new_game_label = Label::createWithTTF("New Game", "fonts/Marker Felt.ttf", 24);
-    auto quit_label = Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 24);
-
-    auto new_game_menu_item = MenuItemLabel::create(new_game_label, [&](Ref* sender) { menuNewGameCallback(sender); } );
-    auto quit_menu_item = MenuItemLabel::create(quit_label, [&](Ref* sender) { menuCloseCallback(sender); });
-
-    // create menu, it's an autorelease object
-    Vector<MenuItem*> menu_items;
-
-    menu_items.pushBack(new_game_menu_item);
-    menu_items.pushBack(quit_menu_item);
-
-    auto menu = Menu::createWithArray(menu_items);
-    menu->alignItemsVertically();
-    this->addChild(menu, 1);
-
-    menu->setPosition(Vec2(s.width / 2, s.height / 2));
-    
-    auto label = Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 24);
-    if (label)
-    {
-        // position the label on the center of the screen
-        label->setPosition(Vec2(s.width / 2, s.height - label->getContentSize().height));
-
-        // add the label as a child to this layer
-        this->addChild(label, 1);
-    }
-    */
     AudioEngine::play2d("background.mp3", true, 0.25f);
 
     return true;

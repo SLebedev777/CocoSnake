@@ -905,6 +905,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\apple.png" />
+    <Image Include="Resources\button_green.png" />
+    <Image Include="Resources\button_red.png" />
     <Image Include="Resources\HD\snake.png" />
   </ItemGroup>
   <ItemGroup>

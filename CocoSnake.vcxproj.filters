@@ -153,6 +153,12 @@
     <Image Include="Resources\HD\snake.png">
       <Filter>Resources</Filter>
     </Image>
+    <Image Include="Resources\button_green.png">
+      <Filter>Resources</Filter>
+    </Image>
+    <Image Include="Resources\button_red.png">
+      <Filter>Resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\HD\snake.plist">
