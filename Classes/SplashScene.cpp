@@ -1,6 +1,8 @@
 #include "SplashScene.h"
 #include "MainMenuScene.h"
 #include "audio/include/AudioEngine.h"
+#include "ui/CocosGUI.h"
+
 
 USING_NS_CC;
 
@@ -20,27 +22,37 @@ bool WinSplashScene::init()
         return false;
     }
 
-    auto continue_label = Label::createWithTTF("Continue", "fonts/Marker Felt.ttf", 24);
-    auto quit_label = Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 24);
-
-    auto continue_menu_item = MenuItemLabel::create(continue_label, [&](Ref* sender) { onContinueCallback(sender); } );
-    auto quit_menu_item = MenuItemLabel::create(quit_label, [&](Ref* sender) { onQuitCallback(sender); });
-
-    // create menu, it's an autorelease object
-    Vector<MenuItem*> menu_items;
-
-    menu_items.pushBack(continue_menu_item);
-    menu_items.pushBack(quit_menu_item);
-
-    auto menu = Menu::createWithArray(menu_items);
-    menu->alignItemsVertically();
-    this->addChild(menu, 1);
-
     auto s = Director::getInstance()->getWinSize();
 
-    menu->setPosition(Vec2(s.width / 2, s.height / 2));
+    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
+    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
+    auto delay = cocos2d::DelayTime::create(3);
+    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
 
-    auto label = Label::createWithTTF("You Win!!!", "fonts/Marker Felt.ttf", 24);
+    auto button_play = ui::Button::create("button_green.png", "button_green.png");
+    button_play->setTitleText("Next Level");
+    button_play->setTitleFontName("fonts/arial.ttf");
+    button_play->setTitleFontSize(32);
+    button_play->setPosition(Vec2(s.width / 2, s.height / 2));
+    button_play->addClickEventListener([=](Ref* sender) {
+        onContinueCallback(sender);
+        });
+    button_play->runAction(seq);
+    this->addChild(button_play);
+
+    auto button_quit = ui::Button::create("button_red.png", "button_red.png");
+    button_quit->setTitleText("Main Menu");
+    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontSize(24);
+    button_quit->setScale(0.8);
+    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
+    button_quit->addClickEventListener([=](Ref* sender) {
+        onQuitCallback(sender);
+        });
+    this->addChild(button_quit);
+
+
+    auto label = Label::createWithTTF("You Win!!!", "fonts/Marker Felt.ttf", 48);
     if (label)
     {
         // position the label on the center of the screen
@@ -86,25 +98,34 @@ bool LooseSplashScene::init()
         return false;
     }
 
-    auto continue_label = Label::createWithTTF("Restart", "fonts/Marker Felt.ttf", 24);
-    auto quit_label = Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 24);
-
-    auto continue_menu_item = MenuItemLabel::create(continue_label, [&](Ref* sender) { onContinueCallback(sender); });
-    auto quit_menu_item = MenuItemLabel::create(quit_label, [&](Ref* sender) { onQuitCallback(sender); });
-
-    // create menu, it's an autorelease object
-    Vector<MenuItem*> menu_items;
-
-    menu_items.pushBack(continue_menu_item);
-    menu_items.pushBack(quit_menu_item);
-
-    auto menu = Menu::createWithArray(menu_items);
-    menu->alignItemsVertically();
-    this->addChild(menu, 1);
-
     auto s = Director::getInstance()->getWinSize();
 
-    menu->setPosition(Vec2(s.width / 2, s.height / 2));
+    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
+    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
+    auto delay = cocos2d::DelayTime::create(3);
+    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
+
+    auto button_play = ui::Button::create("button_green.png", "button_green.png");
+    button_play->setTitleText("Retry");
+    button_play->setTitleFontName("fonts/arial.ttf");
+    button_play->setTitleFontSize(32);
+    button_play->setPosition(Vec2(s.width / 2, s.height / 2));
+    button_play->addClickEventListener([=](Ref* sender) {
+        onContinueCallback(sender);
+        });
+    button_play->runAction(seq);
+    this->addChild(button_play);
+
+    auto button_quit = ui::Button::create("button_red.png", "button_red.png");
+    button_quit->setTitleText("Main Menu");
+    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontSize(24);
+    button_quit->setScale(0.8);
+    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
+    button_quit->addClickEventListener([=](Ref* sender) {
+        onQuitCallback(sender);
+        });
+    this->addChild(button_quit);
 
     auto label = Label::createWithTTF("You Loose...", "fonts/Marker Felt.ttf", 24);
     if (label)
