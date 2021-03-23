@@ -22,7 +22,41 @@ bool MainMenuScene::init()
         return false;
     }
 
-    auto s = Director::getInstance()->getWinSize();
+    Size visible_size = Director::getInstance()->getWinSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    float margin = 80;
+    Rect nodegrid_rect = Rect(origin - Vec2(margin, margin), visible_size + Size(2*margin, 2*margin));
+    auto node_grid = NodeGrid::create(nodegrid_rect);
+    this->addChild(node_grid, -1);
+
+    float scroll_interval = 10.0f;
+    Sprite* back1 = Sprite::create("menu_background2.png");
+    Size back_size = back1->getContentSize();
+    Sprite* back2 = Sprite::create("menu_background2.png");
+    back1->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2));
+    back2->setPosition(Vec2(visible_size.width / 2 - back_size.width, visible_size.height / 2));
+
+    auto back1_move_seq = Sequence::create(
+        MoveBy::create(scroll_interval, Vec2(back_size.width, 0)),
+        MoveBy::create(0.0f, Vec2(-2*back_size.width, 0)),
+        MoveBy::create(scroll_interval, Vec2(back_size.width, 0)),
+        nullptr
+    );
+    back1->runAction(RepeatForever::create(back1_move_seq));
+    
+    auto back2_move_seq = Sequence::create(
+        MoveBy::create(2*scroll_interval, Vec2(2*back_size.width, 0)),
+        MoveBy::create(0.0f, Vec2(-2 * back_size.width, 0)),
+        nullptr
+    );
+    back2->runAction(RepeatForever::create(back2_move_seq));
+
+    node_grid->addChild(back1, 0);
+    node_grid->addChild(back2, 0);
+
+    auto waves = Waves::create(7, Size(16, 12), 3, 15, true, true);
+    node_grid->runAction(RepeatForever::create(waves));
 
     auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
     auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
@@ -33,7 +67,7 @@ bool MainMenuScene::init()
     button_play->setTitleText("Play");
     button_play->setTitleFontName("fonts/arial.ttf");
     button_play->setTitleFontSize(32);
-    button_play->setPosition(Vec2(s.width / 2, s.height / 2));
+    button_play->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2));
     button_play->addClickEventListener([=](Ref* sender) {
         menuNewGameCallback(sender);
         });
@@ -45,7 +79,7 @@ bool MainMenuScene::init()
     button_quit->setTitleFontName("fonts/arial.ttf");
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
-    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
+    button_quit->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2 - button_play->getContentSize().height - 20));
     button_quit->addClickEventListener([=](Ref* sender) {
         menuCloseCallback(sender);
         });
