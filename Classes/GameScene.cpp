@@ -277,24 +277,14 @@ bool GameScene::init()
 
     auto hud_control_layer = LayerColor::create(Color4B(0, 0, 0, 0));
     
-    auto game_menu_label = Label::createWithTTF("Game Menu", "fonts/Marker Felt.ttf", 24);
+    auto button_menu = ui::Button::create("game_menu_icon.png", "game_menu_icon.png");
+    button_menu->setAnchorPoint(Vec2(0.0, 1.0));
+    button_menu->setPosition(Vec2(cell_size / 2, grid->getOrigin().y + grid->getHeight()));
+    button_menu->addClickEventListener([=](Ref* sender) {
+        onGameMenuOpen(sender);
+        });
+    hud_control_layer->addChild(button_menu);
 
-    auto game_menu_item = MenuItemLabel::create(game_menu_label,
-        [&](Ref* sender) {
-            onGameMenuOpen(sender);
-        }
-    );
-    // create menu, it's an autorelease object
-    Vector<MenuItem*> menu_items;
-
-    menu_items.pushBack(game_menu_item);
-
-    auto menu = Menu::createWithArray(menu_items);
-    menu->alignItemsVertically();
-    auto s = Director::getInstance()->getWinSize();
-    menu->setPosition(Vec2(s.width / 2, s.height - 100));
-    
-    hud_control_layer->addChild(menu, 1, "HUD_CONTROL_MENU");
 
     auto button_win = ui::Button::create("CloseNormal.png", "CloseSelected.png");
     button_win->setTitleText("Win");
@@ -445,8 +435,6 @@ void GameScene::onGameMenuOpen(Ref* sender)
         auto layer = this->getChildByTag(tag);
         MyCocos2dHelpers::CallCCNodeMethodRecursively(layer, [](Node* node) { node->pause(); });
     }
-    auto hud_control_menu = static_cast<Menu*> (this->getChildByTag(TAG_HUD_CONTROL_LAYER)->getChildByName("HUD_CONTROL_MENU"));
-    hud_control_menu->setEnabled(false);
 
     auto game_menu_layer = GameMenuLayer::create(this);
     this->addChild(game_menu_layer, 255, TAG_GAME_MENU_LAYER);
@@ -466,8 +454,6 @@ void GameScene::onGameMenuClose(Event* event)
             auto layer = this->getChildByTag(tag);
             MyCocos2dHelpers::CallCCNodeMethodRecursively(layer, [](Node* node) { node->resume(); });
         }
-        auto hud_control_menu = static_cast<Menu*> (this->getChildByTag(TAG_HUD_CONTROL_LAYER)->getChildByName("HUD_CONTROL_MENU"));
-        hud_control_menu->setEnabled(true);
 
     }
 }
