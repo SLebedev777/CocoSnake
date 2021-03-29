@@ -12,6 +12,8 @@ class GameLevel
 public:
 	GameLevel(
 		int number,
+		size_t num_cells_x,
+		size_t num_cells_y,
 		NS_Snake::FoodTable& food_table,
 		std::string level_name = "", 
 		uint16_t snake_starting_length = 3, 
@@ -22,6 +24,8 @@ public:
 		float spawn_food_interval = 1.0f
 		):
 		m_number(number),
+		m_numCellsX(num_cells_x),
+		m_numCellsY(num_cells_y),
 		m_foodTable(food_table),
 		m_levelName(level_name),
 		m_snakeStartingLength(snake_starting_length),
@@ -32,6 +36,8 @@ public:
 		m_spawnFoodInterval(spawn_food_interval)
 	{}
 
+	size_t getNumCellsX() const { return m_numCellsX; }
+	size_t getNumCellsY() const { return m_numCellsY; }
 	NS_Snake::FoodTable getFoodTable() const { return m_foodTable; }
 	int getNumber() const { return m_number; }
 	uint16_t getSnakeStartingLength() const { return m_snakeStartingLength; }
@@ -47,6 +53,8 @@ public:
 private:
 	NS_Snake::FoodTable m_foodTable;
 	int m_number;
+	size_t m_numCellsX;
+	size_t m_numCellsY;
 	std::string m_levelName;
 	uint16_t m_snakeStartingLength;
 	uint16_t m_numStartingFood;

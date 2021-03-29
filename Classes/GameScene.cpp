@@ -91,8 +91,8 @@ bool GameScene::init()
     // detect grid cell size (sprite size), depending on design resolution, scale factor and loaded art
     int cell_size = Sprite::createWithSpriteFrameName("apple.png")->getTextureRect().size.width;
     int border = 2 * cell_size;
-    int num_cells_x = 19;
-    int num_cells_y = 15;
+    int num_cells_x = currLevel.getNumCellsX();
+    int num_cells_y = currLevel.getNumCellsY();
     int grid_width = num_cells_x * cell_size;  // WAS: visibleSize.width - 2*border
     int grid_height = num_cells_y * cell_size; // WAS: visibleSize.height - 2*border
     int grid_origin_x = origin.x + (visibleSize.width - grid_width) / 2;  // WAS: origin.x + border

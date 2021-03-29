@@ -92,9 +92,9 @@ GameLevelsArray getGameLevels()
 
 	GameLevelsArray levels;
 
-	levels.push_back(std::make_shared<GameLevel>(1, food_table1, "Level1", 3, 10, 5, 10, 120));
-	levels.push_back(std::make_shared<GameLevel>(2, food_table1, "Level2", 4, 8, 6, 15, 90));
-	levels.push_back(std::make_shared<GameLevel>(3, food_table1, "Level3", 5, 7, 8, 20, 60));
+	levels.push_back(std::make_shared<GameLevel>(1, 10, 12, food_table1, "Level1", 3, 10, 5, 10, 120));
+	levels.push_back(std::make_shared<GameLevel>(2, 12, 13, food_table1, "Level2", 4, 8, 6, 15, 90));
+	levels.push_back(std::make_shared<GameLevel>(3, 15, 15, food_table1, "Level3", 5, 7, 8, 20, 60));
 
 	return levels;
 
