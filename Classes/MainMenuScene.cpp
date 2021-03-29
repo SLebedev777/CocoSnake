@@ -31,11 +31,13 @@ bool MainMenuScene::init()
     this->addChild(node_grid, -1);
 
     float scroll_interval = 10.0f;
-    Sprite* back1 = Sprite::create("menu_background2.png");
+    Sprite* back1 = Sprite::create("menu_background1.png");
     Size back_size = back1->getContentSize();
-    Sprite* back2 = Sprite::create("menu_background2.png");
-    back1->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2));
-    back2->setPosition(Vec2(visible_size.width / 2 - back_size.width, visible_size.height / 2));
+    Sprite* back2 = Sprite::create("menu_background1.png");
+    float back_y_pos = origin.y + visible_size.height / 2;
+    back1->setPosition(Vec2(origin.x + visible_size.width / 2, back_y_pos));
+    back2->setPosition(Vec2(origin.x + visible_size.width / 2 - back_size.width, back_y_pos));
+
 
     auto back1_move_seq = Sequence::create(
         MoveBy::create(scroll_interval, Vec2(back_size.width, 0)),
