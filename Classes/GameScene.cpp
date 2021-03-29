@@ -91,8 +91,14 @@ bool GameScene::init()
     // detect grid cell size (sprite size), depending on design resolution, scale factor and loaded art
     int cell_size = Sprite::createWithSpriteFrameName("apple.png")->getTextureRect().size.width;
     int border = 2 * cell_size;
+    int num_cells_x = 19;
+    int num_cells_y = 15;
+    int grid_width = num_cells_x * cell_size;  // WAS: visibleSize.width - 2*border
+    int grid_height = num_cells_y * cell_size; // WAS: visibleSize.height - 2*border
+    int grid_origin_x = origin.x + (visibleSize.width - grid_width) / 2;  // WAS: origin.x + border
+    int grid_origin_y = origin.y + (visibleSize.height - grid_height) / 2; // WAS: origin.y + border
 
-    grid = std::make_shared<GameGrid>(origin.x + border, origin.y + border, visibleSize.width - 2*border, visibleSize.height - 2*border, cell_size);
+    grid = std::make_shared<GameGrid>(grid_origin_x, grid_origin_y, grid_width, grid_height, cell_size);
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
     
@@ -128,6 +134,10 @@ bool GameScene::init()
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
     int start_y = grid->getOrigin().y + grid->getHeight() / 2;
+    NS_Snake::Point2d snake_start_pos = grid->cellToXyCenter(grid->xyToCell(start_x, start_y));
+    start_x = snake_start_pos.x;
+    start_y = snake_start_pos.y;
+
     int num_parts_body = currLevel.getSnakeStartingLength();
     uint8_t accel = 5;
     // make head
@@ -231,43 +241,57 @@ bool GameScene::init()
         label_level->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200,
             origin.y + visibleSize.height - 50));
     }
-
     hud_layer->addChild(label_level);
 
-    auto label_time = Label::createWithTTF("time elapsed: ", "fonts/Marker Felt.ttf", 24);
+    ///////
+    auto sprite_hud_time = Sprite::createWithSpriteFrameName("hud_clock.png");
+    sprite_hud_time->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 50));
+    hud_layer->addChild(sprite_hud_time, 1);
+
+    auto label_time = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
     if (label_time)
     {
-        label_time->setPosition(Vec2(origin.x + visibleSize.width/2  + 50,
+        label_time->setAnchorPoint(Vec2(0, 0.5f));
+        label_time->setPosition(Vec2(sprite_hud_time->getBoundingBox().getMaxX() + 20,
             origin.y + visibleSize.height - 50));
     }
-
     hud_layer->addChild(label_time, 1, TAG_HUD_LAYER_TIMER_STRING);
 
-    auto label_snake_health = Label::createWithTTF("health: 100", "fonts/Marker Felt.ttf", 24);
-    if (label_snake_health)
-    {
-        label_snake_health->setPosition(Vec2(origin.x + visibleSize.width - 100,
-            origin.y + visibleSize.height - 50));
-    }
+    ///////
+    auto sprite_hud_score = Sprite::createWithSpriteFrameName("hud_score.png");
+    sprite_hud_score->setPosition(Vec2(origin.x + visibleSize.width * 0.66f, origin.y + visibleSize.height - 50));
+    hud_layer->addChild(sprite_hud_score, 1);
 
-    hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
-
-    auto label_score = Label::createWithTTF("score: 0", "fonts/Marker Felt.ttf", 24);
+    auto label_score = Label::createWithTTF("0", "fonts/Marker Felt.ttf", 24);
+    label_score->setAnchorPoint(Vec2(0, 0.5f));
     if (label_score)
     {
-        label_score->setPosition(Vec2(origin.x + 50,
+        label_score->setPosition(Vec2(sprite_hud_score->getBoundingBox().getMaxX() + 20,
             origin.y + visibleSize.height - 50));
     }
-
     hud_layer->addChild(label_score, 1, TAG_HUD_LAYER_SCORE_STRING);
 
+    ///////
+    auto sprite_hud_health = Sprite::createWithSpriteFrameName("hud_health.png");
+    sprite_hud_health->setPosition(Vec2(origin.x + visibleSize.width - 180, origin.y + visibleSize.height - 50));
+    hud_layer->addChild(sprite_hud_health, 1);
+
+    auto label_snake_health = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    if (label_snake_health)
+    {
+        label_snake_health->setAnchorPoint(Vec2(0, 0.5f));
+        label_snake_health->setPosition(Vec2(sprite_hud_health->getBoundingBox().getMaxX() + 20,
+            origin.y + visibleSize.height - 50));
+    }
+    hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
+
+    ///////
     auto label_snake_debug = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
     if (label_snake_debug)
     {
         label_snake_debug->setPosition(Vec2(origin.x + 500,
             origin.y + 50));
     }
-
     hud_layer->addChild(label_snake_debug, 1, TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING);
 
 
@@ -607,9 +631,9 @@ void GameScene::update(float dt)
     }
     
     //
-    drawHUDString(TAG_HUD_LAYER_SCORE_STRING, "score: " + std::to_string(score) + "/" + std::to_string(currLevel.getScoreNeeded()));
-    drawHUDString(TAG_HUD_LAYER_TIMER_STRING, "time elapsed: " + std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
-    drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, "health: " + std::to_string(snake->getHealth()));
+    drawHUDString(TAG_HUD_LAYER_SCORE_STRING, std::to_string(score) + "/" + std::to_string(currLevel.getScoreNeeded()));
+    drawHUDString(TAG_HUD_LAYER_TIMER_STRING, std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
+    drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, std::to_string(snake->getHealth()));
 
     auto head_cell = grid->xyToCell(snake->head().getPosition());
     drawHUDString(TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING, 
