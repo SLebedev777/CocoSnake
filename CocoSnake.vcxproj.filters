@@ -117,6 +117,9 @@
     <ClInclude Include="Classes\GameScene_VFX.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\UISettings.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="D:\semen\games\cocos2d-x_projects\CocoSnake\CMakeLists.txt" />

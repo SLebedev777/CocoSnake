@@ -2,7 +2,7 @@
 #include "MainMenuScene.h"
 #include "audio/include/AudioEngine.h"
 #include "ui/CocosGUI.h"
-
+#include "UISettings.h"
 
 USING_NS_CC;
 
@@ -30,8 +30,8 @@ bool WinSplashScene::init()
     auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
 
     auto button_play = ui::Button::create("button_green.png", "button_green.png");
-    button_play->setTitleText("Next Level");
-    button_play->setTitleFontName("fonts/arial.ttf");
+    button_play->setTitleText("Next");
+    button_play->setTitleFontName(FONT_FILENAME_MENU);
     button_play->setTitleFontSize(32);
     button_play->setPosition(Vec2(s.width / 2, s.height / 2));
     button_play->addClickEventListener([=](Ref* sender) {
@@ -42,7 +42,7 @@ bool WinSplashScene::init()
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText("Main Menu");
-    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
@@ -52,7 +52,7 @@ bool WinSplashScene::init()
     this->addChild(button_quit);
 
 
-    auto label = Label::createWithTTF("You Win!!!", "fonts/Marker Felt.ttf", 48);
+    auto label = Label::createWithTTF("You Win!!!", FONT_FILENAME_MENU, 48);
     if (label)
     {
         // position the label on the center of the screen
@@ -107,7 +107,7 @@ bool LooseSplashScene::init()
 
     auto button_play = ui::Button::create("button_green.png", "button_green.png");
     button_play->setTitleText("Retry");
-    button_play->setTitleFontName("fonts/arial.ttf");
+    button_play->setTitleFontName(FONT_FILENAME_MENU);
     button_play->setTitleFontSize(32);
     button_play->setPosition(Vec2(s.width / 2, s.height / 2));
     button_play->addClickEventListener([=](Ref* sender) {
@@ -118,7 +118,7 @@ bool LooseSplashScene::init()
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText("Main Menu");
-    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
@@ -127,7 +127,7 @@ bool LooseSplashScene::init()
         });
     this->addChild(button_quit);
 
-    auto label = Label::createWithTTF("You Loose...", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("You Loose...", FONT_FILENAME_MENU, 24);
     if (label)
     {
         // position the label on the center of the screen
@@ -176,7 +176,7 @@ bool FinalSplashScene::init()
         return false;
     }
 
-    auto quit_label = Label::createWithTTF("Quit", "fonts/Marker Felt.ttf", 24);
+    auto quit_label = Label::createWithTTF("Quit", FONT_FILENAME_MENU, 24);
 
     auto quit_menu_item = MenuItemLabel::create(quit_label, [&](Ref* sender) { onQuitCallback(sender); });
 
@@ -193,7 +193,7 @@ bool FinalSplashScene::init()
 
     menu->setPosition(Vec2(s.width / 2, s.height / 2));
 
-    auto label = Label::createWithTTF("All game finished!!!", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("All game finished!!!", FONT_FILENAME_MENU, 24);
     if (label)
     {
         // position the label on the center of the screen

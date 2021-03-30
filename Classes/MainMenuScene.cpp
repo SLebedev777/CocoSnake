@@ -3,6 +3,7 @@
 #include "GameLevel.h"
 #include "audio/include/AudioEngine.h"
 #include "ui/CocosGUI.h"
+#include "UISettings.h"
 
 USING_NS_CC;
 
@@ -67,7 +68,7 @@ bool MainMenuScene::init()
 
     auto button_play = ui::Button::create("button_green.png", "button_green.png");
     button_play->setTitleText("Play");
-    button_play->setTitleFontName("fonts/arial.ttf");
+    button_play->setTitleFontName(FONT_FILENAME_MENU);
     button_play->setTitleFontSize(32);
     button_play->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2));
     button_play->addClickEventListener([=](Ref* sender) {
@@ -78,7 +79,7 @@ bool MainMenuScene::init()
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText("Quit");
-    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(visible_size.width / 2, visible_size.height / 2 - button_play->getContentSize().height - 20));

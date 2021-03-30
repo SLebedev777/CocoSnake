@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "MainMenuScene.h"
 #include "ui/CocosGUI.h"
+#include "UISettings.h"
 
 USING_NS_CC;
 
@@ -40,7 +41,7 @@ bool GameMenuLayer::init()
 
     auto button_resume = ui::Button::create("button_green.png", "button_green.png");
     button_resume->setTitleText("Resume");
-    button_resume->setTitleFontName("fonts/arial.ttf");
+    button_resume->setTitleFontName(FONT_FILENAME_MENU);
     button_resume->setTitleFontSize(32);
     button_resume->setPosition(Vec2(s.width / 2, s.height / 2));
     button_resume->addClickEventListener([=](Ref* sender) {
@@ -51,7 +52,7 @@ bool GameMenuLayer::init()
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText("Main Menu");
-    button_quit->setTitleFontName("fonts/arial.ttf");
+    button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_resume->getContentSize().height - 20));

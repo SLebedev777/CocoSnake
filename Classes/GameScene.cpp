@@ -7,6 +7,7 @@
 #include "GameGrid.h"
 #include "IFood.h"
 #include "ui/CocosGUI.h"
+#include "UISettings.h"
 #include "CCHelpers.h"
 #include <string>
 #include <vector>
@@ -235,7 +236,7 @@ bool GameScene::init()
     
     auto hud_layer = LayerColor::create(Color4B(0, 0, 0, 0));
 
-    auto label_level = Label::createWithTTF("level: " + std::to_string(this->currLevel.getNumber()), "fonts/Marker Felt.ttf", 24);
+    auto label_level = Label::createWithTTF("level: " + std::to_string(this->currLevel.getNumber()), FONT_FILENAME_GAME_HUD, 24);
     if (label_level)
     {
         label_level->setPosition(Vec2(origin.x + visibleSize.width / 2 - 200,
@@ -248,7 +249,7 @@ bool GameScene::init()
     sprite_hud_time->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height - 50));
     hud_layer->addChild(sprite_hud_time, 1);
 
-    auto label_time = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    auto label_time = Label::createWithTTF("", FONT_FILENAME_GAME_HUD, 24);
     if (label_time)
     {
         label_time->setAnchorPoint(Vec2(0, 0.5f));
@@ -262,7 +263,7 @@ bool GameScene::init()
     sprite_hud_score->setPosition(Vec2(origin.x + visibleSize.width * 0.66f, origin.y + visibleSize.height - 50));
     hud_layer->addChild(sprite_hud_score, 1);
 
-    auto label_score = Label::createWithTTF("0", "fonts/Marker Felt.ttf", 24);
+    auto label_score = Label::createWithTTF("0", FONT_FILENAME_GAME_HUD, 24);
     label_score->setAnchorPoint(Vec2(0, 0.5f));
     if (label_score)
     {
@@ -276,7 +277,7 @@ bool GameScene::init()
     sprite_hud_health->setPosition(Vec2(origin.x + visibleSize.width - 180, origin.y + visibleSize.height - 50));
     hud_layer->addChild(sprite_hud_health, 1);
 
-    auto label_snake_health = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    auto label_snake_health = Label::createWithTTF("", FONT_FILENAME_GAME_HUD, 24);
     if (label_snake_health)
     {
         label_snake_health->setAnchorPoint(Vec2(0, 0.5f));
@@ -286,7 +287,7 @@ bool GameScene::init()
     hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
 
     ///////
-    auto label_snake_debug = Label::createWithTTF("", "fonts/Marker Felt.ttf", 24);
+    auto label_snake_debug = Label::createWithTTF("", FONT_FILENAME_GAME_HUD, 24);
     if (label_snake_debug)
     {
         label_snake_debug->setPosition(Vec2(origin.x + 500,
@@ -529,7 +530,7 @@ void GameScene::drawHUDString(int str_tag, const std::string& str)
 void GameScene::createHUDMovingScoreLabel(NS_Snake::IFoodPtr& f)
 {
     float score_label_duration = 1.0f;
-    auto score_label = cocos2d::Label::createWithTTF("+" + std::to_string(f->getScore()), "fonts/Marker Felt.ttf", 18);
+    auto score_label = cocos2d::Label::createWithTTF("+" + std::to_string(f->getScore()), FONT_FILENAME_GAME_HUD, 18);
     auto score_label_action = cocos2d::MoveBy::create(score_label_duration, cocos2d::Vec2(-40, 40));
     score_label->setPosition(f->getPosition().toVec2());
     score_label->runAction(score_label_action);
