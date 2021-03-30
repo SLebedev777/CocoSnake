@@ -36,7 +36,7 @@
 USING_NS_CC;
 
 // the design resolution should be oriented on the target devices the game most likely will be played on
-static cocos2d::Size designResolutionSize = cocos2d::Size(1920, 1080);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
