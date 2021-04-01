@@ -3,17 +3,36 @@
 #include "audio/include/AudioEngine.h"
 #include "ui/CocosGUI.h"
 #include "UISettings.h"
+#include "GameGrid.h"
+#include <ctime>
 
 USING_NS_CC;
 
-Scene* WinSplashScene::createScene()
+SplashScene::SplashScene(SplashSceneDescription& descr) :
+    m_descr(descr)
+{}
+
+SplashScene* SplashScene::create(SplashSceneDescription& descr)
 {
-    return WinSplashScene::create();
+    SplashScene* pRet = new(std::nothrow) SplashScene(descr);
+    if (pRet && pRet->init()) {
+        pRet->autorelease();
+        return pRet;
+    }
+    else {
+        delete pRet;
+        pRet = nullptr;
+        return nullptr;
+    }
+}
+
+Scene* SplashScene::createScene(SplashSceneDescription& descr)
+{
+    return SplashScene::create(descr);
 }
 
 
-// on "init" you need to initialize your instance
-bool WinSplashScene::init()
+bool SplashScene::init()
 {
     //////////////////////////////
     // 1. super init first
@@ -22,81 +41,43 @@ bool WinSplashScene::init()
         return false;
     }
 
-    auto s = Director::getInstance()->getWinSize();
+    using namespace NS_Snake;
 
-    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
-    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
-    auto delay = cocos2d::DelayTime::create(3);
-    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto button_play = ui::Button::create("button_green.png", "button_green.png");
-    button_play->setTitleText("Next");
-    button_play->setTitleFontName(FONT_FILENAME_MENU);
-    button_play->setTitleFontSize(32);
-    button_play->setPosition(Vec2(s.width / 2, s.height / 2));
-    button_play->addClickEventListener([=](Ref* sender) {
-        onContinueCallback(sender);
-        });
-    button_play->runAction(seq);
-    this->addChild(button_play);
+    auto back_layer = LayerColor::create(Color4B(70, 100, 0, 255)); // green
+    std::vector<std::string> sprite_names = { "apple.png", "portal.png", "ananas.png", "potion.png" };
 
-    auto button_quit = ui::Button::create("button_red.png", "button_red.png");
-    button_quit->setTitleText("Main Menu");
-    button_quit->setTitleFontName(FONT_FILENAME_MENU);
-    button_quit->setTitleFontSize(24);
-    button_quit->setScale(0.8);
-    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
-    button_quit->addClickEventListener([=](Ref* sender) {
-        onQuitCallback(sender);
-        });
-    this->addChild(button_quit);
-
-
-    auto label = Label::createWithTTF("You Win!!!", FONT_FILENAME_MENU, 48);
-    if (label)
+    float scale_factor = 0.5f;
+    size_t cell_size = Sprite::createWithSpriteFrameName("apple.png")->getTextureRect().size.width;
+    auto grid = std::make_shared<GameGrid>(origin.x, origin.y, visibleSize.width, visibleSize.height, scale_factor * cell_size);
+    for (int i = 0; i < grid->getNumCellsX(); i++)
     {
-        // position the label on the center of the screen
-        label->setPosition(Vec2(s.width / 2, s.height - label->getContentSize().height));
-
-        // add the label as a child to this layer
-        this->addChild(label, 1);
+        for (int j = i % 2; j < grid->getNumCellsY(); j += 2)
+        {
+            auto spr = Sprite::createWithSpriteFrameName(sprite_names[rand() % sprite_names.size()]);
+            spr->setColor(Color3B(30, 100, 30));
+            spr->setOpacity(50);
+            spr->setScale(scale_factor);
+            spr->setRotation(rand() % 360);
+            spr->setPosition(grid->cellToXyCenter(GameGrid::Cell(i, j)).toVec2());
+            back_layer->addChild(spr);
+        }
     }
+    this->addChild(back_layer, -2);
 
-    AudioEngine::play2d("sound/you_win.mp3", false, 0.5f);
+    auto central_rect = DrawNode::create();
+    int central_rect_width = 450;
+    central_rect->drawSolidRect(Vec2(origin.x + visibleSize.width / 2 - central_rect_width / 2, origin.y),
+        Vec2(origin.x + visibleSize.width / 2 + central_rect_width / 2, origin.y + visibleSize.height), m_descr.central_rect_color);
+    auto central_rect_border = DrawNode::create(50);
+    int central_rect_border_width = central_rect_width;
+    central_rect_border->drawRect(Vec2(origin.x + visibleSize.width / 2 - central_rect_border_width / 2, origin.y - 100),
+        Vec2(origin.x + visibleSize.width / 2 + central_rect_border_width / 2, origin.y + visibleSize.height + 100), Color4F::RED);
 
-    return true;
-}
-
-
-void WinSplashScene::onContinueCallback(Ref* pSender)
-{
-    AudioEngine::stopAll();
-    Director::getInstance()->popScene();
-}
-
-
-void WinSplashScene::onQuitCallback(cocos2d::Ref* pSender)
-{
-    AudioEngine::stopAll();
-    Director::getInstance()->replaceScene(MainMenuScene::create());
-}
-
-
-Scene* LooseSplashScene::createScene()
-{
-    return LooseSplashScene::create();
-}
-
-
-// on "init" you need to initialize your instance
-bool LooseSplashScene::init()
-{
-    //////////////////////////////
-    // 1. super init first
-    if (!Scene::init())
-    {
-        return false;
-    }
+    this->addChild(central_rect_border, -1);
+    this->addChild(central_rect, -1);
 
     auto s = Director::getInstance()->getWinSize();
 
@@ -105,59 +86,74 @@ bool LooseSplashScene::init()
     auto delay = cocos2d::DelayTime::create(3);
     auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
 
-    auto button_play = ui::Button::create("button_green.png", "button_green.png");
-    button_play->setTitleText("Retry");
-    button_play->setTitleFontName(FONT_FILENAME_MENU);
-    button_play->setTitleFontSize(32);
-    button_play->setPosition(Vec2(s.width / 2, s.height / 2));
-    button_play->addClickEventListener([=](Ref* sender) {
+    auto button_continue = ui::Button::create("button_green.png", "button_green.png");
+    button_continue->setTitleText(m_descr.continue_button_text);
+    button_continue->setTitleFontName(FONT_FILENAME_MENU);
+    button_continue->setTitleFontSize(32);
+    button_continue->setPosition(Vec2(s.width / 2, s.height / 2));
+    button_continue->addClickEventListener([=](Ref* sender) {
         onContinueCallback(sender);
         });
-    button_play->runAction(seq);
-    this->addChild(button_play);
+    button_continue->runAction(seq);
+    this->addChild(button_continue);
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
-    button_quit->setTitleText("Main Menu");
+    button_quit->setTitleText(m_descr.quit_button_text);
     button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
     button_quit->setScale(0.8);
-    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_play->getContentSize().height - 20));
+    button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_continue->getContentSize().height - 20));
     button_quit->addClickEventListener([=](Ref* sender) {
         onQuitCallback(sender);
         });
     this->addChild(button_quit);
 
-    auto label = Label::createWithTTF("You Loose...", FONT_FILENAME_MENU, 24);
+
+    auto label = Label::createWithTTF(m_descr.caption, FONT_FILENAME_MENU, 64);
     if (label)
     {
         // position the label on the center of the screen
-        label->setPosition(Vec2(s.width / 2, s.height - label->getContentSize().height));
+        label->setPosition(Vec2(s.width / 2, s.height - 3 * label->getContentSize().height));
 
-        // add the label as a child to this layer
-        this->addChild(label, 1);
+        auto label_scaler_disappear = cocos2d::ScaleTo::create(0, 0);
+        auto label_scaler_popup = cocos2d::ScaleTo::create(0.3f, 1.3f);
+        auto label_scaler_tonormal = cocos2d::ScaleTo::create(0.15f, 1.0f);
+        auto label_rotator = cocos2d::RotateBy::create(1.0f, 3);
+        auto label_appear_seq = cocos2d::Sequence::create(label_scaler_disappear, label_scaler_popup, label_scaler_tonormal, nullptr);
+        auto label_rotate_seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(
+            label_rotator, label_rotator->reverse(), label_rotator->reverse(), label_rotator, nullptr));
+        label->runAction(label_appear_seq);
+        label->runAction(label_rotate_seq);
+
+        auto label_shadow = Label::createWithTTF(m_descr.caption, FONT_FILENAME_MENU, 64);;
+        label_shadow->setPosition(label->getPosition() + Vec2(8, -8));
+        label_shadow->setTextColor(cocos2d::Color4B::BLACK);
+        label_shadow->setOpacity(50);
+        label_shadow->runAction(label_appear_seq->clone());
+        label_shadow->runAction(label_rotate_seq->clone());
+
+        this->addChild(label_shadow, 1);
+        this->addChild(label, 2);
     }
 
-    AudioEngine::play2d("sound/you_loose.mp3", false, 0.5f);
+    AudioEngine::play2d(m_descr.sound_file, false, 0.5f);
 
     return true;
 }
 
-
-void LooseSplashScene::onContinueCallback(Ref* pSender)
+void SplashScene::onContinueCallback(Ref* pSender)
 {
     AudioEngine::stopAll();
     Director::getInstance()->popScene();
 }
 
 
-void LooseSplashScene::onQuitCallback(cocos2d::Ref* pSender)
+void SplashScene::onQuitCallback(cocos2d::Ref* pSender)
 {
     AudioEngine::stopAll();
     Director::getInstance()->replaceScene(MainMenuScene::create());
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 Scene* FinalSplashScene::createScene()
