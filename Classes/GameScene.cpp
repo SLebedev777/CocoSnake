@@ -303,8 +303,7 @@ bool GameScene::init()
     auto hud_control_layer = LayerColor::create(Color4B(0, 0, 0, 0));
     
     auto button_menu = ui::Button::create("game_menu_icon.png", "game_menu_icon.png");
-    button_menu->setAnchorPoint(Vec2(0.0, 1.0));
-    button_menu->setPosition(Vec2(cell_size / 2, grid->getOrigin().y + grid->getHeight()));
+    button_menu->setPosition(Vec2(origin.x + 80, origin.y + visibleSize.height - 50));
     button_menu->addClickEventListener([=](Ref* sender) {
         onGameMenuOpen(sender);
         });
