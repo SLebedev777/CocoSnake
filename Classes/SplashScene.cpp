@@ -114,6 +114,7 @@ bool SplashScene::init()
     {
         // position the label on the center of the screen
         label->setPosition(Vec2(s.width / 2, s.height - 3 * label->getContentSize().height));
+        label->enableShadow(Color4B(0, 0, 0, 50), cocos2d::Size(8, -8));
 
         auto label_scaler_disappear = cocos2d::ScaleTo::create(0, 0);
         auto label_scaler_popup = cocos2d::ScaleTo::create(0.3f, 1.3f);
@@ -124,15 +125,6 @@ bool SplashScene::init()
             label_rotator, label_rotator->reverse(), label_rotator->reverse(), label_rotator, nullptr));
         label->runAction(label_appear_seq);
         label->runAction(label_rotate_seq);
-
-        auto label_shadow = Label::createWithTTF(m_descr.caption, FONT_FILENAME_MENU, 64);;
-        label_shadow->setPosition(label->getPosition() + Vec2(8, -8));
-        label_shadow->setTextColor(cocos2d::Color4B::BLACK);
-        label_shadow->setOpacity(50);
-        label_shadow->runAction(label_appear_seq->clone());
-        label_shadow->runAction(label_rotate_seq->clone());
-
-        this->addChild(label_shadow, 1);
         this->addChild(label, 2);
     }
 
