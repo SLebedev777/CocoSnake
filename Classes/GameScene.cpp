@@ -564,11 +564,14 @@ void GameScene::spawnFood(float dt, cocos2d::Node* parent)
 
 void GameScene::update(float dt)
 {
-    updateInputDirectionState();
     // GAME LOGIC HERE
-    
-    snake->move(up, right);
 
+    if (snake->isAlive())
+    {
+        updateInputDirectionState();
+        snake->move(up, right);
+    }
+    
     snake->update();
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
@@ -578,6 +581,9 @@ void GameScene::update(float dt)
         snake->intersectsItself() ||
         time_elapsed >= currLevel.getMaxTime())
     {
+        snake->kill();
+        up = 0;
+        right = 0;
         onGameLoose(nullptr);
     }
     

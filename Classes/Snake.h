@@ -30,6 +30,7 @@ namespace NS_Snake
 		void addHealth(int h) { m_health += h; checkHealth(); }
 		int getHealth() const { return m_health; }
 		bool isAlive() const { return m_alive; }
+		void kill() { m_alive = false; }
 		bool canMoveAlone() const { return m_canMoveAlone; }
 		void setWrapAround(bool wrap_around) { m_wrapAround = wrap_around; }
 		bool getWrapAround() const { return m_wrapAround; }
