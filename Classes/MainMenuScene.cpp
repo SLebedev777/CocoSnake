@@ -80,15 +80,7 @@ bool MainMenuScene::init()
     buttons_callbacks.push_back({ button_play, [=](Ref* sender) { menuNewGameCallback(sender); } });
     buttons_callbacks.push_back({ button_quit, [=](Ref* sender) { menuCloseCallback(sender); } });
 
-    std::function<Action* ()> focused_button_action_callback = []() {
-        auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
-        auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
-        auto delay = cocos2d::DelayTime::create(3);
-        auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
-        return seq;
-    };
-
-    UIButtonMenu* menu = UIButtonMenu::create(buttons_callbacks, this, this->getEventDispatcher(), focused_button_action_callback);
+    UIButtonMenu* menu = UIButtonMenu::create(buttons_callbacks, this, this->getEventDispatcher());
     this->addChild(menu);
 
     AudioEngine::play2d("background.mp3", true, 0.25f);

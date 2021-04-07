@@ -17,6 +17,7 @@ UIButtonMenu::UIButtonMenu(std::vector<std::pair<ui::Button*, ui::Widget::ccWidg
 
 	if (!m_dispatcher)
 		throw std::runtime_error("Event dispatcher must be set by parent scene for buttons menu");
+	
 }
 
 bool UIButtonMenu::init()
@@ -42,8 +43,14 @@ bool UIButtonMenu::init()
 		button->setScale(0.8);
 		i++;
 	}
-
-	m_buttonsCallbacks.front().first->runAction(m_focusedButtonActionCallback());
+	if (!m_focusedButtonActionCallback)
+	{
+		m_buttonsCallbacks.front().first->runAction(defaultFocusedButtonActionCallback());
+	}
+	else
+	{
+		m_buttonsCallbacks.front().first->runAction(m_focusedButtonActionCallback());
+	}
 
 	auto keyboard_listener = EventListenerKeyboard::create();
 	keyboard_listener->onKeyPressed = CC_CALLBACK_2(UIButtonMenu::onKeyPressed, this);
@@ -123,7 +130,23 @@ void UIButtonMenu::update()
 	{
 		m_buttonsCallbacks[old_id].first->stopAllActions();
 		m_buttonsCallbacks[old_id].first->setScale(0.8);
-		m_buttonsCallbacks[m_currButtonId].first->runAction(m_focusedButtonActionCallback());
+		if (!m_focusedButtonActionCallback)
+		{
+			m_buttonsCallbacks[m_currButtonId].first->runAction(defaultFocusedButtonActionCallback());
+		}
+		else
+		{
+			m_buttonsCallbacks[m_currButtonId].first->runAction(m_focusedButtonActionCallback());
+		}
 	}
 
 }
+
+Action* UIButtonMenu::defaultFocusedButtonActionCallback()
+{
+	auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
+	auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
+	auto delay = cocos2d::DelayTime::create(3);
+	auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
+	return seq;
+};
