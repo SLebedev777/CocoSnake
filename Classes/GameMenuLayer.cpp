@@ -3,6 +3,7 @@
 #include "MainMenuScene.h"
 #include "ui/CocosGUI.h"
 #include "UISettings.h"
+#include "UIButtonMenu.h"
 
 USING_NS_CC;
 
@@ -34,32 +35,27 @@ bool GameMenuLayer::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     auto s = Director::getInstance()->getWinSize();
 
-    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
-    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
-    auto delay = cocos2d::DelayTime::create(3);
-    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
-
     auto button_resume = ui::Button::create("button_green.png", "button_green.png");
     button_resume->setTitleText("Resume");
     button_resume->setTitleFontName(FONT_FILENAME_MENU);
     button_resume->setTitleFontSize(32);
     button_resume->setPosition(Vec2(s.width / 2, s.height / 2));
-    button_resume->addClickEventListener([=](Ref* sender) {
-        menuResumeCallback(sender);
-        });
-    button_resume->runAction(seq);
     this->addChild(button_resume);
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText("Main Menu");
     button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
-    button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_resume->getContentSize().height - 20));
-    button_quit->addClickEventListener([=](Ref* sender) {
-        menuBackToMainMenuCallback(sender);
-        });
     this->addChild(button_quit);
+
+    std::vector<std::pair<ui::Button*, ui::Widget::ccWidgetClickCallback>> buttons_callbacks;
+    buttons_callbacks.push_back({ button_resume, [=](Ref* sender) { menuResumeCallback(sender); } });
+    buttons_callbacks.push_back({ button_quit, [=](Ref* sender) { menuBackToMainMenuCallback(sender); } });
+
+    UIButtonMenu* menu = UIButtonMenu::create(buttons_callbacks, this, this->getEventDispatcher());
+    this->addChild(menu);
+
 
     return true;
 }

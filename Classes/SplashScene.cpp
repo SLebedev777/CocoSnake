@@ -3,6 +3,7 @@
 #include "audio/include/AudioEngine.h"
 #include "ui/CocosGUI.h"
 #include "UISettings.h"
+#include "UIButtonMenu.h"
 #include "GameGrid.h"
 #include <ctime>
 
@@ -81,32 +82,26 @@ bool SplashScene::init()
 
     auto s = Director::getInstance()->getWinSize();
 
-    auto bouncer = cocos2d::ScaleTo::create(0.2f, 0.9f);
-    auto unbouncer = cocos2d::ScaleTo::create(0.2f, 1.0f);
-    auto delay = cocos2d::DelayTime::create(3);
-    auto seq = cocos2d::RepeatForever::create(cocos2d::Sequence::create(bouncer, unbouncer, bouncer, unbouncer, delay, nullptr));
-
     auto button_continue = ui::Button::create("button_green.png", "button_green.png");
     button_continue->setTitleText(m_descr.continue_button_text);
     button_continue->setTitleFontName(FONT_FILENAME_MENU);
     button_continue->setTitleFontSize(32);
     button_continue->setPosition(Vec2(s.width / 2, s.height / 2));
-    button_continue->addClickEventListener([=](Ref* sender) {
-        onContinueCallback(sender);
-        });
-    button_continue->runAction(seq);
     this->addChild(button_continue);
 
     auto button_quit = ui::Button::create("button_red.png", "button_red.png");
     button_quit->setTitleText(m_descr.quit_button_text);
     button_quit->setTitleFontName(FONT_FILENAME_MENU);
     button_quit->setTitleFontSize(24);
-    button_quit->setScale(0.8);
     button_quit->setPosition(Vec2(s.width / 2, s.height / 2 - button_continue->getContentSize().height - 20));
-    button_quit->addClickEventListener([=](Ref* sender) {
-        onQuitCallback(sender);
-        });
     this->addChild(button_quit);
+
+    std::vector<std::pair<ui::Button*, ui::Widget::ccWidgetClickCallback>> buttons_callbacks;
+    buttons_callbacks.push_back({ button_continue, [=](Ref* sender) { onContinueCallback(sender); } });
+    buttons_callbacks.push_back({ button_quit, [=](Ref* sender) { onQuitCallback(sender); } });
+
+    UIButtonMenu* menu = UIButtonMenu::create(buttons_callbacks, this, this->getEventDispatcher());
+    this->addChild(menu);
 
 
     auto label = Label::createWithTTF(m_descr.caption, FONT_FILENAME_MENU, 64);
