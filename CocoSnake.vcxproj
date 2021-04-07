@@ -816,6 +816,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Classes\Snake_fwd.h" />
     <ClInclude Include="Classes\Snake_types.h" />
     <ClInclude Include="Classes\SplashScene.h" />
+    <ClInclude Include="Classes\UIButtonMenu.h" />
     <ClInclude Include="Classes\UISettings.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h" />
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\main.h" />
@@ -831,6 +832,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="Classes\MainMenuScene.cpp" />
     <ClCompile Include="Classes\Snake.cpp" />
     <ClCompile Include="Classes\SplashScene.cpp" />
+    <ClCompile Include="Classes\UIButtonMenu.cpp" />
     <ClCompile Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.cpp" />
     <ClCompile Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\main.cpp" />
     <ResourceCompile Include="D:\semen\games\cocos2d-x_projects\CocoSnake\proj.win32\game.rc" />

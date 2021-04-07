@@ -43,6 +43,9 @@
     <ClCompile Include="Classes\GameScene_VFX.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\UIButtonMenu.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Classes\AppDelegate.h">
@@ -117,8 +120,11 @@
     <ClInclude Include="Classes\GameScene_VFX.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\UIButtonMenu.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="Classes\UISettings.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
