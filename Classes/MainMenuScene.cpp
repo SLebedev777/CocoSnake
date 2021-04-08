@@ -62,6 +62,21 @@ bool MainMenuScene::init()
     auto waves = Waves::create(7, Size(16, 12), 3, 15, true, true);
     node_grid->runAction(RepeatForever::create(waves));
 
+    // CocoSnake logo
+    auto label_logo_snake = Label::createWithTTF("Snake", FONT_FILENAME_MENU, 120);
+    label_logo_snake->setPosition(Vec2(visible_size.width / 2, 0.75 * visible_size.height));
+    label_logo_snake->setTextColor(Color4B::ORANGE);
+    label_logo_snake->enableBold();
+    label_logo_snake->enableShadow(Color4B(0, 0, 0, 50), Size(8, -8), 2);
+    label_logo_snake->enableOutline(Color4B(50, 150, 0, 255), 7);
+    this->addChild(label_logo_snake);
+
+    auto spr_cocos2dx = Sprite::create("cocos2d-x-thumb.png");
+    spr_cocos2dx->setScale(0.4, 0.5);
+    spr_cocos2dx->setPosition(Vec2(label_logo_snake->getBoundingBox().getMinX() - 50, 
+        label_logo_snake->getBoundingBox().getMidY() + 5));
+    this->addChild(spr_cocos2dx);
+
     auto button_play = ui::Button::create("button_green.png", "button_green.png");
     button_play->setTitleText("Play");
     button_play->setTitleFontName(FONT_FILENAME_MENU);
