@@ -354,7 +354,7 @@ bool GameScene::init()
 
     // setup Timer
     time_elapsed = 0.0f;
-    this->schedule(CC_SCHEDULE_SELECTOR(GameScene::updateTimer), 1.0f);
+    this->schedule([this](float dt) {GameScene::updateTimer(dt); }, 1.0f, "UpdateTimerCallback");
 
     // callback when time is running out
     this->schedule([this](float dt) {
@@ -569,23 +569,34 @@ void GameScene::update(float dt)
     {
         updateInputDirectionState();
         snake->move(up, right);
+
+        snake->update();
     }
-    
-    snake->update();
-
-    auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-
-    if ((!snake->getWrapAround() && !GAMEGRIDRECT.containsPoint(snake->head().getPosition().toVec2())) || 
-        !snake->isAlive() || 
-        snake->intersectsItself() ||
-        time_elapsed >= currLevel.getMaxTime())
+  
+    if (!end_animation) 
     {
-        snake->kill();
-        up = 0;
-        right = 0;
+        if (!snake->isAlive() || time_elapsed >= currLevel.getMaxTime())
+        {
+            snake->kill();
+            up = 0;
+            right = 0;
+            this->unschedule("UpdateTimerCallback");
+            
+            snake->runDeathAction(RepeatForever::create(Sequence::create(ToggleVisibility::create(), DelayTime::create(0.25f), nullptr)));
+            auto wait_action = DelayTime::create(2.0f);
+            wait_action->setTag(12345);
+            auto wait_node = Node::create();
+            wait_node->runAction(wait_action);
+            this->addChild(wait_node, 2, "WaitNode");
+
+            end_animation = true;            
+        }
+    }
+    if (end_animation && !this->getChildByName("WaitNode")->getActionByTag(12345))
+    {
         onGameLoose(nullptr);
     }
-    
+
     for (auto food_iter = food.begin(); food_iter != food.end(); )
     {
         auto& f = *food_iter;
@@ -646,6 +657,5 @@ void GameScene::update(float dt)
         "head_x:  " + std::to_string(snake->head().getPosition().x) + "   head_y:   " + std::to_string(snake->head().getPosition().y) + 
         "   head_cell_cix(col):  " + std::to_string(head_cell.cix) + "   head_cell_ciy(row):   " + std::to_string(head_cell.ciy)
     );
-
 
 }

@@ -159,6 +159,26 @@ namespace NS_Snake
 
 		}
 		
+		// detect outside game grid
+		auto GAMEGRIDRECT = cocos2d::Rect(m_grid->getOrigin().x, m_grid->getOrigin().y, m_grid->getWidth(), m_grid->getHeight());
+		if ((!getWrapAround() && !GAMEGRIDRECT.containsPoint(poss_new_head_pos.toVec2())) ||
+			!m_grid->contains(poss_new_head_cell))
+		{
+			kill();
+			return false;
+		}
+		
+		// detect intersect itself
+		for (size_t i = 1; i < m_parts.size(); i++)
+		{
+			auto part_cell = m_grid->xyToCell(m_parts[i]->getPosition());
+			if (part_cell == poss_new_head_cell)
+			{
+				kill();
+				return false;
+			}
+		}
+
 		// detect walls collision
 		if (m_grid->isCellOccupied(poss_new_head_cell) && m_grid->getCellType(poss_new_head_cell) == NS_Snake::GameGrid::CellType::WALL)
 			return false;
@@ -272,5 +292,13 @@ namespace NS_Snake
 				return true;
 		}
 		return false;
+	}
+
+	void Snake::runDeathAction(cocos2d::Action* action)
+	{
+		for (const auto& part : m_parts)
+		{
+			part->getSprite()->runAction(action->clone());
+		}
 	}
 }

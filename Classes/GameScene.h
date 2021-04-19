@@ -61,6 +61,8 @@ protected:
     bool left_pressed;
     int up;    // 1 = up, -1 = down
     int right; // 1 = right, -1 = left
+    
+    bool end_animation = false;
 };
 
 #endif // __GAMESCENE_H__

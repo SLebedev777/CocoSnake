@@ -2,6 +2,7 @@
 #define __SNAKE_H__
 
 #include "Snake_fwd.h"
+#include "cocos2d.h"
 #include <vector>
 #include <iterator>
 
@@ -34,6 +35,8 @@ namespace NS_Snake
 		bool canMoveAlone() const { return m_canMoveAlone; }
 		void setWrapAround(bool wrap_around) { m_wrapAround = wrap_around; }
 		bool getWrapAround() const { return m_wrapAround; }
+		
+		void runDeathAction(cocos2d::Action* action);
 	private:
 		std::vector<DirectedSpritePtr> m_parts;
 		GameGridPtr m_grid;
