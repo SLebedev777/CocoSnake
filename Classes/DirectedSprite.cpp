@@ -89,4 +89,61 @@ namespace NS_Snake
 		m_ccSprite->setFlippedX(m_dirToFrameTable[m_dirPair].flipX);
 		m_ccSprite->setFlippedY(m_dirToFrameTable[m_dirPair].flipY);
 	}
+
+	Point2d DirectedSprite::getFromPosition() const
+	{
+		int x = getPosition().x;
+		int y = getPosition().y;
+		cocos2d::Rect rect = getSprite()->getBoundingBox();
+
+		switch (getDirFrom())
+		{
+		case SPRITE_DIRECTION::UP:
+			y = rect.getMinY();
+			break;
+		case SPRITE_DIRECTION::DOWN:
+			y = rect.getMaxY();
+			break;
+		case SPRITE_DIRECTION::RIGHT:
+			x = rect.getMinX();
+			break;
+		case SPRITE_DIRECTION::LEFT:
+			x = rect.getMaxX();
+			break;
+		case SPRITE_DIRECTION::NONE:
+		default:
+			break;
+		}
+
+		return Point2d(x, y);
+	}
+
+	Point2d DirectedSprite::getToPosition() const
+	{
+		int x = getPosition().x;
+		int y = getPosition().y;
+		cocos2d::Rect rect = getSprite()->getBoundingBox();
+
+		switch (getDirTo())
+		{
+		case SPRITE_DIRECTION::UP:
+			y = rect.getMaxY();
+			break;
+		case SPRITE_DIRECTION::DOWN:
+			y = rect.getMinY();
+			break;
+		case SPRITE_DIRECTION::RIGHT:
+			x = rect.getMaxX();
+			break;
+		case SPRITE_DIRECTION::LEFT:
+			x = rect.getMinX();
+			break;
+		case SPRITE_DIRECTION::NONE:
+		default:
+			break;
+		}
+
+		return Point2d(x, y);
+	}
+
 }

@@ -77,6 +77,8 @@ namespace NS_Snake
 		void update();  // updates frame by table, according to set direction
 		Point2d getPosition() const { const auto pos = m_ccSprite->getPosition(); return Point2d(pos.x, pos.y); }
 		void setPosition(Point2d& pos) { m_ccSprite->setPosition(cocos2d::Vec2(pos.x, pos.y)); }
+		Point2d getFromPosition() const;
+		Point2d getToPosition() const;
 
 	private:
 		cocos2d::Sprite* m_ccSprite;
