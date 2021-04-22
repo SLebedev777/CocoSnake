@@ -589,7 +589,11 @@ void GameScene::update(float dt)
             wait_node->runAction(wait_action);
             this->addChild(wait_node, 2, "WaitNode");
 
-            end_animation = true;            
+            auto emitter = getParticleVFXSnakeDies();
+            emitter->setPosition(snake->head().getToPosition().toVec2());
+            this->addChild(emitter, 20);
+
+            end_animation = true;      
         }
     }
     if (end_animation && !this->getChildByName("WaitNode")->getActionByTag(12345))

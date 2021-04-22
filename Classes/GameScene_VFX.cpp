@@ -70,3 +70,23 @@ ParticleSystemQuad* getParticleVFXDisappearFood(FoodType ft, FoodSubType fst)
     
     return emitter;
 }
+
+ParticleSystemQuad* getParticleVFXSnakeDies()
+{
+    auto emitter = ParticleExplosion::createWithTotalParticles(500);
+    emitter->setDuration(0.25f);
+    emitter->setEmitterMode(cocos2d::ParticleSystem::Mode::RADIUS);
+    emitter->setStartRadius(10.0f);
+    emitter->setEndRadius(80.0f);
+    emitter->setLife(0.5f);
+    emitter->setStartSize(15.0f);
+    emitter->setEndSize(2.0f);
+    cocos2d::Color4F start_color(cocos2d::Color4F::GREEN);
+    emitter->setStartColor(start_color);
+    emitter->setStartColorVar(cocos2d::Color4F(0.1, 0.1, 0.1, 0));
+    emitter->setEndColor(cocos2d::Color4F::BLACK);
+    emitter->setEndColorVar(cocos2d::Color4F(0, 0, 0, 0));
+    emitter->setEmissionRate(200);
+
+    return emitter;
+}

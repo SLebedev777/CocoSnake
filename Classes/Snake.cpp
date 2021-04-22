@@ -296,6 +296,10 @@ namespace NS_Snake
 
 	void Snake::runDeathAction(cocos2d::Action* action)
 	{
+		if (isAlive())
+		{
+			return;
+		}
 		for (const auto& part : m_parts)
 		{
 			part->getSprite()->runAction(action->clone());
