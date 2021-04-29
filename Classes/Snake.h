@@ -34,7 +34,7 @@ namespace NS_Snake
 		void kill() { m_alive = false; }
 		bool canMoveAlone() const { return m_canMoveAlone; }
 		void setWrapAround(bool wrap_around) { m_wrapAround = wrap_around; }
-		bool getWrapAround() const { return m_wrapAround; }
+		bool isWrapAround() const { return m_wrapAround; }
 		
 		void runDeathAction(cocos2d::Action* action);
 	private:

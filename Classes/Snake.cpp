@@ -161,7 +161,7 @@ namespace NS_Snake
 		
 		// detect outside game grid
 		auto GAMEGRIDRECT = cocos2d::Rect(m_grid->getOrigin().x, m_grid->getOrigin().y, m_grid->getWidth(), m_grid->getHeight());
-		if ((!getWrapAround() && !GAMEGRIDRECT.containsPoint(poss_new_head_pos.toVec2())) ||
+		if ((!isWrapAround() && !GAMEGRIDRECT.containsPoint(poss_new_head_pos.toVec2())) ||
 			!m_grid->contains(poss_new_head_cell))
 		{
 			kill();
