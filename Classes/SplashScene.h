@@ -49,6 +49,17 @@ public:
 };
 
 
+class FinalSplashScene : public SplashScene
+{
+public:
+    static FinalSplashScene* create()
+    {
+        SplashScene::SplashSceneDescription descr = { "All game finished!!!", "Retry", "Main Menu", cocos2d::Color4F(0.0f, 0.0f, 1.0f, 0.5f), "sound/you_win.mp3" };
+        return static_cast<FinalSplashScene*>(SplashScene::create(descr));
+    }
+};
+
+/*
 class FinalSplashScene : public cocos2d::Scene
 {
 public:
@@ -62,5 +73,6 @@ public:
     CREATE_FUNC(FinalSplashScene);
 
 };
+*/
 
 #endif // __SPLASHSCENE_H__

@@ -142,7 +142,7 @@ void SplashScene::onQuitCallback(cocos2d::Ref* pSender)
 }
 
 
-
+/*
 Scene* FinalSplashScene::createScene()
 {
     return FinalSplashScene::create();
@@ -198,3 +198,4 @@ void FinalSplashScene::onQuitCallback(cocos2d::Ref* pSender)
     AudioEngine::stopAll();
     Director::getInstance()->replaceScene(MainMenuScene::create());
 }
+*/
