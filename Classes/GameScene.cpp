@@ -28,7 +28,7 @@ enum LayersTags
 
 enum GameLayerTags
 {
-
+    TAG_GAME_LAYER_GRID_BORDER_RECT = 1
 };
 
 enum HUDLayerTags
@@ -102,7 +102,15 @@ bool GameScene::init()
     grid = std::make_shared<GameGrid>(grid_origin_x, grid_origin_y, grid_width, grid_height, cell_size);
 
     auto GAMEGRIDRECT = Rect(grid->getOrigin().x, grid->getOrigin().y, grid->getWidth(), grid->getHeight());
-    
+
+    // create gray border around game grid - surrounding wall, that will vanish in wrap-around mode
+    int grid_border_width = 20;
+    auto grid_draw_border = DrawNode::create(2);
+    grid_draw_border->drawSolidRect(Vec2(grid->getOrigin().x - grid_border_width / 2, grid->getOrigin().y - grid_border_width / 2),
+        Vec2(grid->getOrigin().x + grid->getWidth() + grid_border_width / 2, grid->getOrigin().y + grid->getHeight() + grid_border_width / 2),
+        Color4F::GRAY);
+    game_layer->addChild(grid_draw_border, -1, TAG_GAME_LAYER_GRID_BORDER_RECT);
+
     // tile background with sand bitmap
     Texture2D::TexParams texParams;
     texParams.magFilter = backend::SamplerFilter::LINEAR;
@@ -114,6 +122,8 @@ bool GameScene::init()
     background->setAnchorPoint(Vec2(0, 0));
     background->setPosition(grid->getOrigin().x, grid->getOrigin().y);
     game_layer->addChild(background);
+
+#ifdef COCOS2D_DEBUG
 
     auto grid_draw = DrawNode::create(2);
     grid_draw->drawRect(Vec2(grid->getOrigin().x, grid->getOrigin().y),
@@ -131,6 +141,7 @@ bool GameScene::init()
     }
     game_layer->addChild(grid_draw);
 
+#endif
 
     std::vector<DirectedSpritePtr> parts;
     int start_x = grid->getOrigin().x + grid->getWidth() / 2;
@@ -287,6 +298,7 @@ bool GameScene::init()
     hud_layer->addChild(label_snake_health, 1, TAG_HUD_LAYER_SNAKE_HEALTH_STRING);
 
     ///////
+#ifdef COCOS2D_DEBUG
     auto label_snake_debug = Label::createWithTTF("", FONT_FILENAME_GAME_HUD, 24);
     if (label_snake_debug)
     {
@@ -294,7 +306,7 @@ bool GameScene::init()
             origin.y + 50));
     }
     hud_layer->addChild(label_snake_debug, 1, TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING);
-
+#endif
 
     //////////////////////////////////////////////////
     // HUD CONTROL LAYER
@@ -309,7 +321,7 @@ bool GameScene::init()
         });
     hud_control_layer->addChild(button_menu);
 
-
+#ifdef COCOS2D_DEBUG
     auto button_win = ui::Button::create("CloseNormal.png", "CloseSelected.png");
     button_win->setTitleText("Win");
     button_win->setPosition(Vec2(50, 200));
@@ -325,6 +337,7 @@ bool GameScene::init()
         onGameLoose(sender);
         });
     hud_control_layer->addChild(button_loose);
+#endif
     //////////////////////////////////////////////////
 
     auto _mouseListener = EventListenerMouse::create();
@@ -589,9 +602,13 @@ void GameScene::update(float dt)
             wait_node->runAction(wait_action);
             this->addChild(wait_node, 2, "WaitNode");
 
-            auto emitter = getParticleVFXSnakeDies();
-            emitter->setPosition(snake->head().getToPosition().toVec2());
-            this->addChild(emitter, 20);
+            if (time_elapsed < currLevel.getMaxTime())
+            {
+                auto emitter = getParticleVFXSnakeDies();
+                emitter->setPosition(snake->head().getToPosition().toVec2());
+                this->addChild(emitter, 20);
+                AudioEngine::play2d("sound/snake_collide.mp3", false, 0.5f);
+            }
 
             end_animation = true;      
         }
@@ -628,11 +645,27 @@ void GameScene::update(float dt)
             }
             else
             {
+                int grid_border_width = 10;
+                auto grid_draw_border = DrawNode::create(grid_border_width);
+                grid_draw_border->drawRect(Vec2(grid->getOrigin().x - grid_border_width / 2, grid->getOrigin().y - grid_border_width / 2),
+                    Vec2(grid->getOrigin().x + grid->getWidth() + grid_border_width / 2, grid->getOrigin().y + grid->getHeight() + grid_border_width / 2),
+                    Color4F::RED);
+                grid_draw_border->runAction(Sequence::create(FadeOut::create(1.0f), RemoveSelf::create(), nullptr));
+                this->addChild(grid_draw_border, 1);
+
                 AudioEngine::play2d("sound/eat_bad_food.ogg", false, 0.5f);
             }
             if (f->getFoodSubType() == NS_Snake::StaticFoodType::PORTAL)
             {
-                snake->setWrapAround(true);
+                if (!snake->isWrapAround())
+                {
+                    snake->setWrapAround(true);
+                    auto grid_draw_border = this->getChildByTag(TAG_GAME_LAYER)->getChildByTag(TAG_GAME_LAYER_GRID_BORDER_RECT);
+                    auto seq = Sequence::create(FadeOut::create(1.0f), nullptr);  // don't delete, reserve to option to restore after time 
+                    grid_draw_border->runAction(seq);
+
+                    AudioEngine::play2d("sound/portal_activate.mp3", false, 0.5f);
+                }
             }
 
             createHUDMovingScoreLabel(f);
@@ -656,10 +689,12 @@ void GameScene::update(float dt)
     drawHUDString(TAG_HUD_LAYER_TIMER_STRING, std::to_string(int(time_elapsed)) + "/" + std::to_string(currLevel.getMaxTime()));
     drawHUDString(TAG_HUD_LAYER_SNAKE_HEALTH_STRING, std::to_string(snake->getHealth()));
 
+#ifdef COCOS2D_DEBUG
     auto head_cell = grid->xyToCell(snake->head().getPosition());
     drawHUDString(TAG_HUD_LAYER_SNAKE_HEAD_DEBUG_STRING, 
         "head_x:  " + std::to_string(snake->head().getPosition().x) + "   head_y:   " + std::to_string(snake->head().getPosition().y) + 
         "   head_cell_cix(col):  " + std::to_string(head_cell.cix) + "   head_cell_ciy(row):   " + std::to_string(head_cell.ciy)
     );
+#endif
 
 }
