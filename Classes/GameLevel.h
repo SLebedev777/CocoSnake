@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 
+using namespace NS_Snake;
 
 class GameLevel
 {
@@ -15,26 +16,14 @@ public:
 		size_t num_cells_x,
 		size_t num_cells_y,
 		NS_Snake::FoodTable& food_table,
-		std::string level_name = "", 
-		uint16_t snake_starting_length = 3, 
+		std::string level_name = "",
+		uint16_t snake_starting_length = 3,
 		uint16_t num_starting_food = 10,
 		uint16_t num_starting_walls = 5,
 		uint16_t score_needed = 10,
 		uint16_t max_time = -1,
-		float spawn_food_interval = 1.0f
-		):
-		m_number(number),
-		m_numCellsX(num_cells_x),
-		m_numCellsY(num_cells_y),
-		m_foodTable(food_table),
-		m_levelName(level_name),
-		m_snakeStartingLength(snake_starting_length),
-    	m_numStartingFood(num_starting_food),
-	    m_numStartingWalls(num_starting_walls),
-	    m_scoreNeeded(score_needed),
-	    m_maxTime(max_time),
-		m_spawnFoodInterval(spawn_food_interval)
-	{}
+		float spawn_food_interval = 0.0f
+	);
 
 	size_t getNumCellsX() const { return m_numCellsX; }
 	size_t getNumCellsY() const { return m_numCellsY; }

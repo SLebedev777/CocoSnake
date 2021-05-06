@@ -224,7 +224,10 @@ bool GameScene::init()
     }
 
     //set food spawner callback at random free grid cell
-    game_layer->schedule([this](float dt) { spawnFood(dt, this->getChildByTag(TAG_GAME_LAYER)); }, currLevel.getSpawnFoodInterval(), "food_spawn");
+    if (currLevel.getSpawnFoodInterval() > 0)
+    {
+        game_layer->schedule([this](float dt) { spawnFood(dt, this->getChildByTag(TAG_GAME_LAYER)); }, currLevel.getSpawnFoodInterval(), "food_spawn");
+    }
 
     // create some walls
     for (int i = 0; i < currLevel.getNumStartingWalls(); i++)
@@ -618,6 +621,7 @@ void GameScene::update(float dt)
         onGameLoose(nullptr);
     }
 
+    // disappear food if its lifetime is over
     for (auto food_iter = food.begin(); food_iter != food.end(); )
     {
         auto& f = *food_iter;

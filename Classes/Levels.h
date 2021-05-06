@@ -62,7 +62,7 @@ GameLevelsArray getGameLevels()
 	StaticFoodTable static_food_table1 = {
 		{ StaticFoodType::APPLE,  StaticFoodDescription("apple.png", 1, 1, false, 3, actionCallbackBounce) },
 		{ StaticFoodType::BANANA, StaticFoodDescription("banana.png", 1, 1, false, 5, actionCallbackRockSideToSide) },
-		{ StaticFoodType::PORTAL, StaticFoodDescription("portal.png", 1, 1, true, -1, actionCallbackRotateForever) }
+		{ StaticFoodType::PORTAL, StaticFoodDescription("portal.png", 1, 1, true, 1, actionCallbackRotateForever) }
 	};
 
 	DirToFrameTable DFT_butterfly = dirToFrameTemplate("butterfly.png");
@@ -71,7 +71,7 @@ GameLevelsArray getGameLevels()
 		{MovingFoodType::BUTTERFLY, 
 		MovingFoodDescription(DFT_butterfly, 1, 1, false, -1, 0.7, 0.4f, actionCallbackButterflyIdle, actionCallbackButterflyMove)},
 		{MovingFoodType::SPYDER,
-		MovingFoodDescription(DFT_spyder, -10, 1, false, -1, 0.7, 1.0f, nullptr, actionCallbackSpyderMove)},
+		MovingFoodDescription(DFT_spyder, -10, 1, false, 1, 0.7, 1.0f, nullptr, actionCallbackSpyderMove)},
 
 	};
 	TypeToProbasMap static_food_probas1 = {
@@ -92,9 +92,9 @@ GameLevelsArray getGameLevels()
 
 	GameLevelsArray levels;
 
-	levels.push_back(std::make_shared<GameLevel>(1, 10, 12, food_table1, "Level1", 3, 10, 5, 10, 120));
-	levels.push_back(std::make_shared<GameLevel>(2, 12, 13, food_table1, "Level2", 4, 8, 6, 15, 90));
-	levels.push_back(std::make_shared<GameLevel>(3, 15, 15, food_table1, "Level3", 5, 7, 8, 20, 60));
+	levels.push_back(std::make_shared<GameLevel>(1, 10, 12, food_table1, "Level1", 3, 10, 5, 10, -1, 5));
+	levels.push_back(std::make_shared<GameLevel>(2, 12, 13, food_table1, "Level2", 4, 8, 6, 15, 90, 5));
+	levels.push_back(std::make_shared<GameLevel>(3, 15, 15, food_table1, "Level3", 5, 7, 8, 20, 60, 5));
 
 	return levels;
 
