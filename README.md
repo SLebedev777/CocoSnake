@@ -3,6 +3,7 @@
 Simple "Snake" video game, made with Cocos2d-x engine.
 
 Download Win32 release: https://github.com/SLebedev777/CocoSnake/raw/main/CocoSnake.zip
+Gameplay video: https://youtu.be/a4Hb2emPYvI
 
 ## Some interesting features:
 - Randomly generated levels using categorical probability distributions
