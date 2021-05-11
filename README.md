@@ -2,7 +2,7 @@
 
 Simple "Snake" video game, made with Cocos2d-x engine.
 
-Download Win32 release: https://github.com/SLebedev777/CocoSnake/raw/main/CocoSnake.zip
+Download Win32 release: [msi](https://github.com/SLebedev777/CocoSnake/raw/main/CocoSnake.msi) or [zip](https://github.com/SLebedev777/CocoSnake/raw/main/CocoSnake.zip) 
 
 Gameplay video: https://youtu.be/a4Hb2emPYvI
 
