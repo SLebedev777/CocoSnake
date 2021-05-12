@@ -1,4 +1,6 @@
 #include "DirectedSprite.h"
+#include "cocos/2d/CCSpriteFrameCache.h"
+#include "cocos/math/CCGeometry.h"
 #include <stdexcept>
 
 namespace NS_Snake

@@ -1,5 +1,5 @@
 #include "GameScene_VFX.h"
-
+#include "cocos/2d/CCParticleExamples.h"
 
 USING_NS_CC;
 using namespace NS_Snake;

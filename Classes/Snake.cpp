@@ -1,7 +1,9 @@
+#include "cocos2d.h"
 #include "Snake.h"
 #include "DirectedSprite.h"
 #include "GameGrid.h"
 #include <map>
+#include <iterator>
 
 namespace NS_Snake
 {
@@ -160,6 +162,7 @@ namespace NS_Snake
 		}
 		
 		// detect outside game grid
+		// TODO: abstract from cocos to GameGrid interface
 		auto GAMEGRIDRECT = cocos2d::Rect(m_grid->getOrigin().x, m_grid->getOrigin().y, m_grid->getWidth(), m_grid->getHeight());
 		if ((!isWrapAround() && !GAMEGRIDRECT.containsPoint(poss_new_head_pos.toVec2())) ||
 			!m_grid->contains(poss_new_head_cell))

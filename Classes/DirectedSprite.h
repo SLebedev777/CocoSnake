@@ -2,7 +2,8 @@
 #define __DIRECTEDSPRITE_H__
 
 #include "Snake_types.h"
-#include "cocos2d.h"
+#include "cocos/2d/CCSprite.h"
+#include "cocos/2d/CCSpriteFrame.h"
 #include <map>
 
 

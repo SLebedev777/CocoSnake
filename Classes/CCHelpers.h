@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "cocos2d.h"
+#include "cocos/2d/CCNode.h"
 
 namespace MyCocos2dHelpers
 {
@@ -10,7 +10,9 @@ namespace MyCocos2dHelpers
 	{
 		if (!node)
 			return;
+
 		func(node);
+
 		for (auto obj : node->getChildren())
 		{
 			CallCCNodeMethodRecursively(obj, func);
