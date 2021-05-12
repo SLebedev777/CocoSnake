@@ -13,7 +13,8 @@ GameLevel::GameLevel(
 	uint16_t num_starting_walls,
 	uint16_t score_needed,
 	uint16_t max_time,
-	float spawn_food_interval
+	float spawn_food_interval,
+	uint8_t snake_accel
 ) :
 	m_number(number),
 	m_numCellsX(num_cells_x),
@@ -25,7 +26,8 @@ GameLevel::GameLevel(
 	m_numStartingWalls(num_starting_walls),
 	m_scoreNeeded(score_needed),
 	m_maxTime(max_time),
-	m_spawnFoodInterval(spawn_food_interval)
+	m_spawnFoodInterval(spawn_food_interval),
+	m_snakeAccel(snake_accel)
 {
 	// check case when some food has limited lifetime, but spawn food interval is set to default.
 	// (spawn new food only when snake eats some existing food).

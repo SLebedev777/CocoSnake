@@ -94,7 +94,7 @@ GameLevelsArray getGameLevels()
 
 	GameLevelsArray levels;
 
-	levels.push_back(std::make_shared<GameLevel>(1, 10, 12, food_table1, "Level1", 3, 10, 5, 10, -1, 5));
+	levels.push_back(std::make_shared<GameLevel>(1, 10, 12, food_table1, "Level1", 3, 10, 5, 10, -1, 5, 3));
 
 	// level 2
 
@@ -199,7 +199,7 @@ GameLevelsArray getGameLevels()
 
 	FoodTable food_table4(static_food_table4, moving_food_table4, static_food_probas4, moving_food_probas4, food_type_probas4);
 
-	levels.push_back(std::make_shared<GameLevel>(4, 16, 15, food_table4, "Level4", 5, 6, 8, 40, 60, 10));
+	levels.push_back(std::make_shared<GameLevel>(4, 16, 15, food_table4, "Level4", 5, 6, 8, 40, 60, 10, 5));
 
 	// level 5
 
@@ -239,7 +239,7 @@ GameLevelsArray getGameLevels()
 
 	FoodTable food_table5(static_food_table5, moving_food_table5, static_food_probas5, moving_food_probas5, food_type_probas5);
 
-	levels.push_back(std::make_shared<GameLevel>(5, 20, 18, food_table5, "Level5", 5, 5, 8, 50, 60, 10));
+	levels.push_back(std::make_shared<GameLevel>(5, 20, 18, food_table5, "Level5", 5, 5, 8, 50, 60, 10, 5));
 
 	// level 6
 
@@ -273,7 +273,7 @@ GameLevelsArray getGameLevels()
 
 	FoodTable food_table6(static_food_table6, moving_food_table6, static_food_probas6, moving_food_probas6, food_type_probas6);
 
-	levels.push_back(std::make_shared<GameLevel>(6, 15, 15, food_table6, "Level6", 5, 5, 8, 30, 30, 5));
+	levels.push_back(std::make_shared<GameLevel>(6, 15, 15, food_table6, "Level6", 5, 5, 8, 30, 30, 5, 5));
 
 	// level 7
 
@@ -313,7 +313,7 @@ GameLevelsArray getGameLevels()
 
 	FoodTable food_table7(static_food_table7, moving_food_table7, static_food_probas7, moving_food_probas7, food_type_probas7);
 
-	levels.push_back(std::make_shared<GameLevel>(7, 20, 17, food_table7, "Level7", 5, 10, 10, 100, 120, 0));
+	levels.push_back(std::make_shared<GameLevel>(7, 20, 17, food_table7, "Level7", 5, 10, 10, 100, 120, 0, 5));
 
 	return levels;
 

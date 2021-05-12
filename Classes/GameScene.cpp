@@ -151,7 +151,6 @@ bool GameScene::init()
     start_y = snake_start_pos.y;
 
     int num_parts_body = currLevel.getSnakeStartingLength();
-    uint8_t accel = 5;
     // make head
     DirToFrameTable snakeDFT_head = dirToFrameTemplate("head.png");
     parts.push_back(std::make_unique<DirectedSprite>(snakeDFT_head));
@@ -211,7 +210,7 @@ bool GameScene::init()
         game_layer->addChild(parts[i]->getSprite());
     }
     // TODO: refactor to Builder pattern
-    snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/accel, /*max_health*/100, /*can_move_alone*/true);
+    snake = std::make_unique<Snake>(parts, grid, /*speed*/cell_size, /*accel*/currLevel.getSnakeAccel(), /*max_health*/100, /*can_move_alone*/true);
     snake->setWrapAround(false);
  
     // setup food factory according to level's food table settings

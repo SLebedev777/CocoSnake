@@ -22,7 +22,8 @@ public:
 		uint16_t num_starting_walls = 5,
 		uint16_t score_needed = 10,
 		uint16_t max_time = -1,
-		float spawn_food_interval = 0.0f
+		float spawn_food_interval = 0.0f,
+		uint8_t snake_accel = 4
 	);
 
 	size_t getNumCellsX() const { return m_numCellsX; }
@@ -35,6 +36,7 @@ public:
 	uint16_t getScoreNeeded() const { return m_scoreNeeded; }
 	uint16_t getMaxTime() const { return m_maxTime; }
 	float getSpawnFoodInterval() const { return m_spawnFoodInterval; }
+	uint8_t getSnakeAccel() const { return m_snakeAccel; }
 
 	~GameLevel() {}
 
@@ -51,7 +53,7 @@ private:
 	uint16_t m_scoreNeeded;
 	uint16_t m_maxTime;
 	float m_spawnFoodInterval;
-	/* uint8_t m_gameSpeedCoeff; */
+	uint8_t m_snakeAccel;
 };
 
 typedef std::shared_ptr<GameLevel> GameLevelPtr;
