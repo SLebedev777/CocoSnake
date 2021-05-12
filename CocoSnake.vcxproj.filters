@@ -10,6 +10,18 @@
     <ClCompile Include="D:\semen\games\cocos2d-x_projects\CocoSnake\cocos2d\cocos\precheader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\CategoricalDistribution.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\DirectedSprite.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\FoodImpl.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\GameGrid.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
     <ClCompile Include="Classes\GameLevel.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
@@ -19,28 +31,16 @@
     <ClCompile Include="Classes\GameScene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\GameScene_VFX.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
     <ClCompile Include="Classes\MainMenuScene.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\SplashScene.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\DirectedSprite.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
     <ClCompile Include="Classes\Snake.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\GameGrid.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\CategoricalDistribution.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\FoodImpl.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Classes\GameScene_VFX.cpp">
+    <ClCompile Include="Classes\SplashScene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
     <ClCompile Include="Classes\UIButtonMenu.cpp">
@@ -63,19 +63,208 @@
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\CloseSelected.png">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\HD\snake.plist">
+      <Filter>Resources\HD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\HD\snake.png">
+      <Filter>Resources\HD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\HDR\snake.plist">
+      <Filter>Resources\HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\HDR\snake.png">
+      <Filter>Resources\HDR</Filter>
+    </ClInclude>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\HelloWorld.png">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\SD\snake.plist">
+      <Filter>Resources\SD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\SD\snake.png">
+      <Filter>Resources\SD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\apple.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\background.mp3">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\background\reptiles_texture801.jpg">
+      <Filter>Resources\background</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\background\reptiles_texture816.jpg">
+      <Filter>Resources\background</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\background\reptiles_texture816_edit.png">
+      <Filter>Resources\background</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\background\reptiles_texture832.jpg">
+      <Filter>Resources\background</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\button_green.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\button_red.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\cocos2d-x-thumb.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\fonts\BaksoSapi.otf">
+      <Filter>Resources\fonts</Filter>
+    </ClInclude>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\fonts\Marker Felt.ttf">
+      <Filter>Resources\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\fonts\Roguedash-Solid.otf">
+      <Filter>Resources\fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\fonts\african.ttf">
       <Filter>Resources\fonts</Filter>
     </ClInclude>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\fonts\arial.ttf">
       <Filter>Resources\fonts</Filter>
     </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\game_menu_icon.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\ground32x32.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\menu_background1.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\ananas.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\apple.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\banana.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\body_curve.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\body_straight.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\butterfly.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\fence.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\fence_corner.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\ground.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\head.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\hud_clock.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\hud_health.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\hud_score.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\mushroom.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\portal.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\potion.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake.plist">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake.tps">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\HD\snake.plist">
+      <Filter>Resources\raw_art\snake\HD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\HD\snake.png">
+      <Filter>Resources\raw_art\snake\HD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\HDR\snake.plist">
+      <Filter>Resources\raw_art\snake\HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\HDR\snake.png">
+      <Filter>Resources\raw_art\snake\HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\SD\snake.plist">
+      <Filter>Resources\raw_art\snake\SD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\snake\SD\snake.png">
+      <Filter>Resources\raw_art\snake\SD</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\spyder.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\tail.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\tail_curve.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\raw_art\wall.png">
+      <Filter>Resources\raw_art</Filter>
+    </ClInclude>
     <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\res\.gitkeep">
       <Filter>Resources\res</Filter>
     </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\eat_bad_food.ogg">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\eat_good_food.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\eat_potion.ogg">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\final_tune.ogg">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\menu_blip.wav">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\portal_activate.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\snake_collide.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\tick.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\you_loose.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\semen\games\cocos2d-x_projects\CocoSnake\Resources\sound\you_win.mp3">
+      <Filter>Resources\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\CategoricalDistribution.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="Classes\CCHelpers.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\DirectedSprite.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\GameGrid.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\GameLevel.h">
@@ -87,13 +276,16 @@
     <ClInclude Include="Classes\GameScene.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\GameScene_VFX.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\IFood.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Levels.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="Classes\MainMenuScene.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\SplashScene.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\DirectedSprite.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\Snake.h">
@@ -102,22 +294,10 @@
     <ClInclude Include="Classes\Snake_fwd.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\GameGrid.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\Snake_types.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Levels.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\CategoricalDistribution.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\IFood.h">
-      <Filter>Source Files\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Classes\GameScene_VFX.h">
+    <ClInclude Include="Classes\SplashScene.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="Classes\UIButtonMenu.h">
@@ -139,11 +319,41 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{D4DDD852-AF2D-326B-8E9A-3183C7E56F93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\HD">
+      <UniqueIdentifier>{FD36B896-167B-31FB-AFA5-343A7DF40128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\HDR">
+      <UniqueIdentifier>{48AA49B7-8EAD-3471-9761-F6F702E4A2FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\SD">
+      <UniqueIdentifier>{8F56531B-11EB-3512-969E-A0FBC72B100A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\background">
+      <UniqueIdentifier>{E9D9E9A5-37B2-30F9-AD90-1B5624860579}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Resources\fonts">
       <UniqueIdentifier>{DDE7B74C-E28E-38FF-A9C8-909C7351E77E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\raw_art">
+      <UniqueIdentifier>{76B17506-7979-3CC1-BAC3-ED23FBF2A262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\raw_art\snake">
+      <UniqueIdentifier>{47529AD5-A39D-31E5-817B-A7904DE24771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\raw_art\snake\HD">
+      <UniqueIdentifier>{7A4B9625-BE55-35D7-93B7-245C3392A383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\raw_art\snake\HDR">
+      <UniqueIdentifier>{54B14326-B35A-3BB4-B5B9-CF4F9F2EE742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\raw_art\snake\SD">
+      <UniqueIdentifier>{7E9D8148-A7F1-3284-8264-92EB85413413}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Resources\res">
       <UniqueIdentifier>{12D18F36-9862-3944-A27C-A8869791462C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\sound">
+      <UniqueIdentifier>{F35C0000-3DF5-3A7C-A596-71E9471DA5BF}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{E927B5FA-3EF0-3E7D-8717-162012961DAE}</UniqueIdentifier>
@@ -154,29 +364,5 @@
     <Filter Include="Source Files\proj.win32">
       <UniqueIdentifier>{D93FA9A3-2596-3D15-81EF-A340BFCCE708}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\apple.png">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\HD\snake.png">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\button_green.png">
-      <Filter>Resources</Filter>
-    </Image>
-    <Image Include="Resources\button_red.png">
-      <Filter>Resources</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\HD\snake.plist">
-      <Filter>Resources</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Resources\background.mp3">
-      <Filter>Resources</Filter>
-    </Media>
   </ItemGroup>
 </Project>
